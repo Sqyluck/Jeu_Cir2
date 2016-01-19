@@ -7,7 +7,7 @@
     game: Phaser.Game;
 
     create() {
-        var text = "Hello World!";
+        var text = "Hello World! ca marche nan ?";
         var style = { font: "90px Arial", fill: "#ff0000", align: "center" };
         this.game.add.text(200, 100, text, style);
     }
