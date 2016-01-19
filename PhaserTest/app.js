@@ -3,7 +3,7 @@ var SimpleGame = (function () {
         this.game = new Phaser.Game(1200, 700, Phaser.AUTO, 'content', { create: this.create });
     }
     SimpleGame.prototype.create = function () {
-        var text = "Hello World! ca marche nan ?";
+        var text = "Hello World! ca marche nan?";
         var style = { font: "90px Arial", fill: "#ff0000", align: "center" };
         this.game.add.text(200, 100, text, style);
     };
