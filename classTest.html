@@ -1,0 +1,49 @@
+<script>
+
+function Position(x, y) {
+  this.x = x;
+  this.y = y;
+}
+
+function Hitbox(haut, droite, bas, gauche) {
+  this.haut = haut;
+  this.droite = droite;
+  this.bas = bas;
+  this.gauche = gauche;
+}
+
+//je ne considère pas encore les objets, implémentation future
+function Personnage(joueur, position, spriteID, memoryKill, memoryPostion){
+  this.joueur = joueur;
+  this.position = position;
+  this.spriteID = spriteID;
+  this.memoryKill = memoryKill;
+  this.memoryPostion = memoryPosition;
+  
+  this.deplacement = deplacementJoueur();
+  this.tuer= tuer();
+}
+
+function Viseur(joueur, position, nbBalles, taille, hitbox) {
+  this.joueur = joueur;
+  this.position = position;
+  this.nbBalles = nbBalles;
+  this.taille = taille;
+  this.hitbox = hitbox;
+
+  this.deplacement = deplacementViseur();
+  this.tir = tirer();
+}
+
+function Map(mapID, size){
+  this.mapID = mapID;
+  this.size = size;
+}
+
+function Serveur($joueurs){
+  foreach joueur from $joueurs{
+    if(joueur[gameplay]== 't') initTueur.[joueur];
+    if(joueur[gameplay]== 'v') initViseur.[joueur];
+  }
+}
+</script>
