@@ -1,0 +1,31 @@
+//ajouter les lignes dans le code pour le moment :
+
+//début
+var Viseur = function (game,x,y,radius, nbBalle) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.nbBalle = nbBalle;
+};
+Viseur.prototype.constructor = Viseur(game);
+
+
+//create
+mask = game.add.graphics(0, 0);
+mask.beginFill(0xffffff);
+var viseur = new Viseur(game,200,200,200,3);
+eclairage(mask, 60);
+
+//n'importe où
+function eclairage(mask, radius){ 
+
+    mask.drawCircle(0, 0, radius);
+
+    sprite.mask = mask;
+    if(radius == 30) game.input.addMoveCallback(move, this);
+    else game.input.addMoveCallback(move2, this);
+}
+function move(pointer, x, y) {
+	mask.x = x - 100;
+	mask.y = y - 100;  
+}
