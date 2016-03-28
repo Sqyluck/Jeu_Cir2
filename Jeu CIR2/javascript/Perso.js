@@ -4,9 +4,9 @@ var Perso = function(perso){
 
     //les differents mouvement du sprite
     this.Sprite.animations.add('right',[8,9,10,11],10,true);
-	this.Sprite.animations.add('left',[4,5,6,7],10,true);
-	this.Sprite.animations.add('up',[12,13,14,15],10,true);
-	this.Sprite.animations.add('down',[0,1,2,3],10,true);
+    this.Sprite.animations.add('left',[4,5,6,7],10,true);
+    this.Sprite.animations.add('up',[12,13,14,15],10,true);
+    this.Sprite.animations.add('down',[0,1,2,3],10,true);
 
     //collision
     game.physics.arcade.enable(this.Sprite,true);
@@ -98,47 +98,6 @@ Perso.prototype.randomMove = function(){
     }
 }
 
-//procedure pour trouver un point pr
-function movePlayer(){
-    if( (cursors.left.isDown)&&(cursors.right.isDown == false)&&(cursors.up.isDown == false)&&(cursors.down.isDown == false) ){
-        Moi.x -= Math.sqrt(2) * v;
-        this.Sprite.animations.play('left');
-    }
-    if( (cursors.left.isDown == false)&&(cursors.right.isDown)&&(cursors.up.isDown == false)&&(cursors.down.isDown == false) ){
-        Moi.x += Math.sqrt(2) * v;
-        this.Sprite.animations.play('right');
-    }
-    if( (cursors.left.isDown == false)&&(cursors.right.isDown == false)&&(cursors.up.isDown)&&(cursors.down.isDown == false) ){
-        Moi.y -= Math.sqrt(2) * v;
-        this.Sprite.animations.play('up');
-    }
-    if( (cursors.left.isDown == false)&&(cursors.right.isDown == false)&&(cursors.up.isDown == false)&&(cursors.down.isDown) ){
-        Moi.y += Math.sqrt(2) * v;
-        this.Sprite.animations.play('down');
-    }
-
-    if( (cursors.left.isDown)&&(cursors.up.isDown) ){
-        Moi.x -= v;
-        Moi.y -= v;
-        this.Sprite.animations.play('left');
-    }
-    if( (cursors.left.isDown)&&(cursors.down.isDown) ){
-        Moi.x -= v;
-        Moi.y += v;
-        this.Sprite.animations.play('left');
-    }
-    if( (cursors.right.isDown)&&(cursors.up.isDown) ){
-        Moi.x += v;
-        Moi.y -= v;
-        this.Sprite.animations.play('right');
-    }
-    if( (cursors.right.isDown)&&(cursors.down.isDown) ){
-        Moi.x += v;
-        Moi.y += v;
-        this.Sprite.animations.play('right');
-    }
-}
-
 Perso.prototype.findClosePoint = function(){
     var x = game.rnd.between(30, 770);
     var y = game.rnd.between(30, 570);
@@ -174,37 +133,44 @@ var Obstacles = function () {
 Obstacles.prototype = Object.create(Phaser.Sprite.prototype);
 Obstacles.prototype.constructor = Obstacles;
 
+
 function movePlayer(){
-    if( (cursors.left.isDown)&&(cursors.right.isDown == false)&&(cursors.up.isDown == false)&&(cursors.down.isDown == false) ){
+    //direction simple
+    if( (cursors.left.isDown)&&(cursors.right.isUp)&&(cursors.up.isUp == cursors.down.isUp) ){
         if(Moi.x - Math.sqrt(2) * v > 30){
             Moi.x -= Math.sqrt(2) * v;
             Moi.animations.play('left');
+            return;
         }
     }
-    if( (cursors.left.isDown == false)&&(cursors.right.isDown)&&(cursors.up.isDown == false)&&(cursors.down.isDown == false) ){
+    if( (cursors.left.isUp)&&(cursors.right.isDown)&&(cursors.up.isUp == cursors.down.isUp) ){
         if(Moi.x + Math.sqrt(2) < 770){
             Moi.x += Math.sqrt(2) * v;
             Moi.animations.play('right');
+            return;
         }
     }
-    if( (cursors.left.isDown == false)&&(cursors.right.isDown == false)&&(cursors.up.isDown)&&(cursors.down.isDown == false) ){
+    if( (cursors.left.isUp == cursors.right.isUp)&&(cursors.up.isDown)&&(cursors.down.isUp) ){
         if(Moi.y - Math.sqrt(2) * v > 30){
             Moi.y -= Math.sqrt(2) * v;
             Moi.animations.play('up');
+            return;
         }
     }
-    if( (cursors.left.isDown == false)&&(cursors.right.isDown == false)&&(cursors.up.isDown == false)&&(cursors.down.isDown) ){
+    if( (cursors.left.isUp == cursors.right.isUp)&&(cursors.up.isUp)&&(cursors.down.isDown) ){
         if(Moi.y + Math.sqrt(2) * v < 570){
             Moi.y += Math.sqrt(2) * v;
             Moi.animations.play('down');
+            return;
         }
     }
-
+    //diagonales
     if( (cursors.left.isDown)&&(cursors.up.isDown) ){
         if((Moi.x - v > 30)&&(Moi.y - v > 30)){
             Moi.x -= v;
             Moi.y -= v;
             Moi.animations.play('left');
+            return;
         }
     }
     if( (cursors.left.isDown)&&(cursors.down.isDown) ){
@@ -212,6 +178,7 @@ function movePlayer(){
             Moi.x -= v;
             Moi.y += v;
             Moi.animations.play('left');
+            return;
         }
     }
     if( (cursors.right.isDown)&&(cursors.up.isDown) ){
@@ -219,6 +186,7 @@ function movePlayer(){
             Moi.x += v;
             Moi.y -= v;
             Moi.animations.play('right');
+            return;
         }
     }
     if( (cursors.right.isDown)&&(cursors.down.isDown) ){
@@ -226,10 +194,8 @@ function movePlayer(){
             Moi.x += v;
             Moi.y += v;
             Moi.animations.play('right');
+            return;
         }
     }
-    if( (cursors.left.isDown == false)&&(cursors.right.isDown == false)&&(cursors.up.isDown == false)&&(cursors.down.isDown == false) ){
-        Moi.animations.stop();
-    }
-
+    Moi.animations.stop();
 }
