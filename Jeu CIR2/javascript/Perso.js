@@ -135,7 +135,7 @@ Obstacles.prototype.constructor = Obstacles;
 
 
 function movePlayer(){
-    //direction simple
+    //direction simple 1 ou 3 input
     if( (cursors.left.isDown)&&(cursors.right.isUp)&&(cursors.up.isUp == cursors.down.isUp) ){
         if(Moi.x - Math.sqrt(2) * v > 30){
             Moi.x -= Math.sqrt(2) * v;
@@ -164,7 +164,7 @@ function movePlayer(){
             return;
         }
     }
-    //diagonales
+    //diagonales : 2 input non opposé
     if( (cursors.left.isDown)&&(cursors.up.isDown) ){
         if((Moi.x - v > 30)&&(Moi.y - v > 30)){
             Moi.x -= v;
@@ -197,5 +197,6 @@ function movePlayer(){
             return;
         }
     }
+    // si pas d'input ou input opposé
     Moi.animations.stop();
 }
