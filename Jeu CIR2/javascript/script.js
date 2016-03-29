@@ -104,7 +104,18 @@ function update() {
         }
     }
     for (var i = 0; i < myArray.length; i++) {
-        myArray[i].randomMove();
+        myArray[i].IsDetected(viseur);
+        if(myArray[i].out){
+            myArray[i].moveToXY(0, 0);
+        }else{
+            if( (myArray[i].Sprite.alive == false)&&(myArray[i].detected) ){
+                //myArray[i].Sprite.kill();
+                myArray[i].Sprite.loadTexture("player1");
+                myArray[i].out = true;
+            }else{
+                myArray[i].randomMove();
+            }
+        }
     }
     player.movePlayer();
 
