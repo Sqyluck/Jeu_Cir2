@@ -10,6 +10,8 @@ var Perso = function(perso){
 
     //collision
     game.physics.arcade.enable(this.Sprite,true);
+    //Phillipe je te dédie cette ligne pour que tu puisse mettres la hitbox de nos personnage
+    //...........code ici...........................
     //this.Sprite.body.setSize(25, 30, 1, 10);
     this.Sprite.body.collideWorldBounds = true;
 
@@ -36,17 +38,21 @@ Perso.prototype.moveToXY = function(x, y){
             if(x > this.Sprite.x){
                 this.Sprite.x += Math.sqrt(2) * v;
                 this.Sprite.animations.play('right');
+                return;
             }else{
                 this.Sprite.x -= Math.sqrt(2) * v;
                 this.Sprite.animations.play('left');
+                return;
             }
         }else{
             if(y > this.Sprite.y){
                 this.Sprite.y += Math.sqrt(2) * v;
                 this.Sprite.animations.play('down');
+                return;
             }else{
                 this.Sprite.y -= Math.sqrt(2) * v;
                 this.Sprite.animations.play('up');
+                return;
             }
         }
         //sinon on prend la diagonale
@@ -55,18 +61,22 @@ Perso.prototype.moveToXY = function(x, y){
             if( (this.Sprite.x > x)&&(this.Sprite.y > y) ){
                 this.Sprite.x -=v; this.Sprite.y -= v;
                 this.Sprite.animations.play('left');
+                return;
             }
             if( (this.Sprite.x > x)&&(this.Sprite.y < y) ){
                 this.Sprite.x -=v; this.Sprite.y += v;
                 this.Sprite.animations.play('left');
+                return;
             }
             if( (this.Sprite.x < x)&&(this.Sprite.y > y) ){
                 this.Sprite.x +=v; this.Sprite.y -= v;
                 this.Sprite.animations.play('right');
+                return;
             }
             if( (this.Sprite.x < x)&&(this.Sprite.y < y) ){
                 this.Sprite.x +=v; this.Sprite.y += v;
                 this.Sprite.animations.play('right');
+                return;
             }
         }
     }
@@ -119,20 +129,6 @@ Perso.prototype.findDistantPoint = function(){
     this.arriveex = x;
     this.arriveey = y;
 }
-
-var Obstacles = function () {
-    var x = game.rnd.between(30, 770);
-    var y = game.rnd.between(30, 570);
-
-    this.obstacle = game.add.sprite(x, y, 'obstacle');
-    this.obstacle.anchor.setTo(0.5, 0.5);
-    this.obstacle.scale.setTo(0.5);
-    game.physics.arcade.enable(this,true);
-};
-
-Obstacles.prototype = Object.create(Phaser.Sprite.prototype);
-Obstacles.prototype.constructor = Obstacles;
-
 
 function movePlayer(){
     //direction simple 1 ou 3 input
