@@ -1,6 +1,6 @@
-var Perso = function(perso){
+var NPC = function(skin){
     //création du sprite a une position aléatoire
-    this.Sprite = game.add.sprite(game.rnd.between(30, 770), game.rnd.between(30, 570), perso);
+    this.Sprite = game.add.sprite(game.rnd.between(30, 770), game.rnd.between(30, 570), skin);
 
     //les differents mouvement du sprite
     this.Sprite.animations.add('right',[8,9,10,11],10,true);
@@ -10,7 +10,7 @@ var Perso = function(perso){
 
     //collision
     game.physics.arcade.enable(this.Sprite,true);
-    //Phillipe je te dédie cette ligne pour que tu puisse mettres la hitbox de nos personnage
+    //Phillipe je te dédie cette ligne pour que tu puisse mettres la hitbox de nos NPCnnage
     //...........code ici...........................
     //this.Sprite.body.setSize(25, 30, 1, 10);
     this.Sprite.body.collideWorldBounds = true;
@@ -27,10 +27,10 @@ var Perso = function(perso){
     this.arriveey = game.rnd.between(50, 550);
 };
 
-Perso.prototype = Object.create(Phaser.Sprite.prototype);
-Perso.prototype.constructor = Perso;
+NPC.prototype = Object.create(Phaser.Sprite.prototype);
+NPC.prototype.constructor = NPC;
 
-Perso.prototype.moveToXY = function(x, y){
+NPC.prototype.moveToXY = function(x, y){
 
     //si le point d'arrivée n'est pas en diagonale, on avance en ligne droite
     if(Math.abs(Math.abs(x-this.Sprite.x) - Math.abs(y - this.Sprite.y)) > v){
@@ -82,7 +82,7 @@ Perso.prototype.moveToXY = function(x, y){
     }
 }
 
-Perso.prototype.randomMove = function(){
+NPC.prototype.randomMove = function(){
     // si le temps d'attente est fini on bouge jusqu'au point suivant
     if(this.wait == 0){
         //si le point d'arrivée n'est pas atteind, on continue vers ce point
@@ -108,7 +108,7 @@ Perso.prototype.randomMove = function(){
     }
 }
 
-Perso.prototype.findClosePoint = function(){
+NPC.prototype.findClosePoint = function(){
     var x = game.rnd.between(30, 770);
     var y = game.rnd.between(30, 570);
     while(Math.sqrt(Math.pow(this.Sprite.x - x, 2) + Math.pow(this.Sprite.y - y, 2) ) >= 150){
@@ -119,7 +119,7 @@ Perso.prototype.findClosePoint = function(){
     this.arriveey = y;
 }
 // procedure pour trouver un point éloigné
-Perso.prototype.findDistantPoint = function(){
+NPC.prototype.findDistantPoint = function(){
     var x = game.rnd.between(30, 770);
     var y = game.rnd.between(30, 570);
     while(Math.sqrt(Math.pow(this.Sprite.x - x, 2) + Math.pow(this.Sprite.y - y, 2) ) <= 250){
@@ -130,69 +130,95 @@ Perso.prototype.findDistantPoint = function(){
     this.arriveey = y;
 }
 
-function movePlayer(){
+var Player = function(skin){
+    //création du sprite a une position aléatoire
+    this.Sprite = game.add.sprite(game.rnd.between(30, 770), game.rnd.between(30, 570), skin);
+
+    //les differents mouvement du sprite
+    this.Sprite.animations.add('right',[8,9,10,11],10,true);
+    this.Sprite.animations.add('left',[4,5,6,7],10,true);
+    this.Sprite.animations.add('up',[12,13,14,15],10,true);
+    this.Sprite.animations.add('down',[0,1,2,3],10,true);
+
+    //collision
+    game.physics.arcade.enable(this.Sprite,true);
+    //Phillipe je te dédie cette ligne pour que tu puisse mettres la hitbox de nos NPCnnage
+    //...........code ici...........................
+    //this.Sprite.body.setSize(25, 30, 1, 10);
+    this.Sprite.body.collideWorldBounds = true;
+
+    //caracteristique du sprite
+    this.Sprite.anchor.setTo(0.5, 0.5);
+    //this.Sprite.scale.setTo(0.5);
+};
+
+
+Player.prototype = Object.create(Phaser.Sprite.prototype);
+Player.prototype.constructor = Player;
+
+Player.prototype.movePlayer = function(){
     //direction simple 1 ou 3 input
     if( (cursors.left.isDown)&&(cursors.right.isUp)&&(cursors.up.isUp == cursors.down.isUp) ){
-        if(Moi.x - Math.sqrt(2) * v > 30){
-            Moi.x -= Math.sqrt(2) * v;
-            Moi.animations.play('left');
+        if(this.Sprite.x - Math.sqrt(2) * v > 30){
+            this.Sprite.x -= Math.sqrt(2) * v;
+            this.Sprite.animations.play('left');
             return;
         }
     }
     if( (cursors.left.isUp)&&(cursors.right.isDown)&&(cursors.up.isUp == cursors.down.isUp) ){
-        if(Moi.x + Math.sqrt(2) < 770){
-            Moi.x += Math.sqrt(2) * v;
-            Moi.animations.play('right');
+        if(this.Sprite.x + Math.sqrt(2) < 770){
+            this.Sprite.x += Math.sqrt(2) * v;
+            this.Sprite.animations.play('right');
             return;
         }
     }
     if( (cursors.left.isUp == cursors.right.isUp)&&(cursors.up.isDown)&&(cursors.down.isUp) ){
-        if(Moi.y - Math.sqrt(2) * v > 30){
-            Moi.y -= Math.sqrt(2) * v;
-            Moi.animations.play('up');
+        if(this.Sprite.y - Math.sqrt(2) * v > 30){
+            this.Sprite.y -= Math.sqrt(2) * v;
+            this.Sprite.animations.play('up');
             return;
         }
     }
     if( (cursors.left.isUp == cursors.right.isUp)&&(cursors.up.isUp)&&(cursors.down.isDown) ){
-        if(Moi.y + Math.sqrt(2) * v < 570){
-            Moi.y += Math.sqrt(2) * v;
-            Moi.animations.play('down');
+        if(this.Sprite.y + Math.sqrt(2) * v < 570){
+            this.Sprite.y += Math.sqrt(2) * v;
+            this.Sprite.animations.play('down');
             return;
         }
     }
     //diagonales : 2 input non opposé
     if( (cursors.left.isDown)&&(cursors.up.isDown) ){
-        if((Moi.x - v > 30)&&(Moi.y - v > 30)){
-            Moi.x -= v;
-            Moi.y -= v;
-            Moi.animations.play('left');
+        if((this.Sprite.x - v > 30)&&(this.Sprite.y - v > 30)){
+            this.Sprite.x -= v;
+            this.Sprite.y -= v;
+            this.Sprite.animations.play('left');
             return;
         }
     }
     if( (cursors.left.isDown)&&(cursors.down.isDown) ){
-        if((Moi.x - v > 30)&&(Moi.y + v < 570)){
-            Moi.x -= v;
-            Moi.y += v;
-            Moi.animations.play('left');
+        if((this.Sprite.x - v > 30)&&(this.Sprite.y + v < 570)){
+            this.Sprite.x -= v;
+            this.Sprite.y += v;
+            this.Sprite.animations.play('left');
             return;
         }
     }
     if( (cursors.right.isDown)&&(cursors.up.isDown) ){
-        if((Moi.x + v < 770)&&(Moi.y - v > 30)){
-            Moi.x += v;
-            Moi.y -= v;
-            Moi.animations.play('right');
+        if((this.Sprite.x + v < 770)&&(this.Sprite.y - v > 30)){
+            this.Sprite.x += v;
+            this.Sprite.y -= v;
+            this.Sprite.animations.play('right');
             return;
         }
     }
     if( (cursors.right.isDown)&&(cursors.down.isDown) ){
-        if((Moi.x + v < 770)&&(Moi.y + v < 570)){
-            Moi.x += v;
-            Moi.y += v;
-            Moi.animations.play('right');
+        if((this.Sprite.x + v < 770)&&(this.Sprite.y + v < 570)){
+            this.Sprite.x += v;
+            this.Sprite.y += v;
+            this.Sprite.animations.play('right');
             return;
         }
     }
     // si pas d'input ou input opposé
-    Moi.animations.stop();
+    this.Sprite.animations.stop();
 }
