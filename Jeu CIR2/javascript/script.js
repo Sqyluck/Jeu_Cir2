@@ -39,7 +39,7 @@ function create() {
     sprite = game.add.sprite(0, 0, 'fond1'); 
     
     myArray = [];
-    var player = ['player1', 'player2', 'player3', 'player4', 'player5', 'player6'];
+    var skin = ['player1', 'player2', 'player3', 'player4', 'player5', 'player6'];
     
     //id du killer
     var k = game.rnd.between(0, npcs - 1)
