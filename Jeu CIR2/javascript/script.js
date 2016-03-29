@@ -122,9 +122,12 @@ function update() {
 }
 
 function collisionHandler (player, Ennemi) {
-        Ennemi.kill();
+    if(Ennemi.alive == true){
+        Ennemi.alive = false;
+        console.log("someone die"); //a changer ar du son
         npcsLeft--;
         npcdisp.setText('Npcs:'+npcsLeft+'/'+npcs);
+    }
 }
 
 
