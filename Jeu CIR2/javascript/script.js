@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(window.outerWidth-40, window.outerHeight-110, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update });
 
 function preload() {
     game.load.spritesheet('player1','assets/eleve.png',32, 48);
@@ -35,7 +35,7 @@ function create() {
     v = 1;
 
     //Background
-    game.add.tileSprite(0, 0, 800, 600, 'background');
+    game.add.tileSprite(0, 0, game.width, game.height, 'background');
     sprite = game.add.sprite(0, 0, 'fond1'); 
     
     myArray = [];
@@ -57,8 +57,8 @@ function create() {
     //Lampe
     mask = game.add.graphics(0, 0);
     mask.beginFill(0xffffff);
-    viseur = new Viseur(game, 150 ,3 , mask);
-    viseur.eclairage(mask);
+    viseur = new Viseur(150 ,3 , mask);
+    viseur.eclairage();
 
     //Timer + counters
     initAffichage();
@@ -82,10 +82,10 @@ function initAffichage() {
     }
     timerDisplay.anchor.setTo(0.5, 0.5);
 
-    killersLeft = game.add.text(325,  40, 'Killers:'+killersLeft+'/'+killers, { font: "15px Arial", fill: "#ffffff", align: "center" });    
+    killersLeft = game.add.text(game.height/3,  40, 'Killers:'+killersLeft+'/'+killers, { font: "15px Arial", fill: "#ffffff", align: "center" });    
     killersLeft.anchor.setTo(0.5, 0.5);
 
-    npcdisp = game.add.text(475,  40, 'Npcs:'+npcsLeft+'/'+npcs, { font: "15px Arial", fill: "#ffffff", align: "center" });
+    npcdisp = game.add.text(game.height/3*2,  40, 'Npcs:'+npcsLeft+'/'+npcs, { font: "15px Arial", fill: "#ffffff", align: "center" });
     npcdisp.anchor.setTo(0.5, 0.5);
     
     ammoLeft = game.add.text(game.world.centerX,  60, 'Ammo:'+ammoLeft+'/'+ammo, { font: "15px Arial", fill: "#ffffff", align: "center" });

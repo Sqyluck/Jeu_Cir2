@@ -1,6 +1,6 @@
 var NPC = function(skin){
     //création du sprite a une position aléatoire
-    this.Sprite = game.add.sprite(game.rnd.between(30, 770), game.rnd.between(30, 570), skin);
+    this.Sprite = game.add.sprite(game.rnd.between(30, game.width-30), game.rnd.between(30, game.height-30), skin);
 
     //les differents mouvement du sprite
     this.Sprite.animations.add('right',[8,9,10,11],10,true);
@@ -23,8 +23,8 @@ var NPC = function(skin){
     this.wait = game.rnd.between(0, 50);
 
     //point d'arrivé
-    this.arriveex = game.rnd.between(50, 750);
-    this.arriveey = game.rnd.between(50, 550);
+    this.arriveex = game.rnd.between(50, game.width-50);
+    this.arriveey = game.rnd.between(50, game.height-50);
 
     this.Sprite.alive = true;
     this.detected = false;
@@ -113,22 +113,22 @@ NPC.prototype.randomMove = function(){
 }
 
 NPC.prototype.findClosePoint = function(){
-    var x = game.rnd.between(30, 770);
-    var y = game.rnd.between(30, 570);
+    var x = game.rnd.between(30, game.width-30);
+    var y = game.rnd.between(30, game.height-30);
     while(Math.sqrt(Math.pow(this.Sprite.x - x, 2) + Math.pow(this.Sprite.y - y, 2) ) >= 150){
-        x = game.rnd.between(30, 770);
-        y = game.rnd.between(30, 570);
+        x = game.rnd.between(30, game.width-30);
+        y = game.rnd.between(30, game.height-30);
     }
     this.arriveex = x;
     this.arriveey = y;
 }
 // procedure pour trouver un point éloigné
 NPC.prototype.findDistantPoint = function(){
-    var x = game.rnd.between(30, 770);
-    var y = game.rnd.between(30, 570);
+    var x = game.rnd.between(30, game.width-30);
+    var y = game.rnd.between(30, game.height-30);
     while(Math.sqrt(Math.pow(this.Sprite.x - x, 2) + Math.pow(this.Sprite.y - y, 2) ) <= 250){
-        x = game.rnd.between(30, 770);
-        y = game.rnd.between(30, 570);
+        x = game.rnd.between(30, game.width-30);
+        y = game.rnd.between(30, game.height-30);
     }
     this.arriveex = x;
     this.arriveey = y;
@@ -147,7 +147,7 @@ NPC.prototype.IsDetected = function(viseur){
 
 var Player = function(skin){
     //création du sprite a une position aléatoire
-    this.Sprite = game.add.sprite(game.rnd.between(30, 770), game.rnd.between(30, 570), skin);
+    this.Sprite = game.add.sprite(game.rnd.between(30, game.width-30), game.rnd.between(30, game.height-30), skin);
 
     //les differents mouvement du sprite
     this.Sprite.animations.add('right',[8,9,10,11],10,true);
@@ -173,67 +173,71 @@ Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.movePlayer = function(){
+    var left = cursors.left.isDown;
+    var right = cursors.right.isDown;
+    var up = cursors.up.isDown;
+    var down = cursors.down.isDown;
+    // mouvements annulés
+    if(left == true && right == true){
+        left = false;
+        right = false;
+    }
+    if(up == true && down == true){
+        up = false;
+        down = false;
+    }
+    
+    if(this.Sprite.x > game.width - 20)right = false;
+    if(this.Sprite.x < 20) left = false;
+    if(this.Sprite.y > game.height - 30)down = false;
+    if(this.Sprite.y < 30)up = false;
+
     //direction simple 1 ou 3 input
-    if( (cursors.left.isDown)&&(cursors.right.isUp)&&(cursors.up.isUp == cursors.down.isUp) ){
-        if(this.Sprite.x - Math.sqrt(2) * v > 30){
-            this.Sprite.x -= Math.sqrt(2) * v;
-            this.Sprite.animations.play('left');
-            return;
-        }
+    if( left ){
+        this.Sprite.x -= Math.sqrt(2) * v;
+        this.Sprite.animations.play('left');
+        return;
     }
-    if( (cursors.left.isUp)&&(cursors.right.isDown)&&(cursors.up.isUp == cursors.down.isUp) ){
-        if(this.Sprite.x + Math.sqrt(2) < 770){
-            this.Sprite.x += Math.sqrt(2) * v;
-            this.Sprite.animations.play('right');
-            return;
-        }
+    if( right ){
+        this.Sprite.x += Math.sqrt(2) * v;
+        this.Sprite.animations.play('right');
+        return;
     }
-    if( (cursors.left.isUp == cursors.right.isUp)&&(cursors.up.isDown)&&(cursors.down.isUp) ){
-        if(this.Sprite.y - Math.sqrt(2) * v > 30){
-            this.Sprite.y -= Math.sqrt(2) * v;
-            this.Sprite.animations.play('up');
-            return;
-        }
+    if(up){
+        this.Sprite.y -= Math.sqrt(2) * v;
+        this.Sprite.animations.play('up');
+        return;
     }
-    if( (cursors.left.isUp == cursors.right.isUp)&&(cursors.up.isUp)&&(cursors.down.isDown) ){
-        if(this.Sprite.y + Math.sqrt(2) * v < 570){
-            this.Sprite.y += Math.sqrt(2) * v;
-            this.Sprite.animations.play('down');
-            return;
-        }
+    if( down ){
+        this.Sprite.y += Math.sqrt(2) * v;
+        this.Sprite.animations.play('down');
+        return;
     }
     //diagonales : 2 input non opposé
-    if( (cursors.left.isDown)&&(cursors.up.isDown) ){
-        if((this.Sprite.x - v > 30)&&(this.Sprite.y - v > 30)){
-            this.Sprite.x -= v;
-            this.Sprite.y -= v;
-            this.Sprite.animations.play('left');
-            return;
-        }
+    if( left && up ){
+        this.Sprite.x -= v;
+        this.Sprite.y -= v;
+        this.Sprite.animations.play('left');
+        return;
+
     }
-    if( (cursors.left.isDown)&&(cursors.down.isDown) ){
-        if((this.Sprite.x - v > 30)&&(this.Sprite.y + v < 570)){
-            this.Sprite.x -= v;
-            this.Sprite.y += v;
-            this.Sprite.animations.play('left');
-            return;
-        }
+    if( left && down ){
+        this.Sprite.x -= v;
+        this.Sprite.y += v;
+        this.Sprite.animations.play('left');
+        return;
     }
-    if( (cursors.right.isDown)&&(cursors.up.isDown) ){
-        if((this.Sprite.x + v < 770)&&(this.Sprite.y - v > 30)){
-            this.Sprite.x += v;
-            this.Sprite.y -= v;
-            this.Sprite.animations.play('right');
-            return;
-        }
+    if( right && up ){
+        this.Sprite.x += v;
+        this.Sprite.y -= v;
+        this.Sprite.animations.play('right');
+        return;
     }
-    if( (cursors.right.isDown)&&(cursors.down.isDown) ){
-        if((this.Sprite.x + v < 770)&&(this.Sprite.y + v < 570)){
-            this.Sprite.x += v;
-            this.Sprite.y += v;
-            this.Sprite.animations.play('right');
-            return;
-        }
+    if( right && down ){
+        this.Sprite.x += v;
+        this.Sprite.y += v;
+        this.Sprite.animations.play('right');
+        return;
     }
     // si pas d'input ou input opposé
     this.Sprite.animations.stop();
