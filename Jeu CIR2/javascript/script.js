@@ -96,11 +96,11 @@ function initAffichage() {
 
 function update() {
     for(var i = 0; i < npcs; i++){
-        game.physics.arcade.collide(Moi, myArray[i].Sprite);
+        game.physics.arcade.collide(player, myArray[i].Sprite);
     }
     if(killspace.isDown){
         for(var i = 0; i < npcs; i++){
-            game.physics.arcade.overlap(Moi, myArray[i].Sprite, collisionHandler);
+            game.physics.arcade.overlap(player, myArray[i].Sprite, collisionHandler);
         }
     }
     for (var i = 0; i < myArray.length; i++) {
