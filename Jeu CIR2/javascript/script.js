@@ -8,7 +8,7 @@ function preload() {
     game.load.spritesheet('player2','assets/fou.png', 32, 48);
     game.load.spritesheet('player3','assets/prof.png', 32, 48);
     game.load.image('background', 'assets/fond3.png');
-    game.load.image('fond1', 'assets/fond1.png');
+    game.load.image('fond1', 'assets/fond1B.png');
 
 }
 
