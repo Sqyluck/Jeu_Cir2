@@ -47,16 +47,9 @@ function create() {
     //Insertion des npcs + killer
     for (var i = 0; i < npcs; i++) {
         if(i == k){
-            Moi = game.add.sprite(game.rnd.between(30, 570), game.rnd.between(30, 570), player[game.rnd.between(0, 5)]);
-            Moi.anchor.setTo(0.5, 0.5);
-            Moi.animations.add('right',[8,9,10,11],10,true);
-            Moi.animations.add('left',[4,5,6,7],10,true);
-            Moi.animations.add('up',[12,13,14,15],10,true);
-            Moi.animations.add('down',[0,1,2,3],10,true);
-            game.physics.arcade.enable(Moi);
-            Moi.body.collideWorldBounds = true;
+            player = new Player(skin[game.rnd.between(0, 5)]);
         }
-        myArray.push(new Perso(player[game.rnd.between(0, 5)]));
+        myArray.push(new NPC(skin[game.rnd.between(0, 5)]));
     }
     cursors = game.input.keyboard.createCursorKeys();
     killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -113,7 +106,7 @@ function update() {
     for (var i = 0; i < myArray.length; i++) {
         myArray[i].randomMove();
     }
-    movePlayer();
+    player.movePlayer();
 
 }
 
