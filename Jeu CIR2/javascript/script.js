@@ -57,7 +57,7 @@ function create() {
     //Lampe
     mask = game.add.graphics(0, 0);
     mask.beginFill(0xffffff);
-    var viseur = new Viseur(game, 150 ,3 , mask);
+    viseur = new Viseur(game, 150 ,3 , mask);
     viseur.eclairage(mask);
 
     //Timer + counters
