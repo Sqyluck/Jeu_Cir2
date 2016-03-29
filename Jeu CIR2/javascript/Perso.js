@@ -25,6 +25,10 @@ var NPC = function(skin){
     //point d'arrivé
     this.arriveex = game.rnd.between(50, 750);
     this.arriveey = game.rnd.between(50, 550);
+
+    this.Sprite.alive = true;
+    this.detected = false;
+    this.out = false;
 };
 
 NPC.prototype = Object.create(Phaser.Sprite.prototype);
@@ -130,6 +134,17 @@ NPC.prototype.findDistantPoint = function(){
     this.arriveey = y;
 }
 
+NPC.prototype.IsDetected = function(viseur){
+    //var distance = Math.sqrt(Math.pow(this.Sprite.x - viseur.x, 2) + Math.pow(this.Sprite.y - viseur.y, 2) );
+    if( (game.physics.arcade.distanceToPointer(this.Sprite) <= 75) ){
+        if(this.detected == false)
+            this.detected = true;
+    }else{
+        if(this.detected == true)
+            this.detected = false;
+    }
+}
+
 var Player = function(skin){
     //création du sprite a une position aléatoire
     this.Sprite = game.add.sprite(game.rnd.between(30, 770), game.rnd.between(30, 570), skin);
@@ -150,6 +165,7 @@ var Player = function(skin){
     //caracteristique du sprite
     this.Sprite.anchor.setTo(0.5, 0.5);
     //this.Sprite.scale.setTo(0.5);
+    this.detected = false;
 };
 
 
