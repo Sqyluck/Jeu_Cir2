@@ -13,13 +13,13 @@ function preload() {
 }
 
 //Affichage du temps
-var gameLength = 603;
+var gameLength = 120;
 var timerDisplay = 0;
 //Affichage compteur ennemi
 var killers = 1;
 var killersLeft = killers;
 //Affichage compteur civil
-var npcs = 100;
+var npcs = 10;
 var npcsLeft = npcs;
 var npcdisp;
 //Affichage munitions
@@ -82,10 +82,10 @@ function initAffichage() {
     }
     timerDisplay.anchor.setTo(0.5, 0.5);
 
-    killersLeft = game.add.text(game.height/3,  40, 'Killers:'+killersLeft+'/'+killers, { font: "15px Arial", fill: "#ffffff", align: "center" });    
+    killersLeft = game.add.text(game.width/2.5,  40, 'Killers:'+killersLeft+'/'+killers, { font: "15px Arial", fill: "#ffffff", align: "center" });    
     killersLeft.anchor.setTo(0.5, 0.5);
 
-    npcdisp = game.add.text(game.height/3*2,  40, 'Npcs:'+npcsLeft+'/'+npcs, { font: "15px Arial", fill: "#ffffff", align: "center" });
+    npcdisp = game.add.text(game.width/1.5,  40, 'Npcs:'+npcsLeft+'/'+npcs, { font: "15px Arial", fill: "#ffffff", align: "center" });
     npcdisp.anchor.setTo(0.5, 0.5);
     
     ammoLeft = game.add.text(game.world.centerX,  60, 'Ammo:'+ammoLeft+'/'+ammo, { font: "15px Arial", fill: "#ffffff", align: "center" });
@@ -98,6 +98,7 @@ function update() {
     for(var i = 0; i < npcs; i++){
         game.physics.arcade.collide(player.Sprite, myArray[i].Sprite);
     }
+     if (gameLength > 0 && npcsLeft > 0) {
     if(killspace.isDown){
         for(var i = 0; i < npcs; i++){
             game.physics.arcade.overlap(player.Sprite, myArray[i].Sprite, collisionHandler);
@@ -118,8 +119,21 @@ function update() {
         }
     }
     player.movePlayer();
+}else{
+    ecranFin();
+}
 
 }
+
+
+function ecranFin () {
+    endTime = game.add.text(game.world.centerX,  game.world.centerY, 'Fin du Game', { font: "98px Arial", fill: "#ffffff", align: "center" });
+    endTime.anchor.setTo(0.5, 0.5);
+    endTime.stroke = '#000000';
+    endTime.strokeThickness = 7;
+    game.time.events.stop(updateCounter);
+}
+
 
 function collisionHandler (player, Ennemi) {
     if(Ennemi.alive == true){
