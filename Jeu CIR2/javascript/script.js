@@ -9,7 +9,7 @@ function preload() {
     game.load.spritesheet('player3','assets/prof.png', 32, 48);
     game.load.image('background', 'assets/fond3.png');
     game.load.image('fond1', 'assets/fond1B.png');
-
+    game.load.audio('son', 'assets/Son.ogg');
 }
 
 //Affichage du temps
@@ -33,7 +33,7 @@ function create() {
 
     //Vitesse
     v = 1;
-
+    son = game.add.audio('son');
     //Background
     game.add.tileSprite(0, 0, game.width, game.height, 'background');
     sprite = game.add.sprite(0, 0, 'fond1'); 
@@ -147,6 +147,7 @@ function ecranFin () {
 function collisionHandler (player, Ennemi) {
     if(Ennemi.alive == true){
         Ennemi.alive = false;
+        son.play();
         console.log("someone die"); //a changer ar du son
         npcsLeft--;
         npcdisp.setText('Npcs:'+npcsLeft+'/'+npcs);
