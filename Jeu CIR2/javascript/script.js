@@ -127,7 +127,7 @@ function update() {
 
 
 function ecranFin () {
-    endTime = game.add.text(game.world.centerX,  game.world.centerY, 'Fin du Game', { font: "98px Arial", fill: "#ffffff", align: "center" });
+    endTime = game.add.text(game.world.centerX,  game.world.centerY, 'End of the game', { font: "98px Arial", fill: "#ffffff", align: "center" });
     endTime.anchor.setTo(0.5, 0.5);
     endTime.stroke = '#000000';
     endTime.strokeThickness = 7;
