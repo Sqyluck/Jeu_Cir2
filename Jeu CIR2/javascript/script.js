@@ -13,13 +13,13 @@ function preload() {
 }
 
 //Affichage du temps
-var gameLength = 603;
+var gameLength = 60;
 var timerDisplay = 0;
 //Affichage compteur ennemi
 var killers = 1;
 var killersLeft = killers;
 //Affichage compteur civil
-var npcs = 100;
+var npcs = 30;
 var npcsLeft = npcs;
 var npcdisp;
 //Affichage munitions
@@ -106,7 +106,7 @@ function update() {
     for (var i = 0; i < myArray.length; i++) {
         myArray[i].IsDetected(viseur);
         if(myArray[i].out){
-            myArray[i].moveToXY(0, 0);
+            myArray[i].willDie();
         }else{
             if( (myArray[i].Sprite.alive == false)&&(myArray[i].detected) ){
                 //myArray[i].Sprite.kill();
