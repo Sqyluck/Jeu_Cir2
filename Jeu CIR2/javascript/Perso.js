@@ -167,7 +167,10 @@ var Player = function(skin){
     //this.Sprite.scale.setTo(0.5);
     this.detected = false;
 };
-
+NPC.prototype.willDie = function(){
+    if(this.Sprite.y > game.height - 40)  this.Sprite.kill();
+    else this.moveToXY(game.width/2, game.height-30);
+}
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
@@ -192,28 +195,7 @@ Player.prototype.movePlayer = function(){
     if(this.Sprite.y > game.height - 30)down = false;
     if(this.Sprite.y < 30)up = false;
 
-    //direction simple 1 ou 3 input
-    if( left ){
-        this.Sprite.x -= Math.sqrt(2) * v;
-        this.Sprite.animations.play('left');
-        return;
-    }
-    if( right ){
-        this.Sprite.x += Math.sqrt(2) * v;
-        this.Sprite.animations.play('right');
-        return;
-    }
-    if(up){
-        this.Sprite.y -= Math.sqrt(2) * v;
-        this.Sprite.animations.play('up');
-        return;
-    }
-    if( down ){
-        this.Sprite.y += Math.sqrt(2) * v;
-        this.Sprite.animations.play('down');
-        return;
-    }
-    //diagonales : 2 input non opposé
+       //diagonales : 2 input non opposé
     if( left && up ){
         this.Sprite.x -= v;
         this.Sprite.y -= v;
@@ -237,6 +219,27 @@ Player.prototype.movePlayer = function(){
         this.Sprite.x += v;
         this.Sprite.y += v;
         this.Sprite.animations.play('right');
+        return;
+    }
+    //direction simple 1 ou 3 input
+    if( left ){
+        this.Sprite.x -= Math.sqrt(2) * v;
+        this.Sprite.animations.play('left');
+        return;
+    }
+    if( right ){
+        this.Sprite.x += Math.sqrt(2) * v;
+        this.Sprite.animations.play('right');
+        return;
+    }
+    if(up){
+        this.Sprite.y -= Math.sqrt(2) * v;
+        this.Sprite.animations.play('up');
+        return;
+    }
+    if( down ){
+        this.Sprite.y += Math.sqrt(2) * v;
+        this.Sprite.animations.play('down');
         return;
     }
     // si pas d'input ou input opposé
