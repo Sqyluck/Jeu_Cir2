@@ -1,21 +1,21 @@
-var start=false;
+var start=true;
 
 //Affichage du temps
-var gameLength = 5;
-var timerDisplay = 0;
+var gameLength;
+var timerDisplay;
 //Affichage compteur ennemi
-var killers = 1;
-var killersLeft = killers;
+var killers;
+var killersLeft;
 //Affichage compteur civil
-var npcs = 10;
-var npcsLeft = npcs;
+var npcs;
+var npcsLeft;
 var npcdisp;
 //Affichage munitions
-var ammo = 0;
-var ammoLeft = ammo;
+var ammo;
+var ammoLeft;
 //Viseur
 var mask;
-
+var filtreSombre;
 var soloState = {
 	
 	create: function() {
@@ -24,7 +24,7 @@ var soloState = {
 		if (start) {
 
 			//Affichage du temps
-			gameLength = 5;
+			gameLength = 60;
 			timerDisplay = 0;
 			//Affichage compteur ennemi
 			killers = 1;
@@ -44,9 +44,19 @@ var soloState = {
 	    v = 1;
 
 	    //Background
-	    game.add.tileSprite(0, 0, game.width, game.height, 'background');
-	    sprite = game.add.sprite(0, 0, 'fond1'); 
+	    backgroundS = game.add.sprite(0, 0, 'background');
+	    backgroundS = game.add.sprite(0, 0, 'filtreSombre');
+
+	  	background = game.add.sprite(0, 0, 'background');
+	    filtreL = game.add.image(0,0, 'filtreLampe');
 	    
+	    //Lampe
+	    mask = game.add.graphics(0, 0);
+	    mask.beginFill(0xffffff);
+	    viseur = new Viseur(200 ,3 , mask);
+	    viseur.eclairage();
+		//var bmd = game.make.bitmapData(this.radius*2+10, this.radius*2);
+
 	    myArray = [];
 	    var skin = ['player1', 'player2', 'player3', 'player4', 'player5', 'player6'];
 	    
@@ -63,11 +73,6 @@ var soloState = {
 	    cursors = game.input.keyboard.createCursorKeys();
 	    killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-	    //Lampe
-	    mask = game.add.graphics(0, 0);
-	    mask.beginFill(0xffffff);
-	    viseur = new Viseur(150 ,3 , mask);
-	    viseur.eclairage();
 
 	    //Timer + counters
 	    this.initAffichage();
