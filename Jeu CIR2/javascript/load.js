@@ -16,13 +16,14 @@ var loadState = {
 		//Solo
 
 	    game.load.spritesheet('player1','assets/eleve.png',32, 48);
-    	game.load.spritesheet('player5','assets/eleve2.png', 32, 48);
+    	    game.load.spritesheet('player5','assets/eleve2.png', 32, 48);
 	    game.load.spritesheet('player6','assets/eleve3.png', 32, 48);
 	    game.load.spritesheet('player4','assets/femme.png', 32, 48);
 	    game.load.spritesheet('player2','assets/fou.png', 32, 48);
 	    game.load.spritesheet('player3','assets/prof.png', 32, 48);
-	    game.load.image('background', 'assets/fond3.png');
-	    game.load.image('fond1', 'assets/fond1B.png');
+	    game.load.image('background', 'assets/fond1B.png');
+	    game.load.image('filtreSombre', 'assets/filtreSombre.png');
+	    game.load.image('filtreLampe', 'assets/filtreLampe.png');
 	},
 
 	create: function(){
