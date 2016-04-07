@@ -7,6 +7,9 @@ function preload() {
     game.load.spritesheet('player4','assets/femme.png', 32, 48);
     game.load.spritesheet('player2','assets/fou.png', 32, 48);
     game.load.spritesheet('player3','assets/prof.png', 32, 48);
+    game.load.spritesheet('player1dark', 'assets/elevedark.png', 32, 48);
+    game.load.spritesheet('player5dark', 'assets/eleve2dark.png', 32, 48);
+    game.load.spritesheet('player6dark', 'assets/eleve3dark.png', 32, 48);
     game.load.image('background', 'assets/fond3.png');
     game.load.image('fond1', 'assets/fond1B.png');
     game.load.audio('son', 'assets/Son.ogg');
@@ -40,7 +43,7 @@ function create() {
     
     myArray = [];
     var skin = ['player1', 'player2', 'player3', 'player4', 'player5', 'player6'];
-    
+    var skindark = ['player1dark', 'player5dark', 'player6dark'];
     //id du killer
     var k = game.rnd.between(0, npcs - 1)
 
@@ -49,7 +52,7 @@ function create() {
         if(i == k){
             player = new Player(skin[game.rnd.between(0, 5)]);
         }
-        myArray.push(new NPC(skin[game.rnd.between(0, 5)]));
+        myArray.push(new NPC(skindark[game.rnd.between(0, 2)]));
     }
     cursors = game.input.keyboard.createCursorKeys();
     killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
