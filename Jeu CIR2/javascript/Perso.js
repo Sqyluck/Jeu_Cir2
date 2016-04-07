@@ -10,8 +10,8 @@ var NPC = function(skin){
     this.Sprite = game.add.sprite(game.rnd.between(30, game.width-30), game.rnd.between(30, game.height-30), skin);
 
     //les differents mouvement du sprite
-      animation(this.Sprite);
-
+    animation(this.Sprite);
+    this.Sprite.name = skin;
     //collision
     game.physics.arcade.enable(this.Sprite,true);
     //Phillipe je te dédie cette ligne pour que tu puisse mettres la hitbox de nos NPCnnage
