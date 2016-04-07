@@ -1,12 +1,16 @@
+var animation = function(sprite){
+    sprite.animations.add('right',[8,9,10,11],10,true);
+    sprite.animations.add('left',[4,5,6,7],10,true);
+    sprite.animations.add('up',[12,13,14,15],10,true);
+    sprite.animations.add('down',[0,1,2,3],10,true);
+}
+
 var NPC = function(skin){
     //création du sprite a une position aléatoire
     this.Sprite = game.add.sprite(game.rnd.between(30, game.width-30), game.rnd.between(30, game.height-30), skin);
 
     //les differents mouvement du sprite
-    this.Sprite.animations.add('right',[8,9,10,11],10,true);
-    this.Sprite.animations.add('left',[4,5,6,7],10,true);
-    this.Sprite.animations.add('up',[12,13,14,15],10,true);
-    this.Sprite.animations.add('down',[0,1,2,3],10,true);
+      animation(this.Sprite);
 
     //collision
     game.physics.arcade.enable(this.Sprite,true);
@@ -137,23 +141,40 @@ NPC.prototype.findDistantPoint = function(){
 NPC.prototype.IsDetected = function(viseur){
     //var distance = Math.sqrt(Math.pow(this.Sprite.x - viseur.x, 2) + Math.pow(this.Sprite.y - viseur.y, 2) );
     if( (game.physics.arcade.distanceToPointer(this.Sprite) <= 75) ){
-        if(this.detected == false)
+        if(this.detected == false){
             this.detected = true;
+            this.Sprite.name = this.Sprite.name.substring(0, this.Sprite.name.length - 4);
+            var frame = this.Sprite.frame;
+            this.Sprite.loadTexture(this.Sprite.name);
+            this.Sprite.frame = frame;
+            animation(this.Sprite);
+
+        }
     }else{
-        if(this.detected == true)
+        if(this.detected == true){
             this.detected = false;
+            this.Sprite.name += 'dark';
+            var frame = this.Sprite.frame;
+            this.Sprite.loadTexture(this.Sprite.name);
+            this.Sprite.frame = frame;
+            animation(this.Sprite);
+        }
     }
 }
+
+NPC.prototype.willDie = function(){
+    if(this.Sprite.y > game.height - 40)  this.Sprite.kill();
+    else this.moveToXY(game.width/2, game.height-30);
+}
+
 
 var Player = function(skin){
     //création du sprite a une position aléatoire
     this.Sprite = game.add.sprite(game.rnd.between(30, game.width-30), game.rnd.between(30, game.height-30), skin);
 
     //les differents mouvement du sprite
-    this.Sprite.animations.add('right',[8,9,10,11],10,true);
-    this.Sprite.animations.add('left',[4,5,6,7],10,true);
-    this.Sprite.animations.add('up',[12,13,14,15],10,true);
-    this.Sprite.animations.add('down',[0,1,2,3],10,true);
+    animation(this.Sprite);
+
 
     //collision
     game.physics.arcade.enable(this.Sprite,true);
@@ -167,10 +188,7 @@ var Player = function(skin){
     //this.Sprite.scale.setTo(0.5);
     this.detected = false;
 };
-NPC.prototype.willDie = function(){
-    if(this.Sprite.y > game.height - 40)  this.Sprite.kill();
-    else this.moveToXY(game.width/2, game.height-30);
-}
+
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
