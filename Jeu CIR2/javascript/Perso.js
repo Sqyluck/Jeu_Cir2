@@ -8,10 +8,10 @@ var animation = function(sprite){
 var NPC = function(skin){
     //création du sprite a une position aléatoire
     this.Sprite = game.add.sprite(game.rnd.between(30, game.width-30), game.rnd.between(30, game.height-30), skin);
-
+    this.Sprite.name = skin;
     //les differents mouvement du sprite
     animation(this.Sprite);
-    this.Sprite.name = skin;
+
     //collision
     game.physics.arcade.enable(this.Sprite,true);
     //Phillipe je te dédie cette ligne pour que tu puisse mettres la hitbox de nos NPCnnage
@@ -139,6 +139,7 @@ NPC.prototype.findDistantPoint = function(){
 }
 
 NPC.prototype.IsDetected = function(viseur){
+    
     //var distance = Math.sqrt(Math.pow(this.Sprite.x - viseur.x, 2) + Math.pow(this.Sprite.y - viseur.y, 2) );
     if( (game.physics.arcade.distanceToPointer(this.Sprite) <= 75) ){
         if(this.detected == false){
