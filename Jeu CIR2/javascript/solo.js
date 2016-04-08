@@ -48,28 +48,27 @@ var soloState = {
 	    backgroundS = game.add.sprite(0, 0, 'filtreSombre');
 
 	  	background = game.add.sprite(0, 0, 'background');
-	    filtreL = game.add.image(0,0, 'filtreLampe');
 	    
 	    //Lampe
-	    mask = game.add.graphics(0, 0);
+	    mask = game.add.graphics((window.outerWidth-40)/2, (window.outerHeight)/4+50);
 	    mask.beginFill(0xffffff);
 	    viseur = new Viseur(200 ,3 , mask);
+	    filtreL = game.add.image(mask.x-101, mask.y-101, 'filtreLampe');
 	    viseur.eclairage();
-		//var bmd = game.make.bitmapData(this.radius*2+10, this.radius*2);
 
 	    myArray = [];
-	    var skin = ['player1', 'player2', 'player3', 'player4', 'player5', 'player6'];
-	    
+	    var skin = ['player1', 'player2', 'player3'];
+	    var skindark = ['player1dark', 'player2dark', 'player3dark'];
 	    //id du killer
 	    var k = game.rnd.between(0, npcs - 1)
 
 	    //Insertion des npcs + killer
 	    for (var i = 0; i < npcs; i++) {
 	        if(i == k){
-	            player = new Player(skin[game.rnd.between(0, 5)]);
+	            player = new Player(skin[game.rnd.between(0, skin.length-1)]);
 	        }
-	        myArray.push(new NPC(skin[game.rnd.between(0, 5)]));
-	    }
+ 			myArray.push(new NPC(skindark[game.rnd.between(0, skindark.length-1)]));
+ 	    }
 	    cursors = game.input.keyboard.createCursorKeys();
 	    killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
@@ -79,6 +78,39 @@ var soloState = {
 
 	},
 
+	update: function() {
+	    for(var i = 0; i < npcs; i++){
+	        game.physics.arcade.collide(player.Sprite, myArray[i].Sprite);
+	    }
+	    if (gameLength > 0 && npcsLeft > 0) {
+		    if(killspace.isDown){
+		        for(var i = 0; i < npcs; i++){
+		            game.physics.arcade.overlap(player.Sprite, myArray[i].Sprite, this.collisionHandler);
+		        }
+		    }
+		    for (var i = 0; i < myArray.length; i++) {
+		        myArray[i].IsDetected(viseur);
+		        if(myArray[i].out){
+		            myArray[i].willDie();
+		        }else{
+		            if( (myArray[i].Sprite.alive == false)&&(myArray[i].detected) ){
+		            	myArray[i].Sprite.name += 'dead';
+		                myArray[i].Sprite.loadTexture(myArray[i].Sprite.name);
+		                myArray[i].out = true;
+		            }else{
+		                myArray[i].randomMove();
+		            }
+		        }
+		    }
+		    player.movePlayer();
+	    
+		}else{
+	    	game.state.start('fin');
+	    	//this.ecranFin();
+		}
+
+	},
+	
 	initAffichage: function() {
 	    //Insertion du timer
 	    if((gameLength/60)<10){
@@ -115,40 +147,6 @@ var soloState = {
 	    
 	    game.time.events.loop(Phaser.Timer.SECOND, this.updateCounter, this);
 	},
-
-	update: function() {
-	    for(var i = 0; i < npcs; i++){
-	        game.physics.arcade.collide(player.Sprite, myArray[i].Sprite);
-	    }
-	    if (gameLength > 0 && npcsLeft > 0) {
-		    if(killspace.isDown){
-		        for(var i = 0; i < npcs; i++){
-		            game.physics.arcade.overlap(player.Sprite, myArray[i].Sprite, this.collisionHandler);
-		        }
-		    }
-		    for (var i = 0; i < myArray.length; i++) {
-		        myArray[i].IsDetected(viseur);
-		        if(myArray[i].out){
-		            myArray[i].willDie();
-		        }else{
-		            if( (myArray[i].Sprite.alive == false)&&(myArray[i].detected) ){
-		                //myArray[i].Sprite.kill();
-		                myArray[i].Sprite.loadTexture("player1");
-		                myArray[i].out = true;
-		            }else{
-		                myArray[i].randomMove();
-		            }
-		        }
-		    }
-		    player.movePlayer();
-	    
-		}else{
-	    	game.state.start('fin');
-	    	//this.ecranFin();
-		}
-
-	},
-
 	ecranFin: function() {
 	    endTime = game.add.text(game.world.centerX,  game.world.centerY, 'End of the game', { font: "1000% Arial", fill: "#ffffff", align: "center" });
 	    endTime.anchor.setTo(0.5, 0.5);
