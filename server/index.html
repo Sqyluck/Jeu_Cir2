@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>tuto Socket.io</title>
+        <script type="text/javascript" src="js/jQuery.js"></script>
+        <script type="text/javascript" src="js/phaser.js"></script>
+        <script type="text/javascript" src="js/Perso.js"></script>
+        <script type="text/javascript" src="js/viseur.js"></script>
+
+
+    </head>
+    <body>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="js/client.js"></script>
+        <form action='' id="loginform">
+            <input type="text" name="pseudo" id="pseudo" placeholder="pseudo"/>
+            <input type="radio" name="type" value="gardian"/>gardian
+            <input type="radio" name="type" value="killer"/>killer
+            <input type="submit" id="valider" value="valider"/>
+        </form>
+
+        <form id="ready">
+            <input type="button" value="pret"/>
+        </form>
+        <form id="unready">
+            <input type="button" value="annuler"/>
+        </form>
+        <div id = 'game'></div>
+    </body>
+</html>
