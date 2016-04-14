@@ -1,7 +1,6 @@
 $(function(){
 
-    var game = new Phaser.Game(250,250, Phaser.AUTO, 'game', { preload: preload, create: create, update: update });
-
+    game = new Phaser.Game(450,450, Phaser.AUTO, 'game', { preload: preload, create: create, update: update });
     var socket = io.connect('http://localhost:3000');
     $('#unready').hide();
     $('#ready').hide();
@@ -21,17 +20,21 @@ $(function(){
         game.load.image('fond1', 'assets/fond1B.png');
     }
 
-    var npc = 2;
-
+    var me = {};
     function create(){
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         game.add.tileSprite(0, 0, game.width, game.height, 'background');
-        sprite = game.add.sprite(0, 0, 'fond1');
 
+        //sprite = game.add.sprite(0, 0, 'fond1');
+        //sprite1 = game.add.sprite(0, 0, 'fond1');
+        //sprite2 = game.add.sprite(0, 0, 'fond1');
+        SpriteArray = {};
         ViseurArray = {};
+        maskArray = {};
         PlayerArray = {};
         NpcArray = [];
+        cursors = game.input.keyboard.createCursorKeys();
         var skin = ['player1', 'player2', 'player3', 'player4', 'player5', 'player6'];
         var skindark = ['player1dark', 'player5dark', 'player6dark'];
 
@@ -47,9 +50,9 @@ $(function(){
 
         socket.on('data', function(){
             socket.emit('data', {
-                nb_npc : 2,
-                width : 250,
-                height : 250
+                nb_npc : 50,
+                width : 450,
+                height : 450
             });
         });
 
@@ -64,9 +67,15 @@ $(function(){
             $('#unready').hide();
         });
 
+        socket.on('logged', function(user){
+            me = user;
+        });
 
         socket.on('connected',function(user){
             console.log(user.pseudo + ' connected');
+            if(user.type == 'gardian'){
+                SpriteArray[user.pseudo] = game.add.sprite(0, 0, 'fond1');
+            }
         });
 
         socket.on('pret', function(user){
@@ -84,23 +93,78 @@ $(function(){
         });
 
         socket.on('createNPC', function(data){
-            NpcArray.push(new NPC(game, skin[data.skin],data.x, data.y));
+            NpcArray.push(new NPC(game, skindark[data.skin],data.x, data.y));
         });
 
         socket.on('createKiller', function(data){
-            PlayerArray[data.pseudo] = new Player(game, skin[data.skin],data.x, data.y);
+            PlayerArray[data.pseudo] = new Player(game, skindark[data.skin],data.x, data.y);
         });
-        mask = game.add.graphics(0, 0);
-        mask.beginFill(0xffffff);
+
+        var i = 0;
         socket.on('createViseur', function(pseudo){
-            ViseurArray[pseudo] = new Viseur(150, 3, mask);
-            ViseurArray[pseudo].eclairage();
+            maskArray[pseudo] = game.add.graphics(0, 0);
+            maskArray[pseudo].beginFill(0xffffff);
+            ViseurArray[pseudo] = new Viseur(150, 3, pseudo);
+            maskArray[pseudo].drawCircle(0, 0, ViseurArray[pseudo].radius);
+            SpriteArray[pseudo].mask = maskArray[pseudo];
+        });
+
+        socket.on('moveNPCToXY', function(NPC){
+            NpcArray[NPC.id].Sprite.x += NPC.moveOnX;
+            NpcArray[NPC.id].Sprite.y += NPC.moveOnY;
+            if(NPC.animation == ''){
+                NpcArray[NPC.id].Sprite.animations.stop();
+            }else{
+                NpcArray[NPC.id].Sprite.animations.play(NPC.animation);
+            }
         });
 
         socket.on('disco', function(player){
             console.log(player.pseudo + ' disconnected');
+            //$('#game').hide();
         });
 
+        socket.on('ActionKiller', function(){
+            if(me.type == 'killer'){
+                PlayerArray[me.pseudo].movePlayer();
+                socket.emit('movePlayer',{
+                    moveOnX : PlayerArray[me.pseudo].moveOnX,
+                    moveOnY : PlayerArray[me.pseudo].moveOnY,
+                    animation : PlayerArray[me.pseudo].animation,
+                    pseudo : me.pseudo
+                });
+            }
+        });
+
+        socket.on('ActionViseur', function(){
+            if(me.type == 'gardian'){
+                ViseurArray[me.pseudo].moveViseur(game, socket);
+            }
+        });
+
+        socket.on('IsNPCDetected', function(npc){
+            //console.log(npc.detected);
+            NpcArray[npc.id].IsDetected(npc.detected);
+        });
+
+        socket.on('IsKillerDetected', function(killer){
+            PlayerArray[killer.id].IsDetected(killer.detected);
+        });
+
+        socket.on('moveViseur', function(viseur){
+            maskArray[viseur.pseudo].x = viseur.x;
+            maskArray[viseur.pseudo].y = viseur.y;
+        });
+
+        socket.on('movePlayer', function(player){
+            PlayerArray[player.pseudo].Sprite.x += player.moveOnX;
+            PlayerArray[player.pseudo].Sprite.y += player.moveOnY;
+            if(player.animation == ''){
+                PlayerArray[player.pseudo].Sprite.animations.stop();
+            }else{
+                PlayerArray[player.pseudo].Sprite.animations.play(player.animation);
+            }
+        });
     }
 
     function update(){
