@@ -34,7 +34,7 @@ var loadState = {
 	    	game.load.image('acadre','assets/Funcky/cadre.png');
 
 	    	//Map
-	    	game.load.tilemap('map1',, null, Phaser.T)
+	    	//game.load.tilemap('map1',, null, Phaser.T)
 	    	game.load.image('tiles','assets/tileset/LPC_house_interior/interior.png');
 
 		//Multi
