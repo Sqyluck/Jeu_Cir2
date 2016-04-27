@@ -1,43 +1,49 @@
-var start=true;
-
-//Affichage du temps
+//Entrer clavier pour affichage complet
+var key;
+//Temps
 var gameLength;
 var timerDisplay;
-//Affichage compteur ennemi
+//Compteur ennemi
 var killers;
 var killersLeft;
-//Affichage compteur civil
+var killersdisp;
+//Compteur civil
 var npcs;
 var npcsLeft;
 var npcdisp;
-//Affichage munitions
+//Compteur munitions
 var ammo;
 var ammoLeft;
+var ammodisp;
+
 //Viseur
 var mask;
 var filtreSombre;
+
 var soloState = {
 	
 	create: function() {
 		
-		//Reinit des variables si jeu restart
-		if (start) {
+		//Reinit jeu si restart
+		if (restart) {
 
-			//Affichage du temps
-			gameLength = 60;
+			timer = game.time.create(false);
+			//Temps
+			gameLength = timeinit;
 			timerDisplay = 0;
-			//Affichage compteur ennemi
-			killers = 1;
+			//Compteur ennemi
+			killers = killerinit;
 			killersLeft = killers;
-			//Affichage compteur civil
-			npcs = 10;
+			//Compteur civil
+			npcs = npcsinit;
 			npcsLeft = npcs;
-			npcdisp;
-			//Affichage munitions
-			ammo = 0;
+			//Compteur munitions
+			ammo = ammoinit;
 			ammoLeft = ammo;
-			//Viseur
-			start=false;
+			//Key pour affichage
+			key = game.input.keyboard.addKey(Phaser.Keyboard.A);
+			restart = false;
+
 		}
 
 		//Vitesse
@@ -79,6 +85,14 @@ var soloState = {
 	},
 
 	update: function() {
+		//Affichage Complet
+		if(key.isDown){
+	        this.showdisp();
+	        
+	    }else{
+	        this.hidedisp();
+	    }
+
 	    for(var i = 0; i < npcs; i++){
 	        game.physics.arcade.collide(player.Sprite, myArray[i].Sprite);
 	    }
@@ -105,8 +119,7 @@ var soloState = {
 		    player.movePlayer();
 	    
 		}else{
-	    	game.state.start('fin');
-	    	//this.ecranFin();
+	    	this.ecranFin();
 		}
 
 	},
@@ -130,29 +143,39 @@ var soloState = {
 	    timerDisplay.stroke = '#000000';
 	    timerDisplay.strokeThickness = 2;
 
-	    killersLeft = game.add.text(game.width/3,  40, 'Killers:'+killersLeft+'/'+killers, { font: "15px Arial", fill: "#ffffff", align: "center" });    
-	    killersLeft.anchor.setTo(0.5, 0.5);
-	    killersLeft.stroke = '#000000';
-	    killersLeft.strokeThickness = 1;
+	    killersdisp = game.add.text(50,  10, 'Killers:'+killersLeft+'/'+killers, { font: "15px Arial", fill: "#ffffff", align: "center" });    
+	    killersdisp.anchor.setTo(0.5, 0.5);
+	    killersdisp.stroke = '#000000';
+	    killersdisp.strokeThickness = 1;
 
-	    npcdisp = game.add.text(game.width/3*2,  40, 'Npcs:'+npcsLeft+'/'+npcs, { font: "15px Arial", fill: "#ffffff", align: "center" });
+	    npcdisp = game.add.text(50,  40, 'Npcs:'+npcsLeft+'/'+npcs, { font: "15px Arial", fill: "#ffffff", align: "center" });
 	    npcdisp.anchor.setTo(0.5, 0.5);
 	    npcdisp.stroke = '#000000';
 	    npcdisp.strokeThickness = 1;
 	    
-	    ammoLeft = game.add.text(game.world.centerX,  60, 'Ammo:'+ammoLeft+'/'+ammo, { font: "15px Arial", fill: "#ffffff", align: "center" });
-	    ammoLeft.anchor.setTo(0.5, 0.5);
-	    ammoLeft.stroke = '#000000';
-	    ammoLeft.strokeThickness = 1;
+	    ammodisp = game.add.text(50,  70, 'Ammo:'+ammoLeft+'/'+ammo, { font: "15px Arial", fill: "#ffffff", align: "center" });
+	    ammodisp.anchor.setTo(0.5, 0.5);
+	    ammodisp.stroke = '#000000';
+	    ammodisp.strokeThickness = 1;
 	    
-	    game.time.events.loop(Phaser.Timer.SECOND, this.updateCounter, this);
+	   	timer.loop(Phaser.Timer.SECOND, this.updateCounter, this);
+	   	timer.start();
 	},
+
 	ecranFin: function() {
 	    endTime = game.add.text(game.world.centerX,  game.world.centerY, 'End of the game', { font: "1000% Arial", fill: "#ffffff", align: "center" });
 	    endTime.anchor.setTo(0.5, 0.5);
 	    endTime.stroke = '#000000';
 	    endTime.strokeThickness = 7;
-	    game.time.events.stop(this.updateCounter);
+	    timer.stop(false);
+
+	    var startLabel = game.add.text(game.width/2, game.height -40, 'Press SPACE', {font: '25px Arial', fill: '#ffffff'});
+		var wkey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		wkey.onDown.addOnce(this.quit, this);
+	},
+
+	quit: function() {
+		game.state.start('fin');
 	},
 
 	collisionHandler: function (player, Ennemi) {
@@ -181,5 +204,19 @@ var soloState = {
 	        }
 	    }
 
+	},
+
+	hidedisp: function() {
+	    killersdisp.visible = false;
+	    npcdisp.visible = false;
+	    ammodisp.visible = false;
+	},
+
+	showdisp: function(){
+
+	    npcdisp.visible = true;
+	    killersdisp.visible = true;
+	    ammodisp.visible = true;
 	}
+
 };
