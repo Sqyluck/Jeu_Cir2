@@ -4,12 +4,14 @@
     <head>
         <meta charset="UTF-8" />
         <title>FIND'ISEN</title>
-        <!-- Lib phaser-->
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/style.css" />
+         <!-- Lib -->
         <script type="text/javascript" src="lib/phaser.js"></script>
         <script type="text/javascript" src="lib/pixi.js"></script>
+        <script type="text/javascript" src="lib/jquery-1.4.2.min.js"></script>
 
         <!-- Etats-->
-
         <script type="text/javascript" src="javascript/boot.js"></script>
         <script type="text/javascript" src="javascript/load.js"></script>
         <script type="text/javascript" src="javascript/menu.js"></script>
@@ -18,16 +20,37 @@
         <script type="text/javascript" src="javascript/fin.js"></script>
         <script type="text/javascript" src="javascript/succes.js"></script>
         <script type="text/javascript" src="javascript/optio.js"></script>
+        <script type="text/javascript" src="javascript/start.js"></script>
         <script type="text/javascript" src="javascript/game.js"></script>
         
         <!-- Classes-->
         <script type="text/javascript" src="javascript/Perso.js"></script>
         <script type="text/javascript" src="javascript/viseur.js"></script>
-        
-        
+        <script type="text/javascript" src="javascript/settings.js"></script>
     </head>
 
     <body>
-        <div id="gameDiv"></div>  
+        <div id="modif">
+            <label for="NPCS"> NPCS </label>
+            <input type="number" name="NPCS" id="NPCS" value="10">
+            <label for="Time"> Time </label>
+            <input type="number" name="Time" id="Time" value="60">
+            <label for="Ammos"> Ammos </label>
+            <input type="number" name="Ammos" id="Ammos" value="1">
+        </div>
+        <!--
+        <div id="multi">
+            <label for="pseudo">Nom Joueur</label>
+            <input type="text" name="pseudo" id="pseudo" value="Pseudo">
+            <label for="killmode">Killer</label>
+            <input type="radio" name="mode" id="killmode">
+            <label for="viseurmode">Viseur</label>
+            <input type="radio" name="mode" id="viseurmode">
+        </div>
+        -->
+        <div id="gameDiv">
+
+        </div>
+        
     </body>
 </html>
