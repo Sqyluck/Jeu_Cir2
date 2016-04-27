@@ -1,5 +1,4 @@
 var finState = {
-var finState = {
 
 	create: function() {
 
