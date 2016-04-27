@@ -1,43 +1,18 @@
 var multiState = {
+    create: function(){
 
-    create: function() {
+    
+    //---------------------------------------------------------------------------------------------------------------------------------------
+        var startLabel = game.add.text(game.width/2, game.height -40, 'Press SPACE', {font: '25px Arial', fill: '#ffffff'});
+        var wkey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        wkey.onDown.addOnce(this.restart, this);
+        startLabel.stroke = '#000000';
+        startLabel.strokeThickness = 3;
 
-        this.keyboard = game.input.keyboard;
-        
-        this.player = game.add.sprite(16, 16, 'player');
-        game.physics.enable(this.player, Phaser.Physics.ARCADE);
-        
-        this.win = game.add.sprite(256, 256, 'win');
-        game.physics.enable(this.win, Phaser.Physics.ARCADE);
     },
 
-    update: function() {
-        
-        game.physics.arcade.overlap(this.player, this.win, this.Win, null, this);
-
-        if(this.keyboard.isDown(Phaser.Keyboard.Q)) {
-            this.player.body.velocity.x = -175;
-        } 
-        else if (this.keyboard.isDown(Phaser.Keyboard.D)) {
-            this.player.body.velocity.x = 175;
-        }
-        else {
-            this.player.body.velocity.x = 0;
-        }
-
-        if(this.keyboard.isDown(Phaser.Keyboard.Z)) {
-            this.player.body.velocity.y = -175;
-        }
-        else if(this.keyboard.isDown(Phaser.Keyboard.S)) {
-            this.player.body.velocity.y = 175;
-        }
-        else {
-            this.player.body.velocity.y = 0;
-        }
-    },
-
-    Win: function() {
-
-        game.state.start('fin');
+    restart: function() {
+        game.state.start('menu');
     }
+
 };
