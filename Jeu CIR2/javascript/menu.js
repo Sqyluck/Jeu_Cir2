@@ -2,35 +2,44 @@ var menuState = {
 
     create: function() {
         
-        game.stage.backgroundColor = '#182d3b';
+        var logo;
+        var solo;
+        var multi;
+        var succes;
+        var optio;
 
-        //Position des boutons
-        var solo = game.add.button(game.world.centerX -41, game.world.centerY -100, 'solo', this.solo, this, 1, 0);
-        var multi = game.add.button(game.world.centerX -75, game.world.centerY, 'multi', this.multi, this, 1, 0);
-        var succes = game.add.button(game.world.centerX -55, game.world.centerY +100, 'succes', this.succes, this, 1, 0);
-        var optio = game.add.button(game.world.centerX -58, game.world.centerY +200, 'options', this.optio, this, 1, 0);
+        if(choice == 'funcky'){
+            logo = game.add.sprite(game.width/2 -150,0, 'flogo');
+            logo.scale.setTo(0.3, 0.3);
 
-    },
+            //Position des boutons
+            solo = game.add.button(game.width/4 -50, 250, 'fsolo', this.solo, this, 0, 1);
+            multi = game.add.button(100+game.width/2, 250, 'fmulti', this.multi, this, 0, 1);
+            succes = game.add.button(game.width/4 -50, 450, 'fsucces', this.succes, this, 0, 1);
+            optio = game.add.button(100+game.width/2, 450, 'foptio', this.optio, this, 0, 1);
+            //Echelle
+            solo.scale.setTo(0.25, 0.25);
+            multi.scale.setTo(0.25, 0.25);
+            succes.scale.setTo(0.25, 0.25);
+            optio.scale.setTo(0.25, 0.25);
+        }
+        else//------------------Changement BDE----------------------------------------------------------------- 
+        {
+            logo = game.add.sprite(game.width/2 -150,0, 'alogo');
+            logo.scale.setTo(0.3, 0.3);
 
-    up: function() {
-        console.log('solo up', arguments);
-        console.log('multi up', arguments);
-        console.log('succes up', arguments);
-        console.log('optio up', arguments);
-    },
-
-    over: function() {
-        console.log('solo over');
-        console.log('multi over');
-        console.log('succes over');
-        console.log('optio over');
-    },
-
-    out: function() {
-        console.log('solo out');
-        console.log('multi out');
-        console.log('succes out');
-        console.log('optio out');
+            //Position des boutons
+            solo = game.add.button(game.width/8-75, 300, 'asolo', this.solo, this, 0, 1);
+            multi = game.add.button(game.width/4+50, 300, 'amulti', this.multi, this, 0, 1);
+            succes = game.add.button(game.width/2, 300, 'asucces', this.succes, this, 0, 1);
+            optio = game.add.button(game.width/2+280, 300, 'aoptio', this.optio, this, 0, 1);
+            
+            //Echelle
+            solo.scale.setTo(0.25, 0.25);
+            multi.scale.setTo(0.25, 0.25);
+            succes.scale.setTo(0.25, 0.25);
+            optio.scale.setTo(0.25, 0.25);
+        }
     },
 
     solo: function () {
