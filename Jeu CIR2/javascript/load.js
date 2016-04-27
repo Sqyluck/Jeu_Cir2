@@ -2,12 +2,41 @@ var loadState = {
 	preload: function() {
 		var loadingLabel = game.add.text(80, 150, 'Loading assets...',{font: '30px Arial', fill: '#ffffff'});
 		
-		//Buttons
-		game.load.spritesheet('solo', 'assets/Buttons/solo.png', 82, 43);
-		game.load.spritesheet('multi', 'assets/Buttons/multi.png', 150, 43);
-		game.load.spritesheet('succes', 'assets/Buttons/succes.png', 111, 43);
-		game.load.spritesheet('options', 'assets/Buttons/options.png', 117, 43);
-	    
+		//Boutons Funcky
+		game.load.spritesheet('fsolo', 'assets/Funcky/solo.png', 960, 689);
+		game.load.spritesheet('fmulti', 'assets/Funcky/multi.png', 960, 689);
+		game.load.spritesheet('fsucces', 'assets/Funcky/succes.png', 960, 689);
+		game.load.spritesheet('foptio', 'assets/Funcky/options.png', 960, 689);
+		game.load.spritesheet('fmodif', 'assets/Funcky/modif.png', 960, 689);
+		game.load.spritesheet('fok', 'assets/Funcky/ok.png', 960, 689);
+		game.load.spritesheet('fhome', 'assets/Funcky/home.png', 960, 689);
+		game.load.spritesheet('fdefault', 'assets/Funcky/default.png', 960, 689);
+	    	//Boutons Asterix
+	    	game.load.spritesheet('asolo','assets/Asterix/solo.png', 960, 960);
+	    	game.load.spritesheet('amulti','assets/Asterix/multi.png', 960, 960);
+	    	game.load.spritesheet('asucces','assets/Asterix/succes.png', 960, 960);
+	    	game.load.spritesheet('aoptio','assets/Asterix/options.png', 960, 960);
+	    	game.load.spritesheet('amodif','assets/Funcky/modif.png', 960, 689);
+	    	game.load.spritesheet('aok','assets/Funcky/ok.png', 960, 689);
+		game.load.spritesheet('ahome','assets/Asterix/home.png', 960, 960);
+	    	game.load.spritesheet('adefault','assets/Funcky/default.png', 960, 689);
+		    
+	    	//Images Funcky
+	    	game.load.image('fwon','assets/Funcky/won.png');
+		game.load.image('flost','assets/Funcky/lost.png');
+		game.load.image('flogo','assets/Funcky/logo.old.png');
+		game.load.image('fcadre','assets/Funcky/cadre.png');
+
+	    	//Images Asterix
+	    	game.load.image('awon','assets/Funcky/won.png');
+	    	game.load.image('alost','assets/Funcky/lost.png');
+	    	game.load.image('alogo','assets/Asterix/logo.png');
+	    	game.load.image('acadre','assets/Funcky/cadre.png');
+
+	    	//Map
+	    	game.load.tilemap('map1',, null, Phaser.T)
+	    	game.load.image('tiles','assets/tileset/LPC_house_interior/interior.png');
+
 		//Multi
 		game.load.image('player','assets/player.png');
 		game.load.image('win','assets/win.png');
@@ -37,7 +66,9 @@ var loadState = {
 	},
 
 	create: function(){
-
-		game.state.start('menu');
+		game.stage.backgroundColor = '#7a0e0c'; //#c31222 (Asterix)
+		$("#modif").hide();
+		game.state.start('start');
+		//game.state.start('menu');
 	} 
 };
