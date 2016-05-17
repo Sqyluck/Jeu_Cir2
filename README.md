@@ -7,16 +7,14 @@ Voici les travaux restants au bien de notre projet:
 - Sprites Persos
 - Sprites Map
 - IA qui fait des choix
-- class regroupant IA et Joueur
 - Viseur qui permette une action -done, non màj sur le master-
 - Serveur qui gère les données
 - Gestions de plusieurs joueurs
 - Jeu à la manette
-- hitox moins cramée
 - Story Mode (nécessite l'IA)
 - Scénario
 - Succès
 - musique
 - options
 - manuel
-- déplacement d'IA moins aléatoire (choix de position en fonction du caractere)
+- déplacement d'IA moins aléatoire (choix de position en fonction du caractere) --en cours--
