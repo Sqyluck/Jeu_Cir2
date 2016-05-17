@@ -14,9 +14,8 @@ var NPC = function(skin){
 
     //collision
     game.physics.arcade.enable(this.Sprite,true);
-    //Phillipe je te dédie cette ligne pour que tu puisse mettres la hitbox de nos NPCnnage
-    //...........code ici...........................
-    //this.Sprite.body.setSize(25, 30, 1, 10);
+    
+    this.Sprite.body.setSize(18, 38, 1, 1);
     this.Sprite.body.collideWorldBounds = true;
 
     //caracteristique du sprite
@@ -179,9 +178,7 @@ var Player = function(skin){
 
     //collision
     game.physics.arcade.enable(this.Sprite,true);
-    //Phillipe je te dédie cette ligne pour que tu puisse mettres la hitbox de nos NPCnnage
-    //...........code ici...........................
-    //this.Sprite.body.setSize(25, 30, 1, 10);
+    this.Sprite.body.setSize(18, 38, 1, 1);
     this.Sprite.body.collideWorldBounds = true;
 
     //caracteristique du sprite
