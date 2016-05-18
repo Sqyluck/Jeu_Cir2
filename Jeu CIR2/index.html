@@ -10,7 +10,6 @@
         <script type="text/javascript" src="lib/phaser.js"></script>
         <script type="text/javascript" src="lib/pixi.js"></script>
         <script type="text/javascript" src="lib/jquery-1.4.2.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>
 
         <!-- Etats-->
         <script type="text/javascript" src="javascript/boot.js"></script>
@@ -22,14 +21,15 @@
         <script type="text/javascript" src="javascript/succes.js"></script>
         <script type="text/javascript" src="javascript/optio.js"></script>
         <script type="text/javascript" src="javascript/start.js"></script>
+        <script type="text/javascript" src="javascript/level.js"></script>
         <script type="text/javascript" src="javascript/game.js"></script>
         
         <!-- Classes-->
         <script type="text/javascript" src="javascript/Perso.js"></script>
         <script type="text/javascript" src="javascript/viseur.js"></script>
-            <script type="text/javascript" src="javascript/PersoServer.js"></script>
-        <script type="text/javascript" src="javascript/ViseurServer.js"></script>
         <script type="text/javascript" src="javascript/settings.js"></script>
+        <script type="text/javascript" src="javascript/PersoServer.js"></script>
+        <script type="text/javascript" src="javascript/ViseurServer.js"></script>
     </head>
 
     <body>
@@ -41,28 +41,26 @@
             <label for="Ammos"> Ammos </label>
             <input type="number" name="Ammos" id="Ammos" value="1">
         </div>
-               <form action='' id="loginform">
-            <input type="text" name="pseudo" id="pseudo" placeholder="pseudo"/>
-            <input type="radio" name="type" value="gardian"/>gardian
-            <input type="radio" name="type" value="killer"/>killer
-            <input type="submit" id="valider" value="valider"/>
-        </form>
 
-        <form id="ready">
-            <input type="button" value="pret"/>
-        </form>
-        <form id="unready">
-            <input type="button" value="annuler"/>
-        </form>
-        <div id="gameDiv">
+        <div id="multi">
+            <form action='' id="loginform">
+            	<input type="text" name="pseudo" id="pseudo" placeholder="pseudo"/>
+            	<input type="radio" name="type" value="gardian"/>gardian
+        	    <input type="radio" name="type" value="killer"/>killer
+    	        <input type="submit" id="valider" value="valider"/>
+	        </form>
+	        <form id="ready">
+	            <input type="button" value="pret"/>
+	        </form>
+	        <form id="unready">
+	            <input type="button" value="annuler"/>
+	        </form>
+        </div>
         <script>
             $('#unready').hide();
-            $('#ready').hide();
+             $('#ready').hide();
             $('#loginform').hide();
-            $('#modif').hide();
-        </script>
-
-        </div>
-        
+            $("#modif").hide();
+        </script>        
     </body>
 </html>
