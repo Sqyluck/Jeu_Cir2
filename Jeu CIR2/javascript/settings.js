@@ -8,8 +8,8 @@ function getTime(){
 
 }
 
-function getammos(){
-	ammoinit = document.getElementsByName('Ammos') [0].value;
+function getFilms(){
+	filminit = document.getElementsByName('Film') [0].value;
 
 }
 
