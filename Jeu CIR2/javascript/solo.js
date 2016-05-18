@@ -1,175 +1,185 @@
-//Entrer clavier pour affichage complet
+//Entrée clavier pour affichage complet
 var key;
-//Temps
+//Affichage du temps
 var gameLength;
 var timerDisplay;
 //Compteur ennemi
 var killers;
-var killersLeft;
-var killersdisp;
+var killersDisp;
 //Compteur civil
 var npcs;
 var npcsLeft;
-var npcdisp;
-//Compteur munitions
-var ammo;
-var ammoLeft;
-var ammodisp;
-
+var npcDisp;
+//Affichage munitions
+var film;
+var filmDisp;
 //Viseur
-var mask;
+var sizeCamera
+var test;
+var camera;
 var filtreSombre;
+//gestion jusqu'à 3 manettes
+var pad1, pad2, pad3;
 
 var soloState = {
-	
 	create: function() {
-		
-		//Reinit jeu si restart
+		//Reinitialise les variables si le jeu restart
 		if (restart) {
-
 			timer = game.time.create(false);
-			//Temps
 			gameLength = timeinit;
 			timerDisplay = 0;
-			//Compteur ennemi
 			killers = killerinit;
-			killersLeft = killers;
-			//Compteur civil
 			npcs = npcsinit;
 			npcsLeft = npcs;
-			//Compteur munitions
-			ammo = ammoinit;
-			ammoLeft = ammo;
-			//Key pour affichage
-			key = game.input.keyboard.addKey(Phaser.Keyboard.A);
+			film = filminit;
+			filmLeft = film;
 			restart = false;
-
+			killersLeft = killers;
+			sizeCamera = 100; //diametre de la camera
+			 = 1; // vitesse persos
 		}
+		key = game.input.keyboard.addKey(Phaser.Keyboard.A); //Affichage HUD
 
-		//Vitesse
-	    v = 1;
+		//Background
+		backgroundS = game.add.sprite(0, 0, 'background');
+		backgroundS = game.add.sprite(0, 0, 'filtreSombre');
+		background = game.add.sprite(0, 0, 'background');
+		//Lampe
+		viseur = new Viseur(sizeCamera, film);
+		test = game.add.graphics((window.outerWidth-40)/2, (window.outerHeight)/4+50);
+		viseur.eclairage();
 
-	    //Background
-	    backgroundS = game.add.sprite(0, 0, 'background');
-	    backgroundS = game.add.sprite(0, 0, 'filtreSombre');
-
-	  	background = game.add.sprite(0, 0, 'background');
-	    
-	    //Lampe
-	    mask = game.add.graphics((window.outerWidth-40)/2, (window.outerHeight)/4+50);
-	    mask.beginFill(0xffffff);
-	    viseur = new Viseur(200 ,3 , mask);
-	    filtreL = game.add.image(mask.x-101, mask.y-101, 'filtreLampe');
-	    viseur.eclairage();
-
-	    myArray = [];
-	    var skin = ['player1', 'player2', 'player3'];
-	    var skindark = ['player1dark', 'player2dark', 'player3dark'];
-	    //id du killer
-	    var k = game.rnd.between(0, npcs - 1)
-
-	    //Insertion des npcs + killer
-	    for (var i = 0; i < npcs; i++) {
-	        if(i == k){
-	            player = new Player(skin[game.rnd.between(0, skin.length-1)]);
-	        }
- 			myArray.push(new NPC(skindark[game.rnd.between(0, skindark.length-1)]));
- 	    }
-	    cursors = game.input.keyboard.createCursorKeys();
-	    killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
-
-	    //Timer + counters
-	    this.initAffichage();
+		myArray = [];
+		var skin = ['player1', 'player2', 'player3'];
+		var skindark = ['player1dark', 'player2dark', 'player3dark'];
+		
+		var idKiller = game.rnd.between(0, npcs - 1);
+		//Insertion des npcs + killer
+	    	for (var i = 0; i < npcs; i++) {
+		        if(i == idKiller){
+		        	player = new Player(skin[game.rnd.between(0, skin.length-1)]);
+		        }
+	 		myArray.push(new NPC(skindark[game.rnd.between(0, skindark.length-1)]));
+ 		}
+	    	cursors = game.input.keyboard.createCursorKeys();
+		killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		
+		game.input.gamepad.start();
+		pad1 = game.input.gamepad.pad1;
+		padd = new Padd();
+		
+		this.initAffichage();
 
 	},
 
 	update: function() {
 		//Affichage Complet
 		if(key.isDown){
-	        this.showdisp();
-	        
-	    }else{
-	        this.hidedisp();
-	    }
-
-	    for(var i = 0; i < npcs; i++){
-	        game.physics.arcade.collide(player.Sprite, myArray[i].Sprite);
-	    }
-	    if (gameLength > 0 && npcsLeft > 0) {
-		    if(killspace.isDown){
-		        for(var i = 0; i < npcs; i++){
-		            game.physics.arcade.overlap(player.Sprite, myArray[i].Sprite, this.collisionHandler);
-		        }
-		    }
-		    for (var i = 0; i < myArray.length; i++) {
-		        myArray[i].IsDetected(viseur);
-		        if(myArray[i].out){
-		            myArray[i].willDie();
-		        }else{
-		            if( (myArray[i].Sprite.alive == false)&&(myArray[i].detected) ){
-		            	myArray[i].Sprite.name += 'dead';
-		                myArray[i].Sprite.loadTexture(myArray[i].Sprite.name);
-		                myArray[i].out = true;
-		            }else{
-		                myArray[i].randomMove();
-		            }
-		        }
-		    }
-		    player.movePlayer();
-	    
+			this.showdisp();
 		}else{
-	    	this.ecranFin();
+			this.hidedisp();
 		}
-
+		viseur.move();
+		if (gameLength > 0 && npcsLeft > 0 && player.Sprite.alive && viseur.nbBalle>0 ) { //si le jeu n'est ps fini, on maj
+			/*MàJ VISEUR*/
+			if(game.input.activePointer.leftButton.isDown) viseur.tempShoot = true ;
+			if(game.input.activePointer.leftButton.isUp && viseur.tempShoot == true){
+				console.log(viseur.nbBalle);
+				viseur.tempShoot = false;
+				viseur.nbBalle--;
+				filmDisp.setText('film:'+viseur.nbBalle+'/'+film);
+				for(var i = 0; i < npcs; i++){
+					if(game.physics.arcade.distanceToPointer(myArray[i].Sprite) <= viseur.radius/2)
+					viseur.VkillNPC(viseur.camera, myArray[i].Sprite);
+					filmLeft--;
+				}
+				if(game.physics.arcade.distanceToPointer(player.Sprite) <= viseur.radius/2)
+					viseur.killPlayer(player.Sprite);
+			}
+		    	/*MAJ ACTION JOUEUR*/
+			if(killspace.isDown){
+				for(var i = 0; i < npcs; i++){
+					game.physics.arcade.overlap(player.Sprite, myArray[i].Sprite, player.PkillNPC);
+				}
+			}
+			player.IsDetected(viseur);
+			//player.reelMove(myArray, npcs-1); /*Intelligence de l'IA*/
+			player.movePlayer(pad1);
+			/*MAJ BOTS*/
+			for (var i = 0; i < myArray.length; i++) {
+				myArray[i].IsDetected(viseur);
+				if(myArray[i].out){
+					myArray[i].willDie();
+			        }else{
+					if( (!myArray[i].Sprite.alive)&&(myArray[i].detected) ){
+			            		if(!myArray[i].Sprite.mistake){
+							myArray[i].Sprite.name += 'dead';
+						}else {
+							myArray[i].Sprite.name += 'mistake';
+						}
+						myArray[i].Sprite.loadTexture(myArray[i].Sprite.name);
+						myArray[i].out = true;
+					}else{
+						if((Math.abs(myArray[i].Sprite.x - myArray[i].arriveex) < 100) && (Math.abs(myArray[i].Sprite.y - myArray[i].arriveey) < 100))myArray[i].randomMove();
+						else myArray[i].moveToXY(myArray[i].arriveex, myArray[i].arriveey);
+					}
+				}
+			}
+		}else{
+			viseur.target(player.Sprite);
+			this.ecranFin();
+			for (var i = 0; i < myArray.length; i++) {
+				if(myArray[i].out) myArray[i].willDie();
+			}
+		}
 	},
 	
 	initAffichage: function() {
-	    //Insertion du timer
-	    if((gameLength/60)<10){
-	        if((gameLength%60)<10){
-	            timerDisplay = game.add.text(game.world.centerX, 20, '0'+ Math.floor(gameLength/60) + ':0' + gameLength%60, { font: "18px Arial", fill: "#ffffff", align: "center" });
-	        }else{
-	            timerDisplay = game.add.text(game.world.centerX, 20, '0'+ Math.floor(gameLength/60) + ':' + gameLength%60, { font: "18px Arial", fill: "#ffffff", align: "center" });
-	        }
-	    }else{
-	        if((gameLength%60)<10){
-	            timerDisplay = game.add.text(game.world.centerX, 20, Math.floor(gameLength/60) + ':0' + gameLength%60, { font: "18px Arial", fill: "#ffffff", align: "center" });
-	        }else{
-	            timerDisplay = game.add.text(game.world.centerX, 20, Math.floor(gameLength/60) + ':' + gameLength%60, { font: "18px Arial", fill: "#ffffff", align: "center" });
-	        }
-	    }
-	    timerDisplay.anchor.setTo(0.5, 0.5);
-	    timerDisplay.stroke = '#000000';
-	    timerDisplay.strokeThickness = 2;
-
-	    killersdisp = game.add.text(50,  10, 'Killers:'+killersLeft+'/'+killers, { font: "15px Arial", fill: "#ffffff", align: "center" });    
-	    killersdisp.anchor.setTo(0.5, 0.5);
-	    killersdisp.stroke = '#000000';
-	    killersdisp.strokeThickness = 1;
-
-	    npcdisp = game.add.text(50,  40, 'Npcs:'+npcsLeft+'/'+npcs, { font: "15px Arial", fill: "#ffffff", align: "center" });
-	    npcdisp.anchor.setTo(0.5, 0.5);
-	    npcdisp.stroke = '#000000';
-	    npcdisp.strokeThickness = 1;
+		//Insertion du timer
+		if((gameLength/60)<10){
+			if((gameLength%60)<10){
+				timerDisplay = game.add.text(game.world.centerX, 20, '0'+ Math.floor(gameLength/60) + ':0' + gameLength%60, { font: "18px Arial", fill: "#ffffff", align: "center" });
+			}else{
+				timerDisplay = game.add.text(game.world.centerX, 20, '0'+ Math.floor(gameLength/60) + ':' + gameLength%60, { font: "18px Arial", fill: "#ffffff", align: "center" });
+			}
+		}else{
+			if((gameLength%60)<10){
+				timerDisplay = game.add.text(game.world.centerX, 20, Math.floor(gameLength/60) + ':0' + gameLength%60, { font: "18px Arial", fill: "#ffffff", align: "center" });
+			}else{
+				timerDisplay = game.add.text(game.world.centerX, 20, Math.floor(gameLength/60) + ':' + gameLength%60, { font: "18px Arial", fill: "#ffffff", align: "center" });
+			}
+		}
+		timerDisplay.anchor.setTo(0.5, 0.5);
+		timerDisplay.stroke = '#000000';
+		timerDisplay.strokeThickness = 2;
+		
+		killersDisp = game.add.text(50,  10, 'Killers:'+killers+'/'+killers, { font: "15px Arial", fill: "#ffffff", align: "center" });    
+		killersDisp.anchor.setTo(0.5, 0.5);
+		killersDisp.stroke = '#000000';
+		killersDisp.strokeThickness = 1;
 	    
-	    ammodisp = game.add.text(50,  70, 'Ammo:'+ammoLeft+'/'+ammo, { font: "15px Arial", fill: "#ffffff", align: "center" });
-	    ammodisp.anchor.setTo(0.5, 0.5);
-	    ammodisp.stroke = '#000000';
-	    ammodisp.strokeThickness = 1;
+		npcDisp = game.add.text(50,  40, 'Npcs:'+npcs+'/'+npcs, { font: "15px Arial", fill: "#ffffff", align: "center" });
+		npcDisp.anchor.setTo(0.5, 0.5);
+		npcDisp.stroke = '#000000';
+		npcDisp.strokeThickness = 1;
+		
+		filmDisp = game.add.text(50,  70, 'Ammo:'+film+'/'+film, { font: "15px Arial", fill: "#ffffff", align: "center" });
+		filmDisp.anchor.setTo(0.5, 0.5);
+		filmDisp.stroke = '#000000';
+		filmDisp.strokeThickness = 1;
 	    
-	   	timer.loop(Phaser.Timer.SECOND, this.updateCounter, this);
-	   	timer.start();
+		timer.loop(Phaser.Timer.SECOND, this.updateCounter, this);
+		timer.start();
 	},
 
 	ecranFin: function() {
-	    endTime = game.add.text(game.world.centerX,  game.world.centerY, 'End of the game', { font: "1000% Arial", fill: "#ffffff", align: "center" });
-	    endTime.anchor.setTo(0.5, 0.5);
-	    endTime.stroke = '#000000';
-	    endTime.strokeThickness = 7;
-	    timer.stop(false);
+		endTime = game.add.text(game.world.centerX,  game.world.centerY, 'End of the game', { font: "1000% Arial", fill: "#ffffff", align: "center" });
+		endTime.anchor.setTo(0.5, 0.5);
+		endTime.stroke = '#000000';
+		endTime.strokeThickness = 7;
+		timer.stop(false);
 
-	    var startLabel = game.add.text(game.width/2, game.height -40, 'Press SPACE', {font: '25px Arial', fill: '#ffffff'});
+		var startLabel = game.add.text(game.width/2, game.height -40, 'Press SPACE', {font: '25px Arial', fill: '#ffffff'});
 		var wkey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		wkey.onDown.addOnce(this.quit, this);
 	},
@@ -178,45 +188,32 @@ var soloState = {
 		game.state.start('fin');
 	},
 
-	collisionHandler: function (player, Ennemi) {
-	    if(Ennemi.alive == true){
-	        Ennemi.alive = false;
-	        console.log("someone die"); //a changer ar du son
-	        npcsLeft--;
-	        npcdisp.setText('Npcs:'+npcsLeft+'/'+npcs);
-	    }
-	},
-
 	updateCounter: function() {
-	    gameLength--;
-	    sec = gameLength % 60;
-	    if ((gameLength/60)<10) {
-	        if(sec<10){
-	            timerDisplay.setText('0' + Math.floor(gameLength/60) + ':0' + sec);
-	        }else{
-	            timerDisplay.setText('0' + Math.floor(gameLength/60) + ':' + sec);
-	        }
-	    }else{
-	         if(sec<10){
-	            timerDisplay.setText(Math.floor(gameLength/60) + ':0' + sec);
-	        }else{
-	            timerDisplay.setText(Math.floor(gameLength/60) + ':' + sec);
-	        }
-	    }
-
+		gameLength--;
+		sec = gameLength % 60;
+		if ((gameLength/60)<10) {
+			if(sec<10){
+				timerDisplay.setText('0' + Math.floor(gameLength/60) + ':0' + sec);
+			}else{
+				timerDisplay.setText('0' + Math.floor(gameLength/60) + ':' + sec);
+			}
+		}else{
+			if(sec<10){
+				timerDisplay.setText(Math.floor(gameLength/60) + ':0' + sec);
+			}else{
+				timerDisplay.setText(Math.floor(gameLength/60) + ':' + sec);
+			}
+		}
 	},
 
 	hidedisp: function() {
-	    killersdisp.visible = false;
-	    npcdisp.visible = false;
-	    ammodisp.visible = false;
+	    killersDisp.visible = false;
+	    npcDisp.visible = false;
+	    filmDisp.visible = false;
 	},
-
 	showdisp: function(){
-
-	    npcdisp.visible = true;
-	    killersdisp.visible = true;
-	    ammodisp.visible = true;
+	    npcDisp.visible = true;
+	    killersDisp.visible = true;
+	    filmDisp.visible = true;
 	}
-
 };
