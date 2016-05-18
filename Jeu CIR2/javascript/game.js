@@ -13,7 +13,7 @@ var timer;
 //Options par default pour solo
 var timeinit = 60;
 var npcsinit = 10;
-var ammoinit = 1;
+var filminit = 1;
 var killerinit = 1;
 
 
