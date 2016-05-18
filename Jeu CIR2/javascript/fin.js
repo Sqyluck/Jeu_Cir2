@@ -15,7 +15,7 @@ var finState = {
 		winner.scale.setTo(0.5, 0.5);
 		var staytime = game.add.text(game.width/2, winner.height+10, 'Remaining Time : '+gameLength, {font: '25px Arial', fill: '#ffffff'});
 		var staynpcs = game.add.text(50, winner.height+10, 'Remaining Npcs : '+npcsLeft+'/'+npcs, {font: '25px Arial', fill: '#ffffff'});
-		var stayammo = game.add.text(50, winner.height+100, 'Remaining Ammo : '+ammoLeft+'/'+ammo, {font: '25px Arial', fill: '#ffffff'});
+		var stayfilm = game.add.text(50, winner.height+100, 'Remaining Film : '+filmLeft+'/'+film, {font: '25px Arial', fill: '#ffffff'});
 		var staykiller = game.add.text(50, winner.height+190, 'Remaining Killers : '+killersLeft+'/'+killers, {font: '25px Arial', fill: '#ffffff'});
 		var scoreLabel = game.add.text(game.width/2, winner.height+100, 'Score : ', {font: '25px Arial', fill: '#ffffff'});
 		
