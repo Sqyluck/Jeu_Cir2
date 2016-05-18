@@ -1,5 +1,5 @@
 var game = new Phaser.Game(window.outerWidth-40, window.outerHeight-110, Phaser.CANVAS,'gameDiv');
-
+var socket = io.connect('http://169.254.212.87:3000');
 //Variables Globales
 
 //Choix du BDE
