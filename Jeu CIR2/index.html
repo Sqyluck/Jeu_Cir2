@@ -41,17 +41,26 @@
             <label for="Ammos"> Ammos </label>
             <input type="number" name="Ammos" id="Ammos" value="1">
         </div>
-        <!--
-        <div id="multi">
-            <label for="pseudo">Nom Joueur</label>
-            <input type="text" name="pseudo" id="pseudo" value="Pseudo">
-            <label for="killmode">Killer</label>
-            <input type="radio" name="mode" id="killmode">
-            <label for="viseurmode">Viseur</label>
-            <input type="radio" name="mode" id="viseurmode">
-        </div>
-        -->
+               <form action='' id="loginform">
+            <input type="text" name="pseudo" id="pseudo" placeholder="pseudo"/>
+            <input type="radio" name="type" value="gardian"/>gardian
+            <input type="radio" name="type" value="killer"/>killer
+            <input type="submit" id="valider" value="valider"/>
+        </form>
+
+        <form id="ready">
+            <input type="button" value="pret"/>
+        </form>
+        <form id="unready">
+            <input type="button" value="annuler"/>
+        </form>
         <div id="gameDiv">
+        <script>
+            $('#unready').hide();
+            $('#ready').hide();
+            $('#loginform').hide();
+            $('#modif').hide();
+        </script>
 
         </div>
         
