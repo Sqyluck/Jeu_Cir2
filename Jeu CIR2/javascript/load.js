@@ -42,21 +42,30 @@ var loadState = {
 		game.load.image('win','assets/win.png');
 
 		//Persos
-		game.load.spritesheet('player1','assets/Perso1 (1).png',32, 48);
+		game.load.spritesheet('player1','assets/Perso10-(1).png',32, 48);
 		game.load.spritesheet('player1dark', 'assets/Perso1 (3).png', 32, 48);
 		game.load.spritesheet('player1dead','assets/Perso1 (2).png',32, 48);
-		game.load.spritesheet('player1deaddark', 'assets/Perso1 (3).png', 32, 48);
+		game.load.spritesheet('player1deaddark', 'assets/Perso1 (4).png', 32, 48);
+		game.load.spritesheet('player1mistake', 'assets/eleve.png', 32, 48);
+		game.load.spritesheet('player1mistakedark', 'assets/eleve2.png', 32, 48);
 
-		game.load.spritesheet('player2','assets/Perso2 (4).png',32, 48);
+		game.load.spritesheet('player2','assets/Perso2 (1).png',32, 48);
 		game.load.spritesheet('player2dark','assets/Perso2 (2).png',32, 48);
 		game.load.spritesheet('player2dead','assets/Perso2 (1).png',32, 48);
-		game.load.spritesheet('player2deaddark','assets/Perso2 (3).png',32, 48);
+		game.load.spritesheet('player2deaddark','assets/Perso2 (1).png',32, 48);
+		game.load.spritesheet('player2mistake', 'assets/eleve.png', 32, 48);
+		game.load.spritesheet('player2mistakedark', 'assets/eleve2.png', 32, 48);
 
 		game.load.spritesheet('player3','assets/fou.png',32, 48);
 		game.load.spritesheet('player3dark','assets/dark-fou2.png',32, 48);
 		game.load.spritesheet('player3dead','assets/fou.png',32, 48);
 		game.load.spritesheet('player3deaddark','assets/dark-fou2.png',32, 48);
-	   
+		game.load.spritesheet('player3mistake', 'assets/eleve.png', 32, 48);
+		game.load.spritesheet('player3mistakedark', 'assets/eleve2.png', 32, 48);
+		
+		//Caméra
+		game.load.spritesheet('photo','assets/photo3.png',90,84,5);
+		
 		//Background
 		game.load.image('background', 'assets/fond1B.png');
 
