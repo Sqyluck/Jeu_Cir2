@@ -14,8 +14,9 @@ var NPC = function(skin){
 
     //collision
     game.physics.arcade.enable(this.Sprite,true);
-    
-    this.Sprite.body.setSize(18, 38, 1, 1);
+    //Phillipe je te dédie cette ligne pour que tu puisse mettres la hitbox de nos NPCnnage
+    //...........code ici...........................
+    //this.Sprite.body.setSize(25, 30, 1, 10);
     this.Sprite.body.collideWorldBounds = true;
 
     //caracteristique du sprite
@@ -28,20 +29,18 @@ var NPC = function(skin){
     //point d'arrivé
     this.arriveex = game.rnd.between(50, game.width-50);
     this.arriveey = game.rnd.between(50, game.height-50);
+
     this.Sprite.alive = true;
     this.detected = false;
     this.out = false;
-    this.Sprite.mistake = false;
-    this.target = -1;
 };
 
 NPC.prototype = Object.create(Phaser.Sprite.prototype);
 NPC.prototype.constructor = NPC;
+
 NPC.prototype.moveToXY = function(x, y){
+
     //si le point d'arrivée n'est pas en diagonale, on avance en ligne droite
-    if((Math.abs(this.Sprite.x - this.arriveex) < 5) && (Math.abs(this.Sprite.y - this.arriveey) < 5)){
-        return;
-    }
     if(Math.abs(Math.abs(x-this.Sprite.x) - Math.abs(y - this.Sprite.y)) > v){
         if(Math.abs(x-this.Sprite.x) > Math.abs(y - this.Sprite.y)){
             if(x > this.Sprite.x){
@@ -90,84 +89,30 @@ NPC.prototype.moveToXY = function(x, y){
         }
     }
 }
-NPC.prototype.iaEasy = function(focus){
-    //var target =game.rnd.between(0, my2Array.length-1);
-    this.reelMove(focus);
-}
-
-NPC.prototype.reelMove = function(myArray, nbIA){
-    if(this.target == -1){
-        this.target = game.rnd.between(0, npcs-1);
-        return;
-    }
-   // console.log("is target alive: "+myArray[this.target].alive);
-    if(!myArray[this.target].Sprite.alive){
-        this.Sprite.animations.stop();
-        this.target = -1;
-        return;
-    }
-    game.physics.arcade.overlap(this.Sprite, myArray[this.target].Sprite, this.PkillNPC);
-    this.arriveex = myArray[this.target].Sprite.x;
-    this.arriveey = myArray[this.target].Sprite.y;
-    this.moveToXY(this.arriveex, this.arriveey);
-}
-
-//IA MERDIQUE, 1000 RECURSION AVEC this.target = 0
-/*
-NPC.prototype.reelMove2 = function(myArray, nbIA){
-    console.log(nbIA);
-    if(this.target == -1){
-        this.target = 0;
-        for(var i = 0 ; i < nbIA ; i++){
-            //if(Math.sqrt(Math.pow(player.Sprite.x-myArray[i].Sprite.x)+Math.pow(player.Sprite.y-myArray[i].Sprite.y)) < Math.sqrt(Math.pow(player.Sprite.x-myArray[this.target].Sprite.x)+Math.pow(player.Sprite.y-myArray[this.target].Sprite.y))){
-                this.target = i;
-            //}
-        }
-    }
-    if(!myArray[this.target].Sprite.alive){
-        console.log(this.target);
-        this.target = -1;
-        return this.reelMove2(myArray, nbIA);
-    }
-    if((Math.abs(this.Sprite.x - this.arriveex) < 5) && (Math.abs(this.Sprite.y - this.arriveey) < 5)){
-        this.findClosePoint();
-    }
-    game.physics.arcade.overlap(this.Sprite, myArray[this.target].Sprite, this.PkillNPC);
-    this.moveToXY(this.arriveex, this.arriveey);
-}*/
-
-NPC.prototype.PkillNPC = function (me, Ennemi) {
-    //this.animations.stop();
-    if(Ennemi.alive == true){
-        Ennemi.alive = false;
-        console.log("someone die"); //a changer ar du son
-        npcsLeft--;
-        npcDisp.setText('Npcs:'+npcsLeft+'/'+npcs);
-        console.log(npcsLeft); //a changer ar du son
-        this.target =-1;
-        this.arriveex = 0;
-        this.arriveey = 0;
-        //this.randomMove();
-
-    }
-}
 
 NPC.prototype.randomMove = function(){
-    // si je suis sensé attendre, je réduis ce temps
-    this.arriveex = this.Sprite.x;
-    this.arriveey = this.Sprite.y;
-    this.Sprite.animations.stop();
-    var choix = game.rnd.between(0, 100);
-    if(choix < 50){
-        this.wait = game.rnd.between(0, 60);
-    }
-    else if(choix < 80){
-        this.findClosePoint();
-        this.moveToXY(this.arriveex, this.arriveey);
-    }
-    else{
-        this.findDistantPoint();
-        this.moveToXY(this.arriveex, this.arriveey);
+    // si le temps d'attente est fini on bouge jusqu'au point suivant
+    if(this.wait == 0){
+        //si le point d'arrivée n'est pas atteind, on continue vers ce point
+        if( (Math.abs(this.Sprite.x - this.arriveex) > 5) && (Math.abs(this.Sprite.y - this.arriveey) > 5) ){
+            this.moveToXY(this.arriveex, this.arriveey);
+        }else{//sinon ou on attend, ou on cherche un point proche pur la prohaine destinantion, ou un point éloigné
+            this.Sprite.animations.stop();
+            var choix = game.rnd.between(0, 100);
+            if(choix < 50){
+                this.wait = game.rnd.between(0, 60);
+            }
+            if( (choix < 80)&&(choix >= 50) ){
+                this.findClosePoint();
+                this.moveToXY(this.arriveex, this.arriveey);
+            }
+            if(choix >= 80){
+                this.findDistantPoint();
+                this.moveToXY(this.arriveex, this.arriveey);
+            }
+        }
+    }else{
+        this.wait --;
     }
 }
 
@@ -194,8 +139,9 @@ NPC.prototype.findDistantPoint = function(){
 }
 
 NPC.prototype.IsDetected = function(viseur){
+    
     //var distance = Math.sqrt(Math.pow(this.Sprite.x - viseur.x, 2) + Math.pow(this.Sprite.y - viseur.y, 2) );
-    if( (game.physics.arcade.distanceToPointer(this.Sprite) <= viseur.radius/2) ){
+    if( (game.physics.arcade.distanceToPointer(this.Sprite) <= 75) ){
         if(this.detected == false){
             this.detected = true;
             this.Sprite.name = this.Sprite.name.substring(0, this.Sprite.name.length - 4);
@@ -216,7 +162,6 @@ NPC.prototype.IsDetected = function(viseur){
         }
     }
 }
-
 
 NPC.prototype.willDie = function(){
     if(this.Sprite.y > game.height - 40)  this.Sprite.kill();
@@ -249,14 +194,12 @@ var Player = function(skin){
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
-
-NPC.prototype.movePlayer = function(pad){
-    var left =  (cursors.left.isDown || pad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1);
-    var right = (cursors.right.isDown || pad.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1);
-    var up =    (cursors.up.isDown || pad.isDown(Phaser.Gamepad.XBOX360_DPAD_UP) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) < -0.1) ;
-    var down =  (cursors.down.isDown || pad.isDown(Phaser.Gamepad.XBOX360_DPAD_DOWN) || pad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) > 0.1) ;
+Player.prototype.movePlayer = function(){
+    var left = cursors.left.isDown;
+    var right = cursors.right.isDown;
+    var up = cursors.up.isDown;
+    var down = cursors.down.isDown;
     // mouvements annulés
-
     if(left == true && right == true){
         left = false;
         right = false;
