@@ -42,12 +42,12 @@ var loadState = {
 		game.load.image('win','assets/win.png');
 
 		//Persos
-		game.load.spritesheet('player1','assets/Perso10-(1).png',32, 48);
-		game.load.spritesheet('player1dark', 'assets/Perso1 (3).png', 32, 48);
-		game.load.spritesheet('player1dead','assets/Perso1 (2).png',32, 48);
-		game.load.spritesheet('player1deaddark', 'assets/Perso1 (4).png', 32, 48);
-		game.load.spritesheet('player1mistake', 'assets/eleve.png', 32, 48);
-		game.load.spritesheet('player1mistakedark', 'assets/eleve2.png', 32, 48);
+		game.load.spritesheet('player1','assets/Perso/Perso1/normal.png',33, 70);
+		game.load.spritesheet('player1dark','assets/Perso/Perso1/sombre.png',33, 70);
+		game.load.spritesheet('player1dead','assets/Perso/Perso1/asterix.png',33, 70);
+		game.load.spritesheet('player1deaddark','assets/Perso/Perso1/asterix sombre.png',33, 70);
+		game.load.spritesheet('player1mistake','assets/Perso/Perso1/vener.png',33, 70);
+		game.load.spritesheet('player1mistakedark','assets/Perso/Perso1/vener sombre.png',33, 70);
 
 		game.load.spritesheet('player2','assets/Perso2 (1).png',32, 48);
 		game.load.spritesheet('player2dark','assets/Perso2 (2).png',32, 48);
