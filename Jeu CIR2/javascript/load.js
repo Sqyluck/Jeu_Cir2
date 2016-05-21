@@ -11,43 +11,35 @@ var loadState = {
 		game.load.spritesheet('fok', 'assets/Funcky/ok.png', 960, 689);
 		game.load.spritesheet('fhome', 'assets/Funcky/home.png', 960, 689);
 		game.load.spritesheet('fdefault', 'assets/Funcky/default.png', 960, 689);
-	    	//Boutons Asterix
-	    	game.load.spritesheet('asolo','assets/Asterix/solo.png', 960, 960);
-	    	game.load.spritesheet('amulti','assets/Asterix/multi.png', 960, 960);
-	    	game.load.spritesheet('asucces','assets/Asterix/succes.png', 960, 960);
-	    	game.load.spritesheet('aoptio','assets/Asterix/options.png', 960, 960);
-	    	game.load.spritesheet('amodif','assets/Funcky/modif.png', 960, 689);
-	    	game.load.spritesheet('aok','assets/Funcky/ok.png', 960, 689);
+	    //Boutons Asterix
+	    game.load.spritesheet('asolo','assets/Asterix/solo.png', 960, 960);
+	    game.load.spritesheet('amulti','assets/Asterix/multi.png', 960, 960);
+	    game.load.spritesheet('asucces','assets/Asterix/succes.png', 960, 960);
+	    game.load.spritesheet('aoptio','assets/Asterix/options.png', 960, 960);
+	    game.load.spritesheet('amodif','assets/Funcky/modif.png', 960, 689);
+	    game.load.spritesheet('aok','assets/Funcky/ok.png', 960, 689);
 		game.load.spritesheet('ahome','assets/Asterix/home.png', 960, 960);
-	    	game.load.spritesheet('adefault','assets/Funcky/default.png', 960, 689);
+	    game.load.spritesheet('adefault','assets/Funcky/default.png', 960, 689);
 		    
-	    	//Images Funcky
-	    	game.load.image('fwon','assets/Funcky/won.png');
+	    //Images Funcky
+	    game.load.image('fwon','assets/Funcky/won.png');
 		game.load.image('flost','assets/Funcky/lost.png');
 		game.load.image('flogo','assets/Funcky/logo.old.png');
 		game.load.image('fcadre','assets/Funcky/cadre.png');
 
-	    	//Images Asterix
-	    	game.load.image('awon','assets/Funcky/won.png');
-	    	game.load.image('alost','assets/Funcky/lost.png');
-	    	game.load.image('alogo','assets/Asterix/logo.png');
-	    	game.load.image('acadre','assets/Funcky/cadre.png');
-
-	    	//Map
-	    	//game.load.tilemap('map1',, null, Phaser.T)
-	    	game.load.image('tiles','assets/tileset/LPC_house_interior/interior.png');
-
-		//Multi
-		game.load.image('player','assets/player.png');
-		game.load.image('win','assets/win.png');
+	    //Images Asterix
+	    game.load.image('awon','assets/Funcky/won.png');
+	    game.load.image('alost','assets/Funcky/lost.png');
+	    game.load.image('alogo','assets/Asterix/logo.png');
+	    game.load.image('acadre','assets/Funcky/cadre.png');
 
 		//Persos
-		game.load.spritesheet('player1','assets/Perso/Perso1/normal.png',33, 70);
-		game.load.spritesheet('player1dark','assets/Perso/Perso1/sombre.png',33, 70);
-		game.load.spritesheet('player1dead','assets/Perso/Perso1/asterix.png',33, 70);
-		game.load.spritesheet('player1deaddark','assets/Perso/Perso1/asterix sombre.png',33, 70);
-		game.load.spritesheet('player1mistake','assets/Perso/Perso1/vener.png',33, 70);
-		game.load.spritesheet('player1mistakedark','assets/Perso/Perso1/vener sombre.png',33, 70);
+		game.load.spritesheet('player1','assets/Perso10-(1).png',32, 48);
+		game.load.spritesheet('player1dark', 'assets/Perso1 (3).png', 32, 48);
+		game.load.spritesheet('player1dead','assets/Perso1 (2).png',32, 48);
+		game.load.spritesheet('player1deaddark', 'assets/Perso1 (4).png', 32, 48);
+		game.load.spritesheet('player1mistake', 'assets/eleve.png', 32, 48);
+		game.load.spritesheet('player1mistakedark', 'assets/eleve2.png', 32, 48);
 
 		game.load.spritesheet('player2','assets/Perso2 (1).png',32, 48);
 		game.load.spritesheet('player2dark','assets/Perso2 (2).png',32, 48);
