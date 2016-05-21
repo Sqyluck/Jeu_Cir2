@@ -195,7 +195,7 @@ NPC.prototype.findDistantPoint = function(){
 
 NPC.prototype.IsDetected = function(viseur){
     //var distance = Math.sqrt(Math.pow(this.Sprite.x - viseur.x, 2) + Math.pow(this.Sprite.y - viseur.y, 2) );
-    if( (game.physics.arcade.distanceToPointer(this.Sprite) <= viseur.radius/2) ){
+/*    if( (game.physics.arcade.distanceToPointer(this.Sprite) <= viseur.radius/2) ){
         if(this.detected == false){
             this.detected = true;
             this.Sprite.name = this.Sprite.name.substring(0, this.Sprite.name.length - 4);
@@ -214,7 +214,7 @@ NPC.prototype.IsDetected = function(viseur){
             this.Sprite.frame = frame;
             animation(this.Sprite);
         }
-    }
+    }*/
 }
 
 
