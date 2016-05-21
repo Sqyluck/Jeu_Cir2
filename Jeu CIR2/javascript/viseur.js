@@ -4,7 +4,7 @@ var Viseur = function (radius, nbBalle) {
 	this.radius = radius+1;
 	this.nbBalle = nbBalle;
 	this.mask;
-	this.FiltreL;
+	this.filtreL;
 	this.camera;
 	this.tempShoot = false;
 };
@@ -18,10 +18,10 @@ Viseur.prototype.eclairage = function(){
 	this.filtreL = game.add.image(test.x-101, test.y-101, 'filtreLampe');
 	this.filtreL.height = this.radius;
 	this.filtreL.width = this.radius;
-	this.camera = game.add.tileSprite((window.outerWidth)/2, (window.outerHeight)/4, 88,84, 'photo');
-	this.camera.scale.setTo(this.radius/this.camera.height);
-	game.physics.arcade.enable(this.camera,true);
-	this.camera.animations.add('right',[0,1,2,3,4,3,2,1,0],20,false);
+	//this.camera = game.add.tileSprite((window.outerWidth)/2, (window.outerHeight)/4, 88,84, 'photo');
+	//this.camera.scale.setTo(this.radius/this.camera.height);
+	//game.physics.arcade.enable(this.camera,true);
+	//this.camera.animations.add('right',[0,1,2,3,4,3,2,1,0],20,false);
 }
 
 Viseur.prototype.target =function(player){
@@ -29,8 +29,8 @@ Viseur.prototype.target =function(player){
 	this.filtreL.y = player.y - (this.filtreL.width/2);
 	test.x = player.x;
 	test.y = player.y;
-	this.camera.x = player.x - ((this.radius+2)/2);
-	this.camera.y = player.y - ((this.radius/2));
+	//this.camera.x = player.x - ((this.radius+2)/2);
+	//this.camera.y = player.y - ((this.radius/2));
 }
 
 Viseur.prototype.sendCoord = function(pointer, x, y) {
@@ -58,6 +58,6 @@ Viseur.prototype.move = function() {
 	this.filtreL.y = this.y - (this.filtreL.width/2);
 	test.x = this.x;
 	test.y = this.y;
-	this.camera.x = this.x - ((this.radius+2)/2);
-	this.camera.y = this.y - ((this.radius/2));
+	//this.camera.x = this.x - ((this.radius+2)/2);
+	//this.camera.y = this.y - ((this.radius/2));
 }
