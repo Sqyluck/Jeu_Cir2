@@ -8,11 +8,21 @@ function getTime(){
 
 }
 
-function getFilms(){
-	filminit = document.getElementsByName('Film') [0].value;
+function getammos(){
+	ammoinit = document.getElementsByName('Ammos') [0].value;
+
+}
+/*
+function getammos(){
+	ammoinit = document.getElementsByName('Ammos') [0].value;
 
 }
 
+function getammos(){
+	ammoinit = document.getElementsByName('Ammos') [0].value;
+
+}
+*/
 function montrerform(){
 	$("#modif").show();
 }
