@@ -16,9 +16,7 @@ var film;
 var filmLeft;
 var filmDisp;
 
-//Viseur
-var mask;
-var filtreSombre;
+var pad1, pad2, pad3;
 
 var soloState = {
 	
@@ -55,11 +53,8 @@ var soloState = {
 	  	background = game.add.sprite(0, 0, 'background');
 	    
 	    //Lampe
-	    mask = game.add.graphics((window.outerWidth-40)/2, (window.outerHeight)/4+50);
-	    mask.beginFill(0xffffff);
-	    viseur = new Viseur(200 ,3 , mask);
-	    filtreL = game.add.image(mask.x-101, mask.y-101, 'filtreLampe');
-	    //viseur.eclairage();
+	    viseur = new Viseur(200 ,3);
+	    viseur.eclairage();
 
 	    myArray = [];
 	    var skin = ['player1', 'player2', 'player3'];
@@ -70,13 +65,16 @@ var soloState = {
 	    //Insertion des npcs + killer
 	    for (var i = 0; i < npcs; i++) {
 	        if(i == k){
-	            player = new Player(skin[game.rnd.between(0, skin.length-1)]);
+	            player = new NPC(skin[game.rnd.between(0, skin.length-1)]);
 	        }
  			myArray.push(new NPC(skindark[game.rnd.between(0, skindark.length-1)]));
  	    }
 	    cursors = game.input.keyboard.createCursorKeys();
 	    killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
+	    game.input.gamepad.start();
+    	pad1 = game.input.gamepad.pad1;
+	    padd = new Padd();
 
 	    //Timer + counters
 	    this.initAffichage();
@@ -84,6 +82,7 @@ var soloState = {
 	},
 
 	update: function() {
+		viseur.move();
 		//Affichage Complet
 		if(key.isDown){
 	        this.showdisp();
@@ -91,34 +90,60 @@ var soloState = {
 	    }else{
 	        this.hidedisp();
 	    }
+	    if (gameLength > 0 && npcsLeft > 0 && player.Sprite.alive && viseur.nbBalle>0 ) { //si le jeu n'est ps fini, on maj
+	    	/*MaJ VISEUR*/
+	    	if(game.input.activePointer.leftButton.isDown) viseur.tempShoot = true ;
+	    	if(game.input.activePointer.leftButton.isUp && viseur.tempShoot == true){
+	    		console.log(viseur.nbBalle);
+	    		viseur.tempShoot = false;
+	    		viseur.nbBalle--;
+	    		filmDisp.setText('film:'+viseur.nbBalle+'/'+film);
 
-	    for(var i = 0; i < npcs; i++){
-	        game.physics.arcade.collide(player.Sprite, myArray[i].Sprite);
-	    }
-	    if (gameLength > 0 && npcsLeft > 0) {
+			    for(var i = 0; i < npcs; i++){
+			    	if(game.physics.arcade.distanceToPointer(myArray[i].Sprite) <= viseur.radius/2)
+		            	viseur.VkillNPC(viseur.camera, myArray[i].Sprite);
+		            	filmLeft--;
+		        }
+		        if(game.physics.arcade.distanceToPointer(player.Sprite) <= viseur.radius/2)
+			    	viseur.killPlayer(player.Sprite);
+	    	}
+	    	/*MAJ ACTION JOUEUR*/
 		    if(killspace.isDown){
 		        for(var i = 0; i < npcs; i++){
-		            game.physics.arcade.overlap(player.Sprite, myArray[i].Sprite, this.collisionHandler);
+		            game.physics.arcade.overlap(player.Sprite, myArray[i].Sprite, player.PkillNPC);
 		        }
 		    }
+		    //player.IsDetected(viseur);
+		    player.reelMove(myArray, npcs-1);
+		   	player.movePlayer(pad1);
+		    /*MAJ BOTS*/
 		    for (var i = 0; i < myArray.length; i++) {
 		        myArray[i].IsDetected(viseur);
 		        if(myArray[i].out){
-		            myArray[i].willDie();
+					myArray[i].willDie();
 		        }else{
-		            if( (myArray[i].Sprite.alive == false)&&(myArray[i].detected) ){
-		            	myArray[i].Sprite.name += 'dead';
-		                myArray[i].Sprite.loadTexture(myArray[i].Sprite.name);
-		                myArray[i].out = true;
-		            }else{
-		                myArray[i].randomMove();
-		            }
-		        }
+					if( (!myArray[i].Sprite.alive)&&(myArray[i].detected) ){
+		            	if(!myArray[i].Sprite.mistake){
+							myArray[i].Sprite.name += 'dead';
+						}else {
+							myArray[i].Sprite.name += 'mistake';
+						}
+						myArray[i].Sprite.loadTexture(myArray[i].Sprite.name);
+						myArray[i].out = true;
+					}else{
+						 if((Math.abs(myArray[i].Sprite.x - myArray[i].arriveex) < 100) && (Math.abs(myArray[i].Sprite.y - myArray[i].arriveey) < 100))myArray[i].randomMove();
+						 else myArray[i].moveToXY(myArray[i].arriveex, myArray[i].arriveey);
+
+					}
+		    	}
 		    }
-		   // player.movePlayer();
 	    
 		}else{
+			viseur.target(player.Sprite);
 	    	this.ecranFin();
+	    	for (var i = 0; i < myArray.length; i++) {
+				if(myArray[i].out) myArray[i].willDie();
+			}
 		}
 
 	},
