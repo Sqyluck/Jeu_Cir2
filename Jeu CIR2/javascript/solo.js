@@ -53,7 +53,7 @@ var soloState = {
 	  	background = game.add.sprite(0, 0, 'background');
 	    
 	    //Lampe
-	    viseur = new Viseur(200 ,3);
+	    viseur = new Viseur(100 ,3);
 	    viseur.eclairage();
 
 	    myArray = [];
