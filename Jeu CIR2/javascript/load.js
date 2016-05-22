@@ -34,27 +34,27 @@ var loadState = {
 	    game.load.image('acadre','assets/Funcky/cadre.png');
 
 		//Persos
-		game.load.spritesheet('player1','assets/Perso10-(1).png',32, 48);
-		game.load.spritesheet('player1dark', 'assets/Perso1 (3).png', 32, 48);
-		game.load.spritesheet('player1dead','assets/Perso1 (2).png',32, 48);
-		game.load.spritesheet('player1deaddark', 'assets/Perso1 (4).png', 32, 48);
-		game.load.spritesheet('player1mistake', 'assets/eleve.png', 32, 48);
-		game.load.spritesheet('player1mistakedark', 'assets/eleve2.png', 32, 48);
+		game.load.spritesheet('player1','assets/Perso/Perso1/normal.png',33, 70);
+		game.load.spritesheet('player1dark','assets/Perso/Perso1/sombre.png',33, 70);
+		game.load.spritesheet('player1dead','assets/Perso/Perso1/asterix.png',33, 70);
+		game.load.spritesheet('player1deaddark','assets/Perso/Perso1/asterix sombre.png',33, 70);
+		game.load.spritesheet('player1mistake','assets/Perso/Perso1/vener.png',33, 70);
+		game.load.spritesheet('player1mistakedark','assets/Perso/Perso1/vener sombre.png',33, 70);
 
-		game.load.spritesheet('player2','assets/Perso2 (1).png',32, 48);
-		game.load.spritesheet('player2dark','assets/Perso2 (2).png',32, 48);
-		game.load.spritesheet('player2dead','assets/Perso2 (1).png',32, 48);
-		game.load.spritesheet('player2deaddark','assets/Perso2 (1).png',32, 48);
-		game.load.spritesheet('player2mistake', 'assets/eleve.png', 32, 48);
-		game.load.spritesheet('player2mistakedark', 'assets/eleve2.png', 32, 48);
+		game.load.spritesheet('player2','assets/Perso/Perso2/normal.png',33, 70);
+		game.load.spritesheet('player2dark','assets/Perso/Perso2/sombre.png',33, 70);
+		game.load.spritesheet('player2dead','assets/Perso/Perso2/asterix.png',33, 70);
+		game.load.spritesheet('player2deaddark','assets/Perso/Perso2/asterix sombre.png',33, 70);
+		game.load.spritesheet('player2mistake','assets/Perso/Perso2/vener.png',33, 70);
+		game.load.spritesheet('player2mistakedark','assets/Perso/Perso2/vener sombre.png',33, 70);
 
-		game.load.spritesheet('player3','assets/fou.png',32, 48);
-		game.load.spritesheet('player3dark','assets/dark-fou2.png',32, 48);
-		game.load.spritesheet('player3dead','assets/fou.png',32, 48);
-		game.load.spritesheet('player3deaddark','assets/dark-fou2.png',32, 48);
-		game.load.spritesheet('player3mistake', 'assets/eleve.png', 32, 48);
-		game.load.spritesheet('player3mistakedark', 'assets/eleve2.png', 32, 48);
-		
+		game.load.spritesheet('player3','assets/Perso/Perso3/normal.png',33, 70);
+		game.load.spritesheet('player3dark','assets/Perso/Perso3/sombre.png',33, 70);
+		game.load.spritesheet('player3dead','assets/Perso/Perso3/asterix.png',33, 70);
+		game.load.spritesheet('player3deaddark','assets/Perso/Perso3/asterix sombre.png',33, 70);
+		game.load.spritesheet('player3mistake','assets/Perso/Perso3/vener.png',33, 70);
+		game.load.spritesheet('player3mistakedark','assets/Perso/Perso3/vener sombre.png',33, 70);
+
 		//Caméra
 		game.load.spritesheet('photo','assets/photo3.png',90,84,5);
 		
