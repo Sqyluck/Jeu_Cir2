@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>FIND'ISEN</title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/style.css" />
+         <!-- Lib -->
+        <script type="text/javascript" src="lib/phaser.js"></script>
+        <script type="text/javascript" src="lib/pixi.js"></script>
+        <script type="text/javascript" src="lib/jquery-1.4.2.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+
+        <!-- Etats-->
+        <script type="text/javascript" src="javascript/boot.js"></script>
+        <script type="text/javascript" src="javascript/load.js"></script>
+        <script type="text/javascript" src="javascript/menu.js"></script>
+        <script type="text/javascript" src="javascript/multi.js"></script>
+        <script type="text/javascript" src="javascript/solo.js"></script>
+        <script type="text/javascript" src="javascript/fin.js"></script>
+        <script type="text/javascript" src="javascript/succes.js"></script>
+        <script type="text/javascript" src="javascript/optio.js"></script>
+        <script type="text/javascript" src="javascript/level.js"></script>
+        <script type="text/javascript" src="javascript/start.js"></script>
+        <script type="text/javascript" src="javascript/game.js"></script>
+
+        <!-- Classes-->
+        <script type="text/javascript" src="javascript/Perso.js"></script>
+        <script type="text/javascript" src="javascript/viseur.js"></script>
+        <script type="text/javascript" src="javascript/PersoServer.js"></script>
+        <script type="text/javascript" src="javascript/ViseurServer.js"></script>
+        <script type="text/javascript" src="javascript/settings.js"></script>
+        <script type="text/javascript" src="javascript/pad.js"></script>
+
+    </head>
+
+    <body>
+        <div id="modif">
+            <label for="NPCS"> NPCS </label>
+            <input type="number" name="NPCS" id="NPCS" value="10">
+            <label for="Time"> Time </label>
+            <input type="number" name="Time" id="Time" value="60">
+            <label for="Ammos"> Ammos </label>
+            <input type="number" name="Ammos" id="Ammos" value="1">
+        </div>
+        <form action='' id="loginform">
+            <input type="text" name="pseudo" id="pseudo" placeholder="pseudo"/>
+            <input type="submit" id="valider" value="valider"/>
+        </form>
+
+        <form action="" id="typeform">
+            <input type="radio" name="type" value="gardian"/>gardian
+            <input type="radio" name="type" value="killer"/>killer
+            <input type="submit" id="valider" value="valider"/>
+        </form>
+
+        <form id="changetype">
+            <input type="button" value="changer de Type">
+        </form>
+
+        <form id="ready">
+            <input type="button" value="pret"/>
+        </form>
+        <form id="unready">
+            <input type="button" value="annuler"/>
+        </form>
+        <div id="gameDiv">
+        <script>
+            $('#unready').hide();
+            $('#ready').hide();
+            $('#loginform').hide();
+            $('#typeform').hide();
+            $('#changetype').hide();
+            $('#modif').hide();
+        </script>
+
+        </div>
+
+    </body>
+</html>
