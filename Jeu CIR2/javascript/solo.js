@@ -17,34 +17,27 @@ var filmLeft;
 var filmDisp;
 
 var pad1, pad2, pad3;
-
+var player = [];
 var soloState = {
 	
 	create: function() {
 		
 		//Reinit jeu si restart
 		if (restart) {
-
 			timer = game.time.create(false);
-			//Temps
 			gameLength = timeinit;
-			//Compteur ennemi
-			killers = killerinit;
+			killers = killerinit; //changement variable pour le solo
 			killersLeft = killers;
-			//Compteur civil
-			npcs = npcsinit;
+			npcs = npcsinit; //changement variable pour le solo
 			npcsLeft = npcs;
-			//Compteur munitions
-			film = ammoinit;
+			film = ammoinit; //changement variable pour le solo
 			filmLeft = film;
-			//Key pour affichage
-			key = game.input.keyboard.addKey(Phaser.Keyboard.A);
+			key = game.input.keyboard.addKey(Phaser.Keyboard.A);			//Key pour affichage
+			v = 1;//Vitesse
 			restart = false;
-
 		}
 
-		//Vitesse
-	    v = 1;
+
 
 	    //Background
 	    backgroundS = game.add.sprite(0, 0, 'background');
@@ -53,7 +46,7 @@ var soloState = {
 	  	background = game.add.sprite(0, 0, 'background');
 	    
 	    //Lampe
-	    viseur = new Viseur(100 ,3);
+	    viseur = new Viseur(150 ,30, game);
 	    viseur.eclairage();
 
 	    myArray = [];
@@ -61,61 +54,76 @@ var soloState = {
 	    var skindark = ['player1dark', 'player2dark', 'player3dark'];
 	    //id du killer
 	    var k = game.rnd.between(0, npcs - 1)
-
+		var tempShoot; //action unique onclick
 	    //Insertion des npcs + killer
 	    for (var i = 0; i < npcs; i++) {
 	        if(i == k){
-	            player = new NPC(skin[game.rnd.between(0, skin.length-1)]);
+	            player[1] = new NPC(skindark[game.rnd.between(0, skin.length-1)]);
+	            if(killerinit>1) player[2] = new NPC(skindark[game.rnd.between(0, skin.length-1)]);
+	            if(killerinit>2) player[3] = new NPC(skindark[game.rnd.between(0, skin.length-1)]);
 	        }
  			myArray.push(new NPC(skindark[game.rnd.between(0, skindark.length-1)]));
  	    }
 	    cursors = game.input.keyboard.createCursorKeys();
-	    killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 	    game.input.gamepad.start();
-    	pad1 = game.input.gamepad.pad1;
-	    padd = new Padd();
-
+    	if(lvlrun == 0 && killers>1) pad = game.input.gamepad.pad1;
+	    if(lvlrun == 0 && killers>2) pad2 = game.input.gamepad.pad2;
+		if(lvlrun == 0 && killers>3) pad3 = game.input.gamepad.pad3;
 	    //Timer + counters
 	    this.initAffichage();
-
 	},
 
 	update: function() {
+		game.debug.body(player[1].Sprite);
 		viseur.move();
 		//Affichage Complet
-		if(key.isDown){
+		if(key.isUp){
 	        this.showdisp();
 	        
 	    }else{
 	        this.hidedisp();
 	    }
-	    if (gameLength > 0 && npcsLeft > 0 && player.Sprite.alive && viseur.nbBalle>0 ) { //si le jeu n'est ps fini, on maj
-	    	/*MaJ VISEUR*/
-	    	if(game.input.activePointer.leftButton.isDown) viseur.tempShoot = true ;
-	    	if(game.input.activePointer.leftButton.isUp && viseur.tempShoot == true){
-	    		console.log(viseur.nbBalle);
-	    		viseur.tempShoot = false;
-	    		viseur.nbBalle--;
-	    		filmDisp.setText('film:'+viseur.nbBalle+'/'+film);
-
+	    if (gameLength > 0 && npcsLeft > 0 && killersLeft>0 && viseur.nbBalle>0 ) { //si le jeu n'est ps fini, on maj
+	    	/*MAJ VISEUR*/
+	    	if(game.input.activePointer.leftButton.isDown) tempShoot = true ;
+	    	if(game.input.activePointer.leftButton.isUp && tempShoot == true){
+	    		tempShoot = false;
+	    		filmDisp.setText('film:'+filmLeft+'/'+film);
 			    for(var i = 0; i < npcs; i++){
-			    	if(game.physics.arcade.distanceToPointer(myArray[i].Sprite) <= viseur.radius/2)
+			    	if(game.physics.arcade.distanceToPointer(myArray[i].Sprite) <= viseur.radius/2){
+			    		viseur.camera.animations.play('right');
 		            	viseur.VkillNPC(viseur.camera, myArray[i].Sprite);
 		            	filmLeft--;
+		            	viseur.nbBalle--;
+		            }
 		        }
-		        if(game.physics.arcade.distanceToPointer(player.Sprite) <= viseur.radius/2)
-			    	viseur.killPlayer(player.Sprite);
+		        for(var i=1; i<=killersLeft; i++){
+		        	if(game.physics.arcade.distanceToPointer(player[i].Sprite) <= viseur.radius/2)
+			    		viseur.killPlayer(player[i].Sprite);
+			   	}
 	    	}
 	    	/*MAJ ACTION JOUEUR*/
-		    if(killspace.isDown){
-		        for(var i = 0; i < npcs; i++){
-		            game.physics.arcade.overlap(player.Sprite, myArray[i].Sprite, player.PkillNPC);
-		        }
+	    	for(var i=1; i<=killersLeft; i++){
+		    	player[i].IsDetected(viseur);
 		    }
-		    //player.IsDetected(viseur);
-		    player.reelMove(myArray, npcs-1);
-		   	player.movePlayer(pad1);
+		    if(lvlrun ==0){
+	    		for(var i=1; i<=killersLeft; i++){
+					player[i].movePlayer(pad+i,myArray,npcs);
+		    	}
+		    }else{
+		    	if(lvlrun == 1){ 
+		    		player[1].iaEasy(myArray);
+		    		player[1].moveToXY(player[1].arriveex,player[1].arriveey);
+		    		game.physics.arcade.overlap(player[1].Sprite, myArray[player[1].target].Sprite, player[1].PkillNPC); 
+		    	}else if(lvlrun == 2) { 
+		    		player[1].iaEasy2(myArray); 
+		    		if(!myArray[0].out)myArray[0].iaEasy(myArray);
+		    	}else if(lvlrun == 3) {
+		    		player[1].iaMedium(myArray); 
+		    	}
+		    }
+
 		    /*MAJ BOTS*/
 		    for (var i = 0; i < myArray.length; i++) {
 		        myArray[i].IsDetected(viseur);
@@ -137,9 +145,8 @@ var soloState = {
 					}
 		    	}
 		    }
-	    
 		}else{
-			viseur.target(player.Sprite);
+			viseur.target(player[1].Sprite);
 	    	this.ecranFin();
 	    	for (var i = 0; i < myArray.length; i++) {
 				if(myArray[i].out) myArray[i].willDie();
@@ -202,15 +209,6 @@ var soloState = {
 		game.state.start('fin');
 	},
 
-	collisionHandler: function (player, Ennemi) {
-	    if(Ennemi.alive == true){
-	        Ennemi.alive = false;
-	        console.log("someone die"); //a changer ar du son
-	        npcsLeft--;
-	        npcDisp.setText('Npcs:'+npcsLeft+'/'+npcs);
-	    }
-	},
-
 	updateCounter: function() {
 	    gameLength--;
 	    sec = gameLength % 60;
@@ -242,5 +240,4 @@ var soloState = {
 	    killersDisp.visible = true;
 	    filmDisp.visible = true;
 	}
-
 };
