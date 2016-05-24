@@ -39,6 +39,9 @@ var loadState = {
 	    game.load.spritesheet('bdeMember','assets/Buttons/bdemember.png', 171, 40);
 	    game.load.spritesheet('journalist','assets/Buttons/journalist.png', 138, 40);
 	    game.load.spritesheet('ready','assets/Buttons/ready.png', 102, 40);
+	    game.load.spritesheet('play','assets/Buttons/play.png', 82, 40);
+	    game.load.spritesheet('playOnline','assets/Buttons/playOnline.png', 152, 40);
+	    game.load.spritesheet('playOffline','assets/Buttons/playOffline.png', 155, 40);
 
 		//Persos
 		game.load.spritesheet('player1','assets/Perso/Perso1/normal.png',33, 70);
@@ -63,7 +66,7 @@ var loadState = {
 		game.load.spritesheet('player3mistakedark','assets/Perso/Perso3/vener sombre.png',33, 70);
 
 		//Caméra
-		game.load.spritesheet('photo','assets/camera.png',89,87,5);
+		game.load.spritesheet('photo','assets/photo3.png',90,84,5);
 		
 		//Background
 		game.load.image('background', 'assets/fond1B.png');
