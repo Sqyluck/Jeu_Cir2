@@ -12,26 +12,33 @@ var loadState = {
 		game.load.spritesheet('fhome', 'assets/Funcky/home.png', 960, 689);
 		game.load.spritesheet('fdefault', 'assets/Funcky/default.png', 960, 689);
 	    //Boutons Asterix
-	    game.load.spritesheet('asolo','assets/Asterix/solo.png', 960, 960);
-	    game.load.spritesheet('amulti','assets/Asterix/multi.png', 960, 960);
-	    game.load.spritesheet('asucces','assets/Asterix/succes.png', 960, 960);
-	    game.load.spritesheet('aoptio','assets/Asterix/options.png', 960, 960);
-	    game.load.spritesheet('amodif','assets/Funcky/modif.png', 960, 689);
-	    game.load.spritesheet('aok','assets/Funcky/ok.png', 960, 689);
-		game.load.spritesheet('ahome','assets/Asterix/home.png', 960, 960);
-	    game.load.spritesheet('adefault','assets/Funcky/default.png', 960, 689);
+	    game.load.spritesheet('asolo','assets/Asterix/solo.png', 411, 370);
+	    game.load.spritesheet('amulti','assets/Asterix/multi.png', 411, 370);
+	    game.load.spritesheet('asucces','assets/Asterix/succes.png', 411, 370);
+	    game.load.spritesheet('aoptio','assets/Asterix/options.png', 411, 370);
+	    game.load.spritesheet('amodif','assets/Asterix/modif.png', 411, 370);
+	    game.load.spritesheet('aok','assets/Asterix/ok.png', 411, 370);
+	    game.load.spritesheet('ahome','assets/Asterix/home.png', 411, 370);
+	    game.load.spritesheet('adefault','assets/Asterix/default.png', 411, 370);
 		    
 	    //Images Funcky
 	    game.load.image('fwon','assets/Funcky/won.png');
 		game.load.image('flost','assets/Funcky/lost.png');
-		game.load.image('flogo','assets/Funcky/logo.old.png');
-		game.load.image('fcadre','assets/Funcky/cadre.png');
+		game.load.image('flogo','assets/Funcky/logo.png');
 
 	    //Images Asterix
-	    game.load.image('awon','assets/Funcky/won.png');
+	    game.load.image('awon','assets/Asterix/won.png');
 	    game.load.image('alost','assets/Funcky/lost.png');
 	    game.load.image('alogo','assets/Asterix/logo.png');
-	    game.load.image('acadre','assets/Funcky/cadre.png');
+
+		//Boutons 
+	    game.load.spritesheet('level1','assets/Buttons/level1.png', 107, 40);
+	    game.load.spritesheet('level2','assets/Buttons/level2.png', 107, 40);
+	    game.load.spritesheet('level3','assets/Buttons/level3.png', 107, 40);
+	    game.load.spritesheet('changeRole','assets/Buttons/changerole.png', 159, 40);
+	    game.load.spritesheet('bdeMember','assets/Buttons/bdemember.png', 171, 40);
+	    game.load.spritesheet('journalist','assets/Buttons/journalist.png', 138, 40);
+	    game.load.spritesheet('ready','assets/Buttons/ready.png', 102, 40);
 
 		//Persos
 		game.load.spritesheet('player1','assets/Perso/Perso1/normal.png',33, 70);
@@ -60,6 +67,7 @@ var loadState = {
 		
 		//Background
 		game.load.image('background', 'assets/fond1B.png');
+		//game.load.image('mapLift', 'assets/fond1B.png');
 
 		//Filtres
 		game.load.image('filtreSombre', 'assets/filtreSombre.png');
@@ -67,9 +75,9 @@ var loadState = {
 	},
 
 	create: function(){
-		game.stage.backgroundColor = '#7a0e0c'; //#c31222 (Asterix)
+		game.stage.backgroundColor = '#7a0e0c';
 		$("#modif").hide();
-		game.state.start('start');
-		//game.state.start('menu');
+		//game.state.start('start');
+		game.state.start('menu');
 	} 
 };
