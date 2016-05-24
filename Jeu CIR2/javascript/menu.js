@@ -44,8 +44,7 @@ var menuState = {
     },
 
     solo: function () {
-
-        game.state.start('start');
+        game.state.start('level');
     },
 
     multi: function(){
