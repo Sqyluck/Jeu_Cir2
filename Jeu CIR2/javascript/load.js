@@ -66,7 +66,7 @@ var loadState = {
 		game.load.spritesheet('player3mistakedark','assets/Perso/Perso3/vener sombre.png',33, 70);
 
 		//Caméra
-		game.load.spritesheet('photo','assets/photo3.png',90,84,5);
+		game.load.spritesheet('photo','assets/camera.png',89,87,5);
 		
 		//Background
 		game.load.image('background', 'assets/fond1B.png');
