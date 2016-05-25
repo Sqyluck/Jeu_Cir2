@@ -1,3 +1,4 @@
+var displayLabel;
 var enter;
 var change;
 var Ready;
@@ -8,11 +9,11 @@ var multiState = {
 
     create: function(){
         $('#Login').show();
-        var displayLabel = game.add.text(80, 150, 'Connection',{font: '30px Arial', fill: '#ffffff'});
+        displayLabel = game.add.text(80, 150, 'Connection',{font: '30px Arial', fill: '#ffffff'});
 
         enter = game.add.button(0, 0, 'ready', this.start, this, 1, 0);
         change = game.add.button(0, 450, 'changeRole', this.chooseRole, this, 1, 0);
-        Ready = game.add.button(350, 450, 'ready', this.update, this, 1, 0);
+        Ready = game.add.button(350, 450, 'ready', this.waiting, this, 1, 0);
         journalist = game.add.button(50, 350, 'journalist', this.journalistChoice, this, 1, 0);
         bdeMember = game.add.button(50, 450, 'bdeMember', this.bdeChoice, this, 1, 0);
 
@@ -21,11 +22,6 @@ var multiState = {
         journalist.visible = false;
         bdeMember.visible = false;
 
-       // game.add.tileSprite(0, 0, game.width, game.height, 'background');
-
-        //sprite = game.add.sprite(0, 0, 'fond1');
-        //sprite1 = game.add.sprite(0, 0, 'fond1');
-        //sprite2 = game.add.sprite(0, 0, 'fond1');
         npc = 10;
         SpriteArray = {};
         ViseurArray = {};
@@ -36,49 +32,12 @@ var multiState = {
         killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         var skindark = ['player1dark', 'player2dark', 'player3dark'];
 
-        /*$('#loginform').submit(function(event){
-            event.preventDefault();
-            socket.emit('login', {
-                pseudo : $('#pseudo').val()
-            });
-            $('#loginform').hide();
-            $('#typeform').show();
-        });*/
-
-        $('#typeform').submit(function(event){
-            event.preventDefault();
-            socket.emit('type', $('input[name=type]:checked').val());
-            $('#typeform').hide();
-            $('#changetype').show();
-            $('#ready').show();
-        });
-
         socket.on('data', function(){
             socket.emit('data', {
                 nb_npc : npc,
                 width : game.width,
                 height : game.height
             });
-        });
-
-        $('#changetype').click(function(event){
-            $('#changetype').hide();
-            $('#typeform').show();
-            $('#ready').hide();
-        });
-
-        $('#ready').click(function(event){
-            socket.emit('pret');
-            $('#ready').hide();
-            $('#changetype').hide();
-            $('#unready').show();
-        });
-
-        $('#unready').click(function(event){
-            socket.emit('Paspret');
-            $('#changetype').show();
-            $('#ready').show();
-            $('#unready').hide();
         });
 
         socket.on('logged', function(user){
@@ -89,14 +48,20 @@ var multiState = {
             me.type = type;
         });
 
-//        backgroundS = game.add.sprite(0, 0, 'background');
-//	    backgroundS = game.add.sprite(0, 0, 'filtreSombre');
-
         socket.on('connected',function(user){
             if(user.type == ''){
-                console.log(user.pseudo + ' connected' + ' (no type chosen)');
+            	if(user.ready){
+                	console.log(user.pseudo + ' connected' + ' (no type chosen) et pret');
+            	}else{
+            		console.log(user.pseudo + 'connected' + '(no type chosen) mais pret');
+            	}
+            		
             }else{
-                console.log(user.pseudo + ' connected as ' + user.type);
+                if(user.ready){
+                	console.log(user.pseudo + ' connected' + user.role +'et pret');
+            	}else{
+            		console.log(user.pseudo + 'connected' +  user.role +'mais pret');
+            	}
             }
         });
 
@@ -106,32 +71,37 @@ var multiState = {
 
         socket.on('pret', function(user){
             console.log(user.pseudo + ' est prêt.');
+            //var txt = game.add.text(300, 0, user.pseudo,{font: '30px Arial', fill: '#ffffff'});
         });
 
         socket.on('Paspret', function(user){
             console.log(user.pseudo + " n'est pas prêt.");
         });
 
-        socket.on('tsPret', function(){
+        socket.on('tsPret', function(){//-------------------------------------------------------------------------------------------
             console.log('tout les joueurs sont prêt');
-            $('#gameDiv').show();
-            $('#unready').hide();
+            $('#Login').hide();
+        	displayLabel.visible = false;
+        	enter.visible = false;
+        	Ready.visible = false;
+        	change.visible = false;
+        	journalist.visible = false;
+        	bdeMember.visible = false;
+
+	        game.add.tileSprite(0, 0, game.width, game.height, 'background');
+	        backgroundS = game.add.sprite(0, 0, 'background');
+	        backgroundS = game.add.sprite(0, 0, 'filtreSombre');
+
         });
 
         socket.on('MissingKiller', function(){
             console.log('il faut au moins un killer pour lancer la partie');
             socket.emit('Paspret');
-            $('#changetype').show();
-            $('#ready').show();
-            $('#unready').hide();
         });
 
         socket.on('MissingGardian', function(){
             console.log('il faut au moins un gardian pour lancer la partie');
             socket.emit('Paspret');
-            $('#changetype').show();
-            $('#ready').show();
-            $('#unready').hide();
         });
 
         socket.on('createNPC', function(data){
@@ -237,12 +207,18 @@ var multiState = {
                 NpcArray[id].Sprite.recentlyDead = true;
             }
         });
+
         //Retour menu
         var wkey = game.input.keyboard.addKey(Phaser.Keyboard.M);
         wkey.onDown.addOnce(this.restart, this);
     },
+    waiting: function () {
+        Ready.visible = false;
+        socket.emit('pret');
+    },
 
     chooseRole: function () {
+        socket.emit('Paspret');
         $('#Login').hide();
         enter.visible = false;
         Ready.visible = false;
@@ -275,7 +251,6 @@ var multiState = {
     },
 
     update: function(){
-
             if((killspace.isDown)&&(me.type=='killer')){
                 for(var i = 0; i < npc; i++){
                     game.physics.arcade.overlap(PlayerArray[me.pseudo].Sprite, NpcArray[i].Sprite, this.collisionHandler);
@@ -286,7 +261,6 @@ var multiState = {
                 }
             }
     },
-
 
     collisionHandler: function(player, Ennemi) {
         if(Ennemi.alive == true){
