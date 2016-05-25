@@ -17,7 +17,7 @@ body{
 	width: 50px;
 }
 
-#multi{
+#Login{
 	color: white;
 	display: flex;
 	flex-direction: column;
@@ -25,8 +25,4 @@ body{
 	position: absolute;
 	top :40%;
 	left :40%;
-}
-
-#multi input{
-	width: 100px;
 }
