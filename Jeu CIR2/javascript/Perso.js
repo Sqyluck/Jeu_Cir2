@@ -92,7 +92,6 @@ NPC.prototype.moveToXY = function(x, y){
 }
 NPC.prototype.iaEasy = function(myArray){
     this.target = game.rnd.between(0, myArray.length-1);
-    console.log(this.target + " " + myArray[this.target].Sprite.x + " " + myArray[this.target].Sprite.y);
     this.arriveex = myArray[this.target].Sprite.x;
     this.arriveey = myArray[this.target].Sprite.y;
 }
@@ -100,14 +99,12 @@ NPC.prototype.iaEasy = function(myArray){
 NPC.prototype.iaEasy2 = function(myArray){
     if(this.detected){
         this.target = game.rnd.between(0, myArray.length-1);
-        console.log(this.target + " " + myArray[this.target].Sprite.x + " " + myArray[this.target].Sprite.y);
         this.arriveex = myArray[this.target].Sprite.x;
         this.arriveey = myArray[this.target].Sprite.y;
         game.physics.arcade.overlap(this.Sprite, myArray[this.target].Sprite, this.PkillNPC);
         this.moveToXY(this.arriveex,this.arriveey);
     }else{
         this.target = this.closiestIAalive(myArray);
-        console.log(this.target);
         game.physics.arcade.overlap(this.Sprite, myArray[this.target].Sprite, this.PkillNPC);
         if((Math.abs(this.Sprite.x - this.arriveex) < 10) && (Math.abs(this.Sprite.y - this.arriveey) < 10))
             this.findClosePoint();
@@ -133,11 +130,9 @@ NPC.prototype.iaMedium = function(myArray, nbIA){
 NPC.prototype.iaHard = function(myArray, nbIA){
     if(this.target != this.closiestIAalive(myArray)){
         this.target = this.closiestIAalive(myArray);
-        console.log(this.target + " is the target" + myArray[this.target].Sprite.x);
 
     }
     if(!myArray[this.target].Sprite.alive){
-        console.log(this.target + " already dead, new target");
         this.randomMove();
     }
     if((game.physics.arcade.distanceToPointer(this.Sprite) > 200)) {
@@ -165,22 +160,17 @@ NPC.prototype.closiestIAalive = function(myArray){
 }
 
 NPC.prototype.PkillNPC = function (me, Ennemi) {
-    //this.animations.stop();
     if(Ennemi.alive == true){
+        sons['coller'].play();
         Ennemi.alive = false;
-        console.log("someone die"); //a changer ar du son
         npcsLeft--;
         npcDisp.setText('Npcs:'+npcsLeft+'/'+npcs);
-        console.log(npcsLeft); //a changer ar du son
         this.target =-1;
-        //this.randomMove();
-
     }
 }
 
 NPC.prototype.randomMove = function(){
-    // si je suis sensé attendre, je réduis ce temps
-    if(this.wait>0){
+    if(this.wait>0){    // si je suis sensé attendre, je réduis ce temps
         this.wait--;
         return;
     }
@@ -225,8 +215,7 @@ NPC.prototype.findDistantPoint = function(){
 }
 
 NPC.prototype.IsDetected = function(viseur){
-    //var distance = Math.sqrt(Math.pow(this.Sprite.x - viseur.x, 2) + Math.pow(this.Sprite.y - viseur.y, 2) );
-    if( (game.physics.arcade.distanceToPointer(this.Sprite) <= viseur.radius/2) ){
+    if( (Phaser.Math.distance(this.Sprite.x, this.Sprite.y+15, game.input.x, game.input.y) <= viseur.radius/2) ){
         if(this.detected == false){
             this.detected = true;
             this.Sprite.name = this.Sprite.name.substring(0, this.Sprite.name.length - 4);
@@ -258,13 +247,12 @@ NPC.prototype.willDie = function(){
 }
 
 NPC.prototype.movePlayer = function(mypad, myArray, npcs){
-    var killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     var left =  (cursors.left.isDown || mypad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || mypad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.2);
     var right = (cursors.right.isDown || mypad.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT) || mypad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.2);
     var up =    (cursors.up.isDown || mypad.isDown(Phaser.Gamepad.XBOX360_DPAD_UP) || mypad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) < -0.2) ;
     var down =  (cursors.down.isDown || mypad.isDown(Phaser.Gamepad.XBOX360_DPAD_DOWN) || mypad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) > 0.2) ;
-    var action =(killspace.isDown || mypad.isDown(Phaser.Gamepad.XBOX360_A));
-    
+    var action =(mypad.isDown(Phaser.Gamepad.XBOX360_A));
+      
     // mouvements annulés
     //si opposés
     if(left == true && right == true){
@@ -285,7 +273,7 @@ NPC.prototype.movePlayer = function(mypad, myArray, npcs){
     //actions:
     if(action){
         for(var i = 0; i < npcs; i++){
-            game.physics.arcade.overlap(player.Sprite, myArray[i].Sprite, player.PkillNPC);
+            game.physics.arcade.overlap(this.Sprite, myArray[i].Sprite, this.PkillNPC);
         }
     }
     //diagonales : 2 input non opposé
