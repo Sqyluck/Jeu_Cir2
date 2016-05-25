@@ -92,7 +92,7 @@ var soloState = {
 
 	update: function() {
 		if(gameLength>timeinit) return;
-		//game.debug.body(player[1].Sprite);
+		if(game.rnd.between(0, 10000)==10)sons['prout'].play();
 		viseur.move();
 		
 		if (debugKey.isDown) {
