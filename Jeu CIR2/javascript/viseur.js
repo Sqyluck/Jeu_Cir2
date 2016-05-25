@@ -33,7 +33,7 @@ Viseur.prototype.eclairage = function(){
 }
 Viseur.prototype.killPlayer = function(Ennemi) {
     Ennemi.kill();
-    sons['degout'].play();
+    sons['honte'].play();
     killersLeft--;
     killersDisp.setText('Killers:'+killersLeft+'/'+killers);
 }
