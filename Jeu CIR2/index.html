@@ -41,31 +41,18 @@
             <input type="number" name="NPCS" id="NPCS" value="10">
             <label for="Time"> Time </label>
             <input type="number" name="Time" id="Time" value="60">
-            <label for="Ammos"> Ammos </label>
-            <input type="number" name="Ammos" id="Ammos" value="1">
+            <label for="Film"> Film </label>
+            <input type="number" name="Film" id="Film" value="3">
         </div>
-               <form action='' id="loginform">
-            <input type="text" name="pseudo" id="pseudo" placeholder="pseudo"/>
-            <input type="radio" name="type" value="gardian"/>gardian
-            <input type="radio" name="type" value="killer"/>killer
-            <input type="submit" id="valider" value="valider"/>
-        </form>
+        <div id="Login">
+            <input type="text" name="pseudo" id="pseudo" placeholder="Pseudo"/>
+        </div>
+        <div id="gameDiv"></div>
 
-        <form id="ready">
-            <input type="button" value="pret"/>
-        </form>
-        <form id="unready">
-            <input type="button" value="annuler"/>
-        </form>
-        <div id="gameDiv">
         <script>
-            $('#unready').hide();
-            $('#ready').hide();
-            $('#loginform').hide();
+            $('#Login').hide();
             $('#modif').hide();
         </script>
-
-        </div>
         
     </body>
 </html>
