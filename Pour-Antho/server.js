@@ -17,9 +17,10 @@ var client ={};
 var taille = 0;
 var data;
 var NpcArrayServer = [];
-var KillerArray = {};
+var BDEArray = {};
 var ViseurArray = {};
 var updateGame = {};
+var nb_photos = 0;
 io.sockets.on('connection', function(socket){
     var player;
 console.log('connection');
@@ -32,21 +33,23 @@ console.log('connection');
         player = user;
         player.ready = false;
         client[user.pseudo]=player;
-        client[user.pseudo].type = '';
+        client[user.pseudo].role = '';
+        client[user.pseudo].id = taille;
         socket.emit('logged', user);
         io.sockets.emit('connected', client[user.pseudo]);
         taille ++;
+        console.log(taille);
         if(taille == 1){
             socket.emit('data');
         }
     });
 
-    socket.on('type', function(type){
-        client[player.pseudo].type = type;
-        socket.emit('typped', type);
-        io.sockets.emit('newType', {
+    socket.on('role', function(role){
+        client[player.pseudo].role = role;
+        socket.emit('typped', role);
+        io.sockets.emit('newrole', {
             pseudo : player.pseudo,
-            type : type
+            role : role
         });
     });
 
@@ -60,21 +63,21 @@ console.log('connection');
     socket.on('pret', function(){
         //averti les autre joueur que l'utilisateur courant est pret
         var pret = 1;
-        socket.broadcast.emit('pret', player);
+        io.sockets.emit('pret', player);
         player.ready = true;
-        var nb_killer = 0;
+        var nb_BDE = 0;
         var nb_guardian =0;
         for(var i in client){
             if(client[i].ready == false){
                 pret = 0;
             }
-            if(client[i].type == 'killer'){
-                nb_killer ++;
+            if(client[i].role == 'BDE'){
+                nb_BDE ++;
             }else{
                 nb_guardian ++;
             }
         }
-        if( (pret == 1)&&(nb_guardian > 0)&&(nb_killer > 0) ){
+        if( (pret == 1)&&(nb_guardian > 0)&&(nb_BDE > 0) ){
             //avertis que tt le monde est pret
             io.sockets.emit('tsPret');
             pret = 0;
@@ -84,8 +87,8 @@ console.log('connection');
             createServer();
         }
         if(pret == 1){
-            if(nb_killer == 0){
-                io.sockets.emit('MissingKiller');
+            if(nb_BDE == 0){
+                io.sockets.emit('MissingBDE');
             }
             if(nb_guardian == 0){
                 io.sockets.emit('MissingGuardian');
@@ -100,27 +103,35 @@ console.log('connection');
         player.ready = false;
     });
 
-    //create server, envoie au differents utilisateur la position initial des npc ainsi que des killeres et le nombre de viseur necessaire
+    //create server, envoie au differents utilisateur la position initial des npc ainsi que des BDEes et le nombre de viseur necessaire
     function createServer(){
         //creer la structure des npc coté server et envoies les donnés aux client
-
         for(var k in client){
-            if(client[k].type == 'gardian'){
-                //creer la structure d'un viseur server et envoie les donnés aux client
-                ViseurArray[client[k].pseudo] = new ViseurServer(client[k].pseudo);
-                io.sockets.emit('createViseur', ViseurArray[client[k].pseudo].pseudo);
+            if(client[k].role == 'BDE'){
+                nb_photos += 3;
             }
         }
-        
+        console.log(nb_photos);
         for(var k in client){
-            if(client[k].type == 'killer'){
-                //creer la structure d'un npc pour les killers coté server et envoie les donnés aux client
-                KillerArray[client[k].pseudo] = new NPCserver(client[k].pseudo);
-                io.sockets.emit('createKiller', {
-                    x : KillerArray[client[k].pseudo].x,
-                    y : KillerArray[client[k].pseudo].y,
-                    skin : KillerArray[client[k].pseudo].skin,
-                    pseudo : KillerArray[client[k].pseudo].id
+            if(client[k].role == 'Journalist'){
+                //creer la structure d'un viseur server et envoie les donnés aux client
+                ViseurArray[client[k].pseudo] = new ViseurServer(client[k].pseudo, 100);
+                io.sockets.emit('createViseur', {
+                    pseudo : ViseurArray[client[k].pseudo].pseudo,
+                    radius : ViseurArray[client[k].pseudo].radius
+                });
+            }
+        }
+
+        for(var k in client){
+            if(client[k].role == 'BDE'){
+                //creer la structure d'un npc pour les BDEs coté server et envoie les donnés aux client
+                BDEArray[client[k].pseudo] = new NPCserver(client[k].pseudo);
+                io.sockets.emit('createBDE', {
+                    x : BDEArray[client[k].pseudo].x,
+                    y : BDEArray[client[k].pseudo].y,
+                    skin : BDEArray[client[k].pseudo].skin,
+                    pseudo : BDEArray[client[k].pseudo].id
                 });
             }
         }
@@ -141,12 +152,12 @@ console.log('connection');
     }
 
     function update(){
-        io.sockets.emit('ActionKiller');
+        io.sockets.emit('ActionBDE');
         for(var i = 0; i < data.nb_npc; i++){
             if(NpcArrayServer[i].out != true){
                 NpcArrayServer[i].randomMove();
             }else{
-                NpcArrayServer[i].willDie();
+                NpcArrayServer[i].willDie('npc');
             }
             io.sockets.emit('collision', NpcArrayServer[i].id);
             io.sockets.emit('moveNPCToXY', {
@@ -163,12 +174,21 @@ console.log('connection');
                 });
             }
         }
-        for(var k in KillerArray){
-            KillerArray[k].IsDetected(ViseurArray);
-            if(KillerArray[k].change){
-                io.sockets.emit('IsKillerDetected', {
-                    detected : KillerArray[k].detected,
-                    id : KillerArray[k].id
+        for(var k in BDEArray){
+            if(BDEArray[k].out){
+                BDEArray[k].willDie('bde');
+                io.sockets.emit('movePlayer', {
+                    moveOnX : BDEArray[k].moveOnX,
+                    moveOnY : BDEArray[k].moveOnY,
+                    animation : BDEArray[k].animation,
+                    pseudo : k
+                });
+            }
+            BDEArray[k].IsDetected(ViseurArray);
+            if(BDEArray[k].change){
+                io.sockets.emit('IsBDEDetected', {
+                    detected : BDEArray[k].detected,
+                    id : BDEArray[k].id
                 });
             }
         }
@@ -179,14 +199,19 @@ console.log('connection');
     });
 
 
-    socket.on('willDie', function(npc){
-        NpcArrayServer[npc.id].out = npc.out;
+    socket.on('willDie', function(character){
+        if(character.type == 'npc'){
+            NpcArrayServer[character.id].out = character.out;
+        }else{
+            io.sockets.emit('PlayerFound', character.id);
+            BDEArray[character.id].out = character.out;
+        }
         //io.sockets.emit('willDie', npc.id);
     });
 
     socket.on('movePlayer', function(player){
-        KillerArray[player.pseudo].x += player.moveOnX;
-        KillerArray[player.pseudo].y += player.moveOnY;
+        BDEArray[player.pseudo].x += player.moveOnX;
+        BDEArray[player.pseudo].y += player.moveOnY;
         io.sockets.emit('movePlayer', player);
     });
 
@@ -196,11 +221,35 @@ console.log('connection');
         io.sockets.emit('moveViseur', viseur);
     });
 
+    socket.on('MistakeOnNpc', function(i){
+        io.sockets.emit('MistakeOnNpc', i);
+    });
+
+    socket.on('photo', function(){
+        nb_photos --;
+        if(nb_photos == 0){
+            io.sockets.emit('BdeWin');
+        }
+    });
+
+    socket.on('JournalistWin', function(){
+        io.sockets.emit('JournalistWin');
+    });
+
     socket.on('disconnect',function(){
         if(!player){
             return false;
         }
         clearInterval(updateGame);
+        var dimId = false;
+        for(var k in client){
+            if(client[k] == client[player.id]){
+                dimId =true;
+            }
+            if(dimId){
+                client[k].id --;
+            }
+        }
         delete client[player.id];
         io.sockets.emit('disco', player);
         taille --;
@@ -353,7 +402,7 @@ NPCserver.prototype.IsDetected = function(viseurArray){
     }
     for(var k in viseurArray){
         var distance = Math.sqrt(Math.pow(this.x - viseurArray[k].x, 2) + Math.pow(this.y - viseurArray[k].y, 2) );
-        if( (distance <= 75) ){
+        if( (distance <= viseurArray[k].radius/2) ){
             seen = true;
         }
     }
@@ -367,9 +416,12 @@ NPCserver.prototype.IsDetected = function(viseurArray){
     }
 }
 
-NPCserver.prototype.willDie = function(){
+NPCserver.prototype.willDie = function(type){
     if(this.y > data.height - 50){
-        io.sockets.emit('NpcDie', this.id);
+        io.sockets.emit('NpcDie', {
+            id : this.id,
+            type : type
+        });
     }else{
         this.moveToXY(data.width/2, data.height-30);
         this.x += this.moveOnX;
@@ -377,9 +429,10 @@ NPCserver.prototype.willDie = function(){
      }
 }
 
-var ViseurServer = function (pseudo) {
+var ViseurServer = function (pseudo, radius) {
     this.x = 0;
     this.y = 0;
+    this.radius = radius;
     this.pseudo = pseudo;
 };
 ViseurServer.prototype.constructor = ViseurServer();
