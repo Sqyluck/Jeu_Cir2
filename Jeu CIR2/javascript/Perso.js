@@ -15,7 +15,7 @@ var NPC = function(skin){
     //collision
     game.physics.arcade.enable(this.Sprite,true);
     
-    this.Sprite.body.setSize(18, 38, 1, 1);
+    this.Sprite.body.setSize(18, 40, 1, 12);
     this.Sprite.body.collideWorldBounds = true;
 
     //caracteristique du sprite
@@ -24,7 +24,6 @@ var NPC = function(skin){
 
     //temps d'attente de base
     this.wait = game.rnd.between(0, 50);
-    this.Sprite.body.setSize(50, 50, -10, 0);
 
     //point d'arrivé
     this.arriveex = game.rnd.between(50, game.width-50);
