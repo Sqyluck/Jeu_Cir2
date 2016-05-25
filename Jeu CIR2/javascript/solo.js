@@ -14,12 +14,15 @@ var killersDisp;
 var npcs;
 var npcsLeft;
 var npcDisp;
+var message;
 //Compteur munitions
 var film;
 var filmLeft;
 var filmDisp;
+var sons = {};
+var pad = [];
+		var tempShoot; //action unique onclick
 
-var pad1, pad2, pad3;
 var player = [];
 var soloState = {
 	
@@ -28,7 +31,7 @@ var soloState = {
 		//Reinit jeu si restart
 		if (restart) {
 			timer = game.time.create(false);
-			gameLength = timeinit;
+			gameLength = timeinit+3;
 			killers = killerinit; //changement variable pour le solo
 			killersLeft = killers;
 			npcs = npcsinit; //changement variable pour le solo
@@ -46,11 +49,10 @@ var soloState = {
 	    //Background
 	    backgroundS = game.add.sprite(0, 0, 'background');
 	    backgroundS = game.add.sprite(0, 0, 'filtreSombre');
-
 	  	background = game.add.sprite(0, 0, 'background');
 	    
 	    //Lampe
-	    viseur = new Viseur(150 ,30, game);
+	    viseur = new Viseur(75 ,30, game.input.x, game.input.y);
 	    viseur.eclairage();
 
 	    myArray = [];
@@ -58,7 +60,6 @@ var soloState = {
 	    var skindark = ['player1dark', 'player2dark', 'player3dark'];
 	    //id du killer
 	    var k = game.rnd.between(0, npcs - 1)
-		var tempShoot; //action unique onclick
 	    //Insertion des npcs + killer
 	    for (var i = 0; i < npcs; i++) {
 	        if(i == k){
@@ -71,15 +72,27 @@ var soloState = {
 	    cursors = game.input.keyboard.createCursorKeys();
 
 	    game.input.gamepad.start();
-    	if(lvlrun == 0 && killers>1) pad = game.input.gamepad.pad1;
-	    if(lvlrun == 0 && killers>2) pad2 = game.input.gamepad.pad2;
-		if(lvlrun == 0 && killers>3) pad3 = game.input.gamepad.pad3;
+    	if(lvlrun == 0 && killers>0) pad[1] = game.input.gamepad.pad1;
+	    if(lvlrun == 0 && killers>1) pad[2] = game.input.gamepad.pad2;
+		if(lvlrun == 0 && killers>2) pad[3] = game.input.gamepad.pad3;
 	    //Timer + counters
 	    this.initAffichage();
+	    sons['coller'] = game.add.audio('coller');
+	    sons['degout'] = game.add.audio('degout');
+	    sons['photo'] =  game.add.audio('photo');
+	    sons['ascenseur'] =  game.add.audio('ascenseur');
+	    sons['prout'] =  game.add.audio('prout');
+	    sons['honte'] =  game.add.audio('honte');
+
+	    sons.allowMultiple = false;
+	    this.ecranDebut();
+	    timer.add(3000, this.ecranDebutCancel, this);
+	    sons['ascenseur'].play();
 	},
 
 	update: function() {
-		game.debug.body(player[1].Sprite);
+		if(gameLength>timeinit) return;
+		//game.debug.body(player[1].Sprite);
 		viseur.move();
 		
 		if (debugKey.isDown) {
@@ -98,32 +111,34 @@ var soloState = {
 	    }else{
 	        this.hidedisp();
 	    }
-	    if (gameLength > 0 && npcsLeft > 0 && killersLeft>0 && viseur.nbBalle>0 ) { //si le jeu n'est ps fini, on maj
+	    if (gameLength > 0 && npcsLeft > 0 && killersLeft>0 && filmLeft>0 ) { //si le jeu n'est ps fini, on maj
 	    	/*MAJ VISEUR*/
 	    	if(game.input.activePointer.leftButton.isDown) tempShoot = true ;
 	    	if(game.input.activePointer.leftButton.isUp && tempShoot == true){
+	    		sons['photo'].play();	        
 	    		tempShoot = false;
+	    		filmLeft--;
+		        viseur.nbBalle--;
+		        viseur.camera.animations.play('right');
 	    		filmDisp.setText('film:'+filmLeft+'/'+film);
 			    for(var i = 0; i < npcs; i++){
 			    	if(game.physics.arcade.distanceToPointer(myArray[i].Sprite) <= viseur.radius/2){
-			    		viseur.camera.animations.play('right');
 		            	viseur.VkillNPC(viseur.camera, myArray[i].Sprite);
-		            	filmLeft--;
-		            	viseur.nbBalle--;
+		            	npcDisp.setText('Npcs:'+npcsLeft+'/'+npcs);
 		            }
 		        }
-		        for(var i=1; i<=killersLeft; i++){
+		        for(var i=1; i<=killers; i++){
 		        	if(game.physics.arcade.distanceToPointer(player[i].Sprite) <= viseur.radius/2)
 			    		viseur.killPlayer(player[i].Sprite);
 			   	}
 	    	}
 	    	/*MAJ ACTION JOUEUR*/
-	    	for(var i=1; i<=killersLeft; i++){
+	    	for(var i=1; i<=killers; i++){
 		    	player[i].IsDetected(viseur);
 		    }
 		    if(lvlrun ==0){
-	    		for(var i=1; i<=killersLeft; i++){
-					player[i].movePlayer(pad+i,myArray,npcs);
+	    		for(var i=1; i<=killers; i++){
+					player[i].movePlayer(pad[i],myArray,npcs);
 		    	}
 		    }else{
 		    	if(lvlrun == 1){ 
@@ -206,12 +221,25 @@ var soloState = {
 	   	timer.loop(Phaser.Timer.SECOND, this.updateCounter, this);
 	   	timer.start();
 	},
+	ecranDebut: function() {
+		var myText = "Find them !";
+	    message = game.add.text(game.world.centerX,  game.world.centerY, myText, { font: "1000% Arial", fill: "#ffffff", align: "center" });
+	    message.anchor.setTo(0.5, 0.5);
+	    message.stroke = '#000000';
+	    message.strokeThickness = 7;
+	    timer.add(3000, this.ecranDebutCancel, this);
+
+	},
+	ecranDebutCancel: function() {
+		console.log("jeees");
+	    message.setText("");
+	},
 
 	ecranFin: function() {
-	    endTime = game.add.text(game.world.centerX,  game.world.centerY, 'End of the game', { font: "1000% Arial", fill: "#ffffff", align: "center" });
-	    endTime.anchor.setTo(0.5, 0.5);
-	    endTime.stroke = '#000000';
-	    endTime.strokeThickness = 7;
+	    message = game.add.text(game.world.centerX,  game.world.centerY, 'End of the game', { font: "1000% Arial", fill: "#ffffff", align: "center" });
+	    message.anchor.setTo(0.5, 0.5);
+	    message.stroke = '#000000';
+	    message.strokeThickness = 7;
 	    timer.stop(false);
 
 	    var startLabel = game.add.text(game.width/2, game.height -40, 'Press SPACE', {font: '25px Arial', fill: '#ffffff'});
