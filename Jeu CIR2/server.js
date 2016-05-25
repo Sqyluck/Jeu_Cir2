@@ -9,9 +9,9 @@ var port = 3000;
 
 app.use(express.static(__dirname));
 
-var os = require( 'os' );
-var networkInterfaces = os.networkInterfaces( );
-var ip = networkInterfaces['Wi-Fi'][1].address;
+//var os = require( 'os' );
+//var networkInterfaces = os.networkInterfaces( );
+//var ip = networkInterfaces['Wi-Fi'][1].address;
 
 var client ={};
 var taille = 0;
