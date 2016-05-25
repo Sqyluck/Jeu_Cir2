@@ -1,5 +1,8 @@
 //Entrer clavier pour affichage complet
 var key;
+//Mode debug
+var debugKey;
+var debugMode = false;
 //Temps
 var gameLength;
 var timerDisplay;
@@ -77,6 +80,16 @@ var soloState = {
 	update: function() {
 		game.debug.body(player[1].Sprite);
 		viseur.move();
+		
+		if (debugKey.isDown) {
+			game.input.keyboard.removeKeyCapture(Phaser.Keyboard.D);
+		    debugMode = (debugMode) ? false : true;
+
+		    if (!debugMode)
+		    {
+		        game.debug.reset();
+		    }
+		}
 		//Affichage Complet
 		if(key.isUp){
 	        this.showdisp();
@@ -239,5 +252,32 @@ var soloState = {
 	    npcDisp.visible = true;
 	    killersDisp.visible = true;
 	    filmDisp.visible = true;
+	},
+		render: function() {
+		if(debugMode){
+			for (var i = 0; i < npcs; i++) {
+				if (myArray[i].aiType == 0) {
+					game.debug.body(myArray[i].Sprite, 'green', false);
+				}			
+				if (myArray[i].aiType == 1) {
+					game.debug.body(myArray[i].Sprite,'red', false);
+				}
+				if (myArray[i].aiType == 2) {
+					game.debug.body(myArray[i].Sprite,'blue', false);
+				}
+				if (myArray[i].aiType == 3 ) {
+					game.debug.body(myArray[i].Sprite,'yellow', false);
+				}
+			}
+			for (var i = 1; i < player.length; i++) {
+				if(player[i].Sprite.alive){
+					game.debug.body(player[i].Sprite);
+				}
+			}
+			//game.debug.text("Mouse position (" + game.input.x + "; " + game.input.mousePointer.y + ") Player position ("+player.Sprite.x + "; "+player.Sprite.y+")" ,32,32);
+			game.debug.text("Distance between cursor and player:(" + Phaser.Math.roundTo(Phaser.Math.distance(player[1].Sprite.x, player[1].Sprite.y, game.input.x ,game.input.y), 0) + ")" ,32,64);
+			game.debug.text("Center:(" + game.world.centerX +"; "+ game.world.centerY + ") Width:" + game.width + "; Height:" + game.height, 32, 96);
+			//game.debug.text("Mask position:(" + mask.x +"; "+ mask.y +")", 32, 96 + 32);
+		}
 	}
 };
