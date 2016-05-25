@@ -36,6 +36,7 @@ var soloState = {
 			film = ammoinit; //changement variable pour le solo
 			filmLeft = film;
 			key = game.input.keyboard.addKey(Phaser.Keyboard.A);			//Key pour affichage
+			debugKey = game.input.keyboard.addKey(Phaser.Keyboard.D); //Key pour le mode debug
 			v = 1;//Vitesse
 			restart = false;
 		}
