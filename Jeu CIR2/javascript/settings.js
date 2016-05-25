@@ -8,21 +8,17 @@ function getTime(){
 
 }
 
-function getammos(){
-	ammoinit = document.getElementsByName('Ammos') [0].value;
-
-}
-/*
-function getammos(){
-	ammoinit = document.getElementsByName('Ammos') [0].value;
+function getFilm(){
+	ammoinit = document.getElementsByName('Film') [0].value;
 
 }
 
-function getammos(){
-	ammoinit = document.getElementsByName('Ammos') [0].value;
+function getLogin(){
+	return document.getElementsByName('pseudo') [0].value;
 
 }
-*/
+
+
 function montrerform(){
 	$("#modif").show();
 }
