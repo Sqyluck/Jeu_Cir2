@@ -75,10 +75,22 @@ var loadState = {
 		//Filtres
 		game.load.image('filtreSombre', 'assets/filtreSombre.png');
 		game.load.image('filtreLampe', 'assets/filtreLampe.png');
+
+		//Music
+		game.load.audio('coller', 'assets/Music/coller.mp3');
+		game.load.audio('degout', 'assets/Music/degout.mp3');
+		game.load.audio('photo', 'assets/Music/photo.mp3');
+		game.load.audio('ascenseur', 'assets/Music/ascenseur.mp3');
+		game.load.audio('prout', 'assets/Music/prout.mp3');
+		game.load.audio('honte', 'assets/Music/honte.mp3');
+
 	},
 
 	create: function(){
 		game.stage.backgroundColor = '#7a0e0c';
+		game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE
+        	game.scale.startFullScreen(false);
+        	game.debug.inputInfo(32, 32);
 		$("#modif").hide();
 		//game.state.start('start');
 		game.state.start('menu');
