@@ -168,9 +168,10 @@ var soloState = {
 						myArray[i].Sprite.loadTexture(myArray[i].Sprite.name);
 						myArray[i].out = true;
 					}else{
-						 if((Math.abs(myArray[i].Sprite.x - myArray[i].arriveex) < 100) && (Math.abs(myArray[i].Sprite.y - myArray[i].arriveey) < 100))myArray[i].randomMove();
-						 else myArray[i].moveToXY(myArray[i].arriveex, myArray[i].arriveey);
-
+						if(myArray[i].aiType == 0)myArray[i].AI0();	
+						if(myArray[i].aiType == 1)myArray[i].AI1();
+						if(myArray[i].aiType == 2)myArray[i].AI2();
+						if(myArray[i].aiType == 3)myArray[i].AI3();
 					}
 		    	}
 		    }
