@@ -48,7 +48,7 @@ var menuState = {
     },
 
     multi: function(){
-        game.state.start('multi');
+        game.state.start('start');
     },
 
     succes: function(){
