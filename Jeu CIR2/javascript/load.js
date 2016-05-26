@@ -31,10 +31,14 @@ var loadState = {
 	    game.load.image('alost','assets/Funcky/lost.png');
 	    game.load.image('alogo','assets/Asterix/logo.png');
 
-		//Boutons 
+		//Boutons Levels
 	    game.load.spritesheet('level1','assets/Buttons/level1.png', 107, 40);
 	    game.load.spritesheet('level2','assets/Buttons/level2.png', 107, 40);
 	    game.load.spritesheet('level3','assets/Buttons/level3.png', 107, 40);
+	    game.load.spritesheet('level4','assets/Buttons/level4.png', 107, 40);
+	    game.load.spritesheet('level5','assets/Buttons/level5.png', 107, 40);
+	    game.load.spritesheet('level6','assets/Buttons/level6.png', 107, 40);
+	    //Boutons
 	    game.load.spritesheet('changeRole','assets/Buttons/changerole.png', 159, 40);
 	    game.load.spritesheet('bdeMember','assets/Buttons/bdemember.png', 171, 40);
 	    game.load.spritesheet('journalist','assets/Buttons/journalist.png', 138, 40);
@@ -70,7 +74,7 @@ var loadState = {
 		
 		//Background
 		game.load.image('background', 'assets/fond1B.png');
-		//game.load.image('mapLift', 'assets/fond1B.png');
+		//game.load.image('mapLift', 'assets/background/ascenceur.png');
 
 		//Filtres
 		game.load.image('filtreSombre', 'assets/filtreSombre.png');
@@ -89,10 +93,9 @@ var loadState = {
 	create: function(){
 		game.stage.backgroundColor = '#7a0e0c';
 		game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE
-        	game.scale.startFullScreen(false);
-        	game.debug.inputInfo(32, 32);
+        game.scale.startFullScreen(false);
+        game.debug.inputInfo(32, 32);
 		$("#modif").hide();
-		//game.state.start('start');
 		game.state.start('menu');
 	} 
 };
