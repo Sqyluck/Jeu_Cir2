@@ -33,6 +33,11 @@ var NPC = function(skin){
     this.out = false;
     this.Sprite.mistake = false;
     this.target = -1;
+    //Comportement du personnage
+    this.aiType = game.rnd.between(0, 3);
+    this.inPriorityMove = false;
+    
+    
 };
 
 NPC.prototype = Object.create(Phaser.Sprite.prototype);
