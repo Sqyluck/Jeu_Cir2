@@ -251,6 +251,7 @@ var soloState = {
 	},
 
 	ecranFin: function() {
+	sons['song1'].mute = true; // MODIFY
 	    message = game.add.text(game.world.centerX,  game.world.centerY, 'End of the game', { font: "1000% Arial", fill: "#ffffff", align: "center" });
 	    message.anchor.setTo(0.5, 0.5);
 	    message.stroke = '#000000';
