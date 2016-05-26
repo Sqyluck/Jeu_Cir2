@@ -5,6 +5,11 @@ var animation = function(sprite){
     sprite.animations.add('down',[0,1,2,3],10,true);
 }
 
+var someoneDied = function(){
+    npcsLeft --;
+    npcDisp.setText('Npcs:'+npcsLeft+'/'+npcs);
+}
+
 var NPCServer = function(game, skin, x, y){
     //création du sprite a une position aléatoire
     this.Sprite = game.add.sprite(x, y, skin);
@@ -49,6 +54,33 @@ NPCServer.prototype.IsDetected = function(detected){
         }
 }
 
+NPCServer.prototype.changeSkin = function (){
+    if(this.detected){
+        this.Sprite.name += 'dead';
+        var frame = this.Sprite.frame;
+        this.Sprite.loadTexture(this.Sprite.name);
+        this.Sprite.frame = frame;
+        animation(this.Sprite);
+    }else{
+        this.Sprite.name = this.Sprite.name.substring(0, this.Sprite.name.length - 4);
+        var frame = this.Sprite.frame;
+        this.Sprite.name += 'deaddark';
+        this.Sprite.loadTexture(this.Sprite.name);
+        this.Sprite.frame = frame;
+        animation(this.Sprite);
+    }
+}
+
+NPCServer.prototype.mistake = function (){
+    if(this.detected){
+        this.Sprite.name += 'mistake';
+        var frame = this.Sprite.frame;
+        this.Sprite.loadTexture(this.Sprite.name);
+        this.Sprite.frame = frame;
+        animation(this.Sprite);
+    }
+}
+
 var PlayerServer = function(game, skin, x, y){
     //création du sprite a une position aléatoire
     this.Sprite = game.add.sprite(x, y, skin);
@@ -69,14 +101,27 @@ var PlayerServer = function(game, skin, x, y){
     this.Sprite.anchor.setTo(0.5, 0.5);
     //this.Sprite.scale.setTo(0.5);
     this.detected = false;
+    this.alive = true;
+    this.alreadyFound = false;
 };
 NPCServer.prototype.willDie = function(){
     if(this.Sprite.y > game.height - 40)  this.Sprite.kill();
     else this.moveToXY(game.width/2, game.height-30);
 }
 
+
 PlayerServer.prototype = Object.create(Phaser.Sprite.prototype);
 PlayerServer.prototype.constructor = PlayerServer;
+
+PlayerServer.prototype.changeSkin = function (){
+    if(this.detected){
+        this.Sprite.name += 'dead';
+        var frame = this.Sprite.frame;
+        this.Sprite.loadTexture(this.Sprite.name);
+        this.Sprite.frame = frame;
+        animation(this.Sprite);
+    }
+}
 
 PlayerServer.prototype.IsDetected = function(detected){
         if(detected){
