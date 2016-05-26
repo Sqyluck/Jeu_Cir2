@@ -21,7 +21,7 @@ var killerinit = 1;
 
 //Choix lvl
 var lvlrun;
-var lvlunblock = 2;
+var lvlunblock = 1;
 
 //Declaration des Etats
 game.state.add('boot', bootState);
