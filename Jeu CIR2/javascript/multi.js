@@ -13,6 +13,7 @@ var updateOk;
 var key;
 var KeyA
 var fin;
+var outoftime;
 
 var killers;
 var killersLeft;
@@ -28,12 +29,13 @@ var npcDisp;
 
 var gameLength;
 var timerDisplay;
+var sons = {};
 
 var multiState = {
 
     create: function(){
         //socket = io.connect('localhost:3000');
-     //----------------------------------   
+     //----------------------------------
         $('#Login').show();
         displayLabel = game.add.text(0, 100, 'Connection Page',{font: '30px Arial', fill: '#ffffff'});
         //meDisplay = game.add.text(game.width/3, 100, '',{font: '30px Arial', fill: '#ffffff'});
@@ -66,21 +68,33 @@ var multiState = {
         Display = false;
         KeyA = false;
         fin = false;
+        outoftime = false;
         updateOk = false;
+        var message;
         timer = game.time.create(false);
         key = game.input.keyboard.addKey(Phaser.Keyboard.A);
+        sons['coller'] = game.add.audio('coller');
+        sons['degout'] = game.add.audio('degout');
+        sons['photo'] =  game.add.audio('photo');
+        sons['ascenseur'] =  game.add.audio('ascenseur');
+        sons['prout'] =  game.add.audio('prout');
+        sons['honte'] =  game.add.audio('honte');
+        sons['song1'] =  game.add.audio('song1');
+
+        sons.allowMultiple = true;
 
         var skindark = ['player1dark', 'player2dark', 'player3dark'];
 
         socket.on('data', function(){
             socket.emit('data', {
+                gameLength : gameLength,
                 nb_npc : npcs,
                 width : game.width,
                 height : game.height
             });
         });
 
-        
+
         socket.on('logged', function(user){
             //console.log(user);
             me = user;
@@ -92,13 +106,13 @@ var multiState = {
             //console.log(me);
         });
 
-        var txt = []; 
+        var txt = [];
         socket.on('connected',function(user){
             if(user.role == ''){
                 if(!user.ready){
                     console.log(user.pseudo + ' connected' + ' (no role chosen)' + user.id);
                     txt.push(game.add.text(game.width/3, 150+50*user.id, user.pseudo,{font: '30px Arial', fill: '#ffffff'}));
-                }   
+                }
             }else{
                 if(user.ready){
                     console.log(user.pseudo + ' connected as ' + user.role + ' et pret ' + user.id );
@@ -147,7 +161,7 @@ var multiState = {
 
         socket.on('tsPret', function(){//-------------------------------------------------------------------------------------------
             console.log('tout les joueurs sont prêt');
-            
+
             $('#Login').hide();
             displayLabel.visible = false;
             enter.visible = false;
@@ -156,8 +170,8 @@ var multiState = {
             journalist.visible = false;
             bdeMember.visible = false;
 
-            game.add.tileSprite(0, 0, game.width, game.height, 'background');
-            backgroundS = game.add.sprite(0, 0, 'background');
+            game.add.tileSprite(0, 0, game.width, game.height, 'ascenseur');
+            backgroundS = game.add.sprite(0, 0, 'ascenseur');
             backgroundS = game.add.sprite(0, 0, 'filtreSombre');
 
         });
@@ -170,7 +184,7 @@ var multiState = {
             filmLeft = data.film;
             film = data.film;
             Display = true;
-        })
+        });
 
         socket.on('createNPC', function(data){
             NpcArray.push(new NPCServer(game, skindark[data.skin],data.x, data.y));
@@ -182,7 +196,7 @@ var multiState = {
         });
 
         socket.on('createViseur', function(viseur){
-            SpriteArray[viseur.pseudo] = game.add.sprite(0, 0, 'background');
+            SpriteArray[viseur.pseudo] = game.add.sprite(0, 0, 'ascenseur');
             ViseurArray[viseur.pseudo] = new ViseurServer(viseur.radius, viseur.pseudo);
             ViseurArray[viseur.pseudo].eclairage();
             //film = viseur.film;
@@ -194,6 +208,42 @@ var multiState = {
                 game.physics.arcade.collide(PlayerArray[me.pseudo].Sprite, NpcArray[id].Sprite);
             }
         });
+
+        socket.on('updateCounter', function(){
+            gameLength--;
+            sec = gameLength % 60;
+            if ((gameLength/60)<10) {
+                if(sec<10){
+                    timerDisplay.setText('0' + Math.floor(gameLength/60) + ':0' + sec);
+                }else{
+                    timerDisplay.setText('0' + Math.floor(gameLength/60) + ':' + sec);
+                }
+            }else{
+                 if(sec<10){
+                    timerDisplay.setText(Math.floor(gameLength/60) + ':0' + sec);
+                }else{
+                    timerDisplay.setText(Math.floor(gameLength/60) + ':' + sec);
+                }
+            }
+        });
+
+        socket.on('start', function(n){
+            if(n == 4){
+                message = game.add.text(game.world.centerX,  game.world.centerY, "READY ...", { font: "1000% Arial", fill: "#ffffff", align: "center" });
+                message.anchor.setTo(0.5, 0.5);
+                message.stroke = '#000000';
+                message.strokeThickness = 7;
+            }else if(n == 0){
+                message.setText('GO!!!!!');
+            }else{
+                message.setText(n +'..');
+            }
+
+        });
+
+        socket.on('stopStartAnimation', function(){
+            message.visible = false;
+        })
 
         socket.on('moveNPCToXY', function(NPC){
             NpcArray[NPC.id].Sprite.x += NPC.moveOnX;
@@ -230,6 +280,7 @@ var multiState = {
             killersDisp.setText('Bde:'+killersLeft+'/'+killers);
             if(PlayerArray[pseudo].alreadyFound == false){
                 PlayerArray[pseudo].changeSkin();
+                sons['coller'].play();
                 PlayerArray[pseudo].alreadyFound = true;
             }
         });
@@ -292,6 +343,7 @@ var multiState = {
         socket.on('NPCdied', function(id){
             NpcArray[id].Sprite.alive = false;
             someoneDied();
+            sons['coller'].play();
             console.log("someone died by bde");
             if(me.role == 'BDE'){
                 NpcArray[id].changeSkin();
@@ -312,8 +364,10 @@ var multiState = {
             fin = true;
         });
 
-        socket.on('PhotoShot', function(){
+        socket.on('PhotoShot', function(pseudo){
             filmLeft --;
+            sons['photo'].play();
+            ViseurArray[pseudo].camera.animations.play('right');
             filmDisp.setText( 'film:'+filmLeft+'/'+film);
         })
 
@@ -366,73 +420,73 @@ var multiState = {
     },
 
     update: function(){
+        if(!game.rnd.between(0, 10000))sons['prout'].play();
         if(updateOk){
             if(fin){
-                    this.ecranFin();
-                    fin = false;
-                }
-                if(Display){
-                    this.InitAffichage();
-                    Display = false;
-                    KeyA =true;
-                }
-                if(key.isDown){
-                    this.showdisp();
-                }else{
-                    this.hidedisp();
-                }
-                    var win = false;
-                    if((killspace.isDown)&&(me.role=='BDE')){
-                        for(var i = 0; i < npcs; i++){
-                            game.physics.arcade.overlap(PlayerArray[me.pseudo].Sprite, NpcArray[i].Sprite, this.collisionHandler);
-                            if(NpcArray[i].Sprite.recentlyDead){
-                                NpcArray[i].Sprite.recentlyDead = false;
-                                socket.emit('NPCdied', i);
-                            }
-                        }
-                    }
-        
-                    if( (game.input.activePointer.leftButton.isDown)&&(me.role == "Journalist") ){
-                        ViseurArray[me.pseudo].tempShoot = true;
-                        if(ViseurArray[me.pseudo].tempShoot == true){
-                            ViseurArray[me.pseudo].tempShoot = false;
-                            var findsomeone = false;
-                            for(var i = 0; i < npcs; i++){
-                                if(  ( (game.physics.arcade.distanceToPointer(NpcArray[i].Sprite) ) <= (ViseurArray[me.pseudo].radius/2 ) )&&(NpcArray[i].alive) ){
-                                    NpcArray[i].alive = false;
-                                    findsomeone = true;
-                                    socket.emit('willDie', {
-                                        type : 'npc',
-                                        id : i,
-                                        out : true
-                                    });
-                                    socket.emit('MistakeOnNpc', i);
-                                }
-                            }
-                            for(var k in PlayerArray){
-                                    if( (game.physics.arcade.distanceToPointer(PlayerArray[k].Sprite) ) <= (ViseurArray[me.pseudo].radius/2 ) ){
-                                        findsomeone = true;
-                                        socket.emit('willDie', {
-                                            type : 'bde',
-                                            id : k,
-                                            out : true
-                                        });
-                                    }
-                                    if(PlayerArray[k].alive == false){
-                                        win = true;
-                                    }
-                            }
-        
-        
-                            if(killersLeft == 0){
-                                socket.emit('JournalistWin');
-                            }
-                            if((findsomeone)&&(!win)){
-                                socket.emit('photo');
-                            }
+                this.ecranFin();
+                fin = false;
+            }
+            if(Display){
+                this.InitAffichage();
+                Display = false;
+                KeyA =true;
+            }
+            if(key.isDown){
+                this.showdisp();
+            }else{
+                this.hidedisp();
+            }
+                var win = false;
+                if((killspace.isDown)&&(me.role=='BDE')){
+                    for(var i = 0; i < npcs; i++){
+                        game.physics.arcade.overlap(PlayerArray[me.pseudo].Sprite, NpcArray[i].Sprite, this.collisionHandler);
+                        if(NpcArray[i].Sprite.recentlyDead){
+                            NpcArray[i].Sprite.recentlyDead = false;
+                            socket.emit('NPCdied', i);
                         }
                     }
                 }
+                if( (game.input.activePointer.leftButton.isDown)&&(me.role == "Journalist") ){
+                ViseurArray[me.pseudo].tempShoot = true;
+                if(ViseurArray[me.pseudo].tempShoot == true){
+                    ViseurArray[me.pseudo].tempShoot = false;
+                    var findsomeone = false;
+                    for(var i = 0; i < npcs; i++){
+                        if(  ( (game.physics.arcade.distanceToPointer(NpcArray[i].Sprite) ) <= (ViseurArray[me.pseudo].radius/2 ) )&&(NpcArray[i].alive) ){
+                            NpcArray[i].alive = false;
+                            findsomeone = true;
+                            socket.emit('willDie', {
+                                type : 'npc',
+                                id : i,
+                                out : true
+                            });
+                            socket.emit('MistakeOnNpc', i);
+                        }
+                    }
+                    for(var k in PlayerArray){
+                        if( (game.physics.arcade.distanceToPointer(PlayerArray[k].Sprite) ) <= (ViseurArray[me.pseudo].radius/2 ) ){
+                            findsomeone = true;
+                            socket.emit('willDie', {
+                                type : 'bde',
+                                id : k,
+                                out : true
+                            });
+                        }
+                        if(PlayerArray[k].alive == false){
+                            win = true;
+                        }
+                    }
+
+
+                    if(killersLeft == 0){
+                        socket.emit('JournalistWin');
+                    }
+                    if((findsomeone)&&(!win)){
+                        socket.emit('photo', me.pseudo);
+                    }
+                }
+            }
+        }
 
     },
 
@@ -469,29 +523,9 @@ var multiState = {
         filmDisp.anchor.setTo(0.5, 0.5);
         filmDisp.stroke = '#000000';
         filmDisp.strokeThickness = 1;
-
-        timer.loop(Phaser.Timer.SECOND, this.updateCounter, this);
-        timer.start();
     },
 
-    updateCounter: function() {
-        gameLength--;
-        sec = gameLength % 60;
-        if ((gameLength/60)<10) {
-            if(sec<10){
-                timerDisplay.setText('0' + Math.floor(gameLength/60) + ':0' + sec);
-            }else{
-                timerDisplay.setText('0' + Math.floor(gameLength/60) + ':' + sec);
-            }
-        }else{
-             if(sec<10){
-                timerDisplay.setText(Math.floor(gameLength/60) + ':0' + sec);
-            }else{
-                timerDisplay.setText(Math.floor(gameLength/60) + ':' + sec);
-            }
-        }
 
-    },
 
     hidedisp: function() {
         if(KeyA){
@@ -534,7 +568,7 @@ var multiState = {
     },
 
     restart: function() {
-        $('#Login').hide();        
+        $('#Login').hide();
         game.state.start('menu');
     }
 
