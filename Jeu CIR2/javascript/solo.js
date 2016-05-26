@@ -57,7 +57,7 @@ var soloState = {
 	    background.scale.x = game.width/background.width;
     	background.scale.y = game.height/background.height;
 	    //Lampe
-	    viseur = new Viseur(150 ,ammoinit);
+	    viseur = new Viseur(100 ,ammoinit);
 	    viseur.eclairage();
 
 	    myArray = [];
