@@ -1,3 +1,4 @@
+var meDisplay;
 var displayLabel;
 var enter;
 var change;
@@ -9,8 +10,8 @@ var multiState = {
 
     create: function(){
         $('#Login').show();
-        displayLabel = game.add.text(100, 100, 'Connection Page',{font: '30px Arial', fill: '#ffffff'});
-
+        displayLabel = game.add.text(0, 100, 'Connection Page',{font: '30px Arial', fill: '#ffffff'});
+        meDisplay = game.add.text(game.width/3, 100, '',{font: '30px Arial', fill: '#ffffff'});
         //Déclaration des boutons du menu
         enter = game.add.button(game.width/2 +50, game.height/2, 'ready', this.start, this, 1, 0);
         change = game.add.button(game.width/3 -69, game.height/2, 'changeRole', this.chooseRole, this, 1, 0);
@@ -50,34 +51,41 @@ var multiState = {
             me.role = role;
             me.found = false;
         });
-
+        var txt = []; 
         socket.on('connected',function(user){
             if(user.role == ''){
-                if(user.ready){
-                    console.log(user.pseudo + ' connected' + ' (no role chosen) et pret ' + user.id);
-                }else{
-                    console.log(user.pseudo + ' connected' + ' (no role chosen) mais pas pret ' + user.id);
-                }
+                if(!user.ready){
+                    console.log(user.pseudo + ' connected' + ' (no role chosen)' + user.id);
+                    txt.push(game.add.text(game.width/3, 150+50*user.id, user.pseudo,{font: '30px Arial', fill: '#ffffff'}));
+                }   
             }else{
                 if(user.ready){
                     console.log(user.pseudo + ' connected as ' + user.role + ' et pret ' + user.id );
+                    txt.push(game.add.text(game.width/3, 150+50*user.id, user.pseudo+' est '+user.role+' et est pret',{font: '30px Arial', fill: '#ffffff'}));
+
                 }else{
                     console.log(user.pseudo + ' connected as ' + user.role + ' mais pas pret '+user.id);
+                    txt.push(game.add.text(game.width/3, 150+50*user.id, user.pseudo+' est '+user.role,{font: '30px Arial', fill: '#ffffff'}));
+
                 }
             }
         });
 
         socket.on('newrole', function(user){
             console.log(user.pseudo + ' is a ' + user.role);
+            txt[user.id].setText(user.pseudo+' est '+user.role);
+
         });
 
         socket.on('pret', function(user){
             console.log(user.pseudo + ' est prêt.');
-            //var txt = game.add.text(300, 0, user.pseudo,{font: '30px Arial', fill: '#ffffff'});
+            txt[user.id].setText(user.pseudo+' est '+user.role+' et est pret');
         });
 
         socket.on('Paspret', function(user){
             console.log(user.pseudo + " n'est pas prêt.");
+          //  txt[user.id].setText(user.pseudo);
+
         });
 
         socket.on('MissingKiller', function(){
@@ -252,6 +260,7 @@ var multiState = {
         change.visible = false;
         journalist.visible = true;
         bdeMember.visible = true;
+        meDisplay.setText('');
     },
 
     start: function () {
@@ -268,6 +277,7 @@ var multiState = {
         change.visible = true;
         Ready.visible = true;
         socket.emit('role', 'Journalist');
+        meDisplay.setText(getLogin()+' est Journalist');
     },
 
     bdeChoice: function () {
@@ -276,6 +286,7 @@ var multiState = {
         change.visible = true;
         Ready.visible = true;
         socket.emit('role', 'BDE');
+        meDisplay.setText(getLogin()+' est BDE');
     },
 
     update: function(){
