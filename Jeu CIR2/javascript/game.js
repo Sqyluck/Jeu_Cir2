@@ -34,6 +34,7 @@ game.state.add('succes', succesState);
 game.state.add('optio', optioState);
 game.state.add('level',levelState);
 game.state.add('start',startState);
+game.state.add('home',homeState);
 
 //Lancement du jeu
 game.state.start('boot');
