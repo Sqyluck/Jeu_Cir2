@@ -9,9 +9,9 @@ var port = 3000;
 
 app.use(express.static(__dirname));
 
-//var os = require( 'os' );
-//var networkInterfaces = os.networkInterfaces( );
-//var ip = networkInterfaces['Wi-Fi'][1].address;
+var os = require( 'os' );
+var networkInterfaces = os.networkInterfaces( );
+var ip = networkInterfaces['Wi-Fi'][1].address;
 
 var client ={};
 var taille = 0;
@@ -20,7 +20,8 @@ var NpcArrayServer = [];
 var BDEArray = {};
 var ViseurArray = {};
 var updateGame = {};
-var nb_photos = 0;
+var film = 0;
+var killers = 0;
 io.sockets.on('connection', function(socket){
     var player;
 console.log('connection');
@@ -49,14 +50,15 @@ console.log('connection');
         socket.emit('typped', role);
         io.sockets.emit('newrole', {
             pseudo : player.pseudo,
-            role : role
+            role : role,
+            id : client[player.pseudo].id
         });
     });
 
     //initialise les donné pour tt le monde
     socket.on('data', function(donnee){
         data = donnee;
-        console.log(data);
+        //console.log(data);
     })
 
     //passe l'utilisateur courrant en pret et si ts les utilisateurs sont pret, lance le create
@@ -65,19 +67,19 @@ console.log('connection');
         var pret = 1;
         io.sockets.emit('pret', player);
         player.ready = true;
-        var nb_BDE = 0;
+        var killers = 0;
         var nb_guardian =0;
         for(var i in client){
             if(client[i].ready == false){
                 pret = 0;
             }
             if(client[i].role == 'BDE'){
-                nb_BDE ++;
+                killers ++;
             }else{
                 nb_guardian ++;
             }
         }
-        if( (pret == 1)&&(nb_guardian > 0)&&(nb_BDE > 0) ){
+        if( (pret == 1)&&(nb_guardian > 0)&&(killers > 0) ){
             //avertis que tt le monde est pret
             io.sockets.emit('tsPret');
             pret = 0;
@@ -87,7 +89,7 @@ console.log('connection');
             createServer();
         }
         if(pret == 1){
-            if(nb_BDE == 0){
+            if(killers == 0){
                 io.sockets.emit('MissingBDE');
             }
             if(nb_guardian == 0){
@@ -108,10 +110,10 @@ console.log('connection');
         //creer la structure des npc coté server et envoies les donnés aux client
         for(var k in client){
             if(client[k].role == 'BDE'){
-                nb_photos += 3;
+                film += 3;
+                killers ++;
             }
         }
-        console.log(nb_photos);
         for(var k in client){
             if(client[k].role == 'Journalist'){
                 //creer la structure d'un viseur server et envoie les donnés aux client
@@ -145,7 +147,11 @@ console.log('connection');
                     skin : NpcArrayServer[i].skin
             });
         }
-
+        io.sockets.emit('GlobalData', {
+            nb_npc : data.nb_npc,
+            killers : killers,
+            film : film,
+        });
         io.sockets.emit('ActionViseur');
         console.log('________________________________Start update____________________________________');
         updateGame = setInterval(update, 100/6);
@@ -226,14 +232,17 @@ console.log('connection');
     });
 
     socket.on('photo', function(){
-        nb_photos --;
-        if(nb_photos == 0){
+        film --;
+        io.sockets.emit('PhotoShot');
+        if(film == 0){
             io.sockets.emit('BdeWin');
+            clearInterval(updateGame);
         }
     });
 
     socket.on('JournalistWin', function(){
         io.sockets.emit('JournalistWin');
+        clearInterval(updateGame);
     });
 
     socket.on('disconnect',function(){
