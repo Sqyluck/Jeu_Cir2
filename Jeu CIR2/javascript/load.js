@@ -81,6 +81,8 @@ var loadState = {
 		game.load.spritesheet('cover', 'assets/cover.png', 1920, 1440);
 
 		//Music
+		game.load.audio('song1', 'assets/Music/songBTwmr.mp3');
+
 		game.load.audio('coller', 'assets/Music/coller.mp3');
 		game.load.audio('degout', 'assets/Music/degout.mp3');
 		game.load.audio('photo', 'assets/Music/photo.mp3');
