@@ -197,6 +197,173 @@ NPC.prototype.randomMove = function(){
     }
 }
 
+NPC.prototype.AI0 = function(){
+    if((Math.abs(this.Sprite.x - this.arriveex) < 50) && (Math.abs(this.Sprite.y - this.arriveey) < 50)){
+        this.randomMove();
+    }else{
+      this.moveToXY(this.arriveex, this.arriveey);
+    }
+}
+
+//Runner v1
+NPC.prototype.AI1 = function(){
+    //Light to close 
+    if(Phaser.Math.roundTo(Phaser.Math.distance(this.Sprite.x, this.Sprite.y, game.input.x, game.input.y), 0) < viseur.radius/1.5 && this.inPriorityMove == false){
+        this.inPriorityMove = true;
+        //If stuck in a corner, head to the center
+        //Else move in the opposite direction of the light
+        if (this.Sprite.x < game.input.x && this.Sprite.y < game.input.y){
+            if(this.Sprite.x < 40 && this.Sprite.y < 40){
+                this.arriveex = game.world.centerX;
+                this.arriveey = game.world.centerY;
+            }else{
+                this.arriveex = game.rnd.between(Phaser.Math.max(30, this.Sprite.x - viseur.radius/1.5), Phaser.Math.max(40, this.Sprite.x - viseur.radius / 2));
+                this.arriveey = game.rnd.between(Phaser.Math.max(30, this.Sprite.y - viseur.radius/1.5), Phaser.Math.max(40, this.Sprite.y - viseur.radius / 2));
+            }
+        }
+
+        if (this.Sprite.x < game.input.x && this.Sprite.y > game.input.y){
+            if(this.Sprite.x < 40 && this.Sprite.y > game.height-40){
+                this.arriveex = game.world.centerX;
+                this.arriveey = game.world.centerY;
+            }else{
+                this.arriveex = game.rnd.between(Phaser.Math.max(30, this.Sprite.x - viseur.radius/2), Phaser.Math.max(40, this.Sprite.x - viseur.radius/2));
+                this.arriveey = game.rnd.between(Phaser.Math.min(game.height-40, this.Sprite.y + viseur.radius/2), Phaser.Math.min(game.height-30, this.Sprite.y + viseur.radius/2));
+            }                
+        }
+
+        if (this.Sprite.x > game.input.x && this.Sprite.y < game.input.y){
+            if(this.Sprite.x > game.width-40 && this.Sprite.y < 40){
+                this.arriveex = game.world.centerX;
+                this.arriveey = game.world.centerY;
+            }else{
+                this.arriveex = game.rnd.between(Phaser.Math.min(game.width-40, this.Sprite.x + viseur.radius/2), Phaser.Math.min(game.width-30, this.Sprite.x + viseur.radius/2));
+                this.arriveey = game.rnd.between(Phaser.Math.max(30, this.Sprite.y - viseur.radius/2), Phaser.Math.max(40, this.Sprite.y - viseur.radius/2));
+            }
+        }
+
+        if (this.Sprite.x > game.input.x && this.Sprite.y > game.input.y){
+            if(this.Sprite.x > game.width-40 && this.Sprite.y > game.height-40){
+                this.arriveex = game.world.centerX;
+                this.arriveey = game.world.centerY;
+            }else{
+                this.arriveex = game.rnd.between(Phaser.Math.min(game.width-40, this.Sprite.x + viseur.radius/2), Phaser.Math.min(game.width-30, this.Sprite.x + viseur.radius/2));
+                this.arriveey = game.rnd.between(Phaser.Math.min(game.height-40, this.Sprite.y + viseur.radius/2), Phaser.Math.min(game.height-30, this.Sprite.y + viseur.radius/2));
+            }
+        }
+
+        
+        this.moveToXY(this.arriveex, this.arriveey);
+    //Else don't consider light and move somewhere else
+    }else{
+        if( (Math.abs(this.Sprite.x - this.arriveex) > 50) && (Math.abs(this.Sprite.y - this.arriveey) > 50) ){
+            this.moveToXY(this.arriveex, this.arriveey);
+        }else{
+            this.inPriorityMove = false;
+            if((Math.abs(this.Sprite.x - this.arriveex) < 50) && (Math.abs(this.Sprite.y - this.arriveey) < 50)){
+                this.randomMove();
+            }else{
+              this.moveToXY(this.arriveex, this.arriveey);
+            }
+        }
+    }
+}
+
+
+//Move to the light
+NPC.prototype.AI2 = function(){
+    if(this.wait == 0){
+        if(Phaser.Math.roundTo(Phaser.Math.distance(this.Sprite.x, this.Sprite.y, game.input.x, game.input.y), 0) < viseur.radius*1.5 && this.inPriorityMove==false){
+            var rand = game.rnd.between(1,10);
+            if(rand < 2){
+                this.wait = game.rnd.between(0, 100);
+    console.log("wait");
+            }else{
+                if(rand < 7){
+                    this.arriveex = game.rnd.between(Phaser.Math.max(30, game.input.x - viseur.radius/2), Phaser.Math.min(game.width-30, game.input.x + viseur.radius/2));
+                    this.arriveey = game.rnd.between(Phaser.Math.max(30, game.input.y - viseur.radius/2), Phaser.Math.min(game.height-30, game.input.y + viseur.radius/2));
+                    this.moveToXY(this.arriveex,this.arriveey);
+    console.log("move");
+                }else{
+                    this.randomMove();
+    console.log("rand");
+                }
+            }
+            this.inPriorityMove = true;
+        }else{
+            if ((Math.abs(this.Sprite.x - this.arriveex) > 50) && (Math.abs(this.Sprite.y - this.arriveey) > 50)) {
+                this.moveToXY(this.arriveex,this.arriveey);
+            }else{
+                this.inPriorityMove = false;
+                if((Math.abs(this.Sprite.x - this.arriveex) < 50) && (Math.abs(this.Sprite.y - this.arriveey) < 50)){
+                    this.randomMove();
+                }else{
+                    this.moveToXY(this.arriveex, this.arriveey);
+                }
+            }
+        }
+    }else{
+        this.wait --;
+    }
+}
+
+//Run away from close action on NPC
+NPC.prototype.AI3 = function(){
+    if(this.inPriorityMove){
+        if (this.Sprite.x < this.arriveex && this.Sprite.y < this.arriveey){
+            if(this.Sprite.x < 40 && this.Sprite.y < 40){
+                this.arriveex = game.world.centerX;
+                this.arriveey = game.world.centerY;
+            }else{
+                this.arriveex = game.rnd.between(Phaser.Math.max(30, this.arriveex - viseur.radius/1.5), Phaser.Math.max(40, this.arriveex - viseur.radius / 2));
+                this.arriveey = game.rnd.between(Phaser.Math.max(30, this.arriveey - viseur.radius/1.5), Phaser.Math.max(40, this.arriveey - viseur.radius / 2));
+            }
+        }
+
+        if (this.Sprite.x < this.arriveex && this.Sprite.y > this.arriveey){
+            if(this.Sprite.x < 40 && this.Sprite.y > game.height-40){
+                this.arriveex = game.world.centerX;
+                this.arriveey = game.world.centerY;
+            }else{
+                this.arriveex = game.rnd.between(Phaser.Math.max(30, this.arriveex - viseur.radius/2), Phaser.Math.max(40, this.arriveex - viseur.radius/2));
+                this.arriveey = game.rnd.between(Phaser.Math.min(game.height-40, this.arriveey + viseur.radius/2), Phaser.Math.min(game.height-30, this.arriveey + viseur.radius/2));
+            }                
+        }
+
+        if (this.Sprite.x > this.arriveex && this.Sprite.y < this.arriveey){
+            if(this.Sprite.x > game.width-40 && this.Sprite.y < 40){
+                this.arriveex = game.world.centerX;
+                this.arriveey = game.world.centerY;
+            }else{
+                this.arriveex = game.rnd.between(Phaser.Math.min(game.width-40, this.arriveex + viseur.radius/2), Phaser.Math.min(game.width-30, this.arriveex + viseur.radius/2));
+                this.arriveey = game.rnd.between(Phaser.Math.max(30, this.arriveey - viseur.radius/2), Phaser.Math.max(40, this.arriveey - viseur.radius/2));
+            }
+        }
+
+        if (this.Sprite.x > this.arriveex && this.Sprite.y > this.arriveey){
+            if(this.Sprite.x > game.width-40 && this.Sprite.y > game.height-40){
+                this.arriveex = game.world.centerX;
+                this.arriveey = game.world.centerY;
+            }else{
+                this.arriveex = game.rnd.between(Phaser.Math.min(game.width-40, this.arriveex + viseur.radius/2), Phaser.Math.min(game.width-30, this.arriveex + viseur.radius/2));
+                this.arriveey = game.rnd.between(Phaser.Math.min(game.height-40, this.arriveey + viseur.radius/2), Phaser.Math.min(game.height-30, this.arriveey + viseur.radius/2));
+            }
+        }
+        this.moveToXY(this.arriveex, this.arriveey);
+        this.inPriorityMove = false;
+    }else{
+        if ((Math.abs(this.Sprite.x - this.arriveex) > 50) && (Math.abs(this.Sprite.y - this.arriveey) > 50)) {
+            this.moveToXY(this.arriveex,this.arriveey);
+        }else{
+            if((Math.abs(this.Sprite.x - this.arriveex) < 50) && (Math.abs(this.Sprite.y - this.arriveey) < 50)){
+                this.randomMove();
+            }else{
+              this.moveToXY(this.arriveex, this.arriveey);
+            }
+        }
+    }
+}
+
 NPC.prototype.findClosePoint = function(){
     var x = game.rnd.between(30, game.width-30);
     var y = game.rnd.between(30, game.height-30);
