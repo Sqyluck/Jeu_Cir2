@@ -424,7 +424,7 @@ var multiState = {
                             }
         
         
-                            if(win){
+                            if(killersLeft == 0){
                                 socket.emit('JournalistWin');
                             }
                             if((findsomeone)&&(!win)){
