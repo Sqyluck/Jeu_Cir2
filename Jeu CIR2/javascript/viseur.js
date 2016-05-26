@@ -3,7 +3,7 @@ var Viseur = function (radius, nbBalle) {
     this.y;
     this.radius = radius+1;
     this.nbBalle = nbBalle;
-    this.FiltreL;
+    this.filtreL;
     this.camera;
     this.cercle;
 };
@@ -40,6 +40,7 @@ Viseur.prototype.killPlayer = function(Ennemi) {
 
 Viseur.prototype.VkillNPC = function(player, Ennemi) {
     if(Ennemi.alive == true){
+        npcsLeft--;
         sons['degout'].play();
         Ennemi.alive = false;
         Ennemi.mistake = true;
