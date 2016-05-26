@@ -1,17 +1,29 @@
-var socket;
+var meDisplay;
+var displayLabel;
+var enter;
+var change;
+var Ready;
+var journalist;
+var bdeMember;
 
 var multiState = {
 
     create: function(){
-        socket = io.connect('localhost:3000');
-        //game.physics.startSystem(Phaser.Physics.ARCADE);
-        $('#loginform').show();
-        $('#gameDiv').hide();
-        game.add.tileSprite(0, 0, game.width, game.height, 'background');
+        $('#Login').show();
+        displayLabel = game.add.text(0, 100, 'Connection Page',{font: '30px Arial', fill: '#ffffff'});
+        meDisplay = game.add.text(game.width/3, 100, '',{font: '30px Arial', fill: '#ffffff'});
+        //Déclaration des boutons du menu
+        enter = game.add.button(game.width/2 +50, game.height/2, 'ready', this.start, this, 1, 0);
+        change = game.add.button(game.width/3 -69, game.height/2, 'changeRole', this.chooseRole, this, 1, 0);
+        Ready = game.add.button(2*game.width/3 -40, game.height/2, 'play', this.waiting, this, 1, 0);
+        journalist = game.add.button(game.width/3 -69, game.height/2, 'journalist', this.journalistChoice, this, 1, 0);
+        bdeMember = game.add.button(2*game.width/3 -85, game.height/2, 'bdeMember', this.bdeChoice, this, 1, 0);
 
-        //sprite = game.add.sprite(0, 0, 'fond1');
-        //sprite1 = game.add.sprite(0, 0, 'fond1');
-        //sprite2 = game.add.sprite(0, 0, 'fond1');
+        change.visible = false;
+        Ready.visible = false;
+        journalist.visible = false;
+        bdeMember.visible = false;
+//------------------------------------Déclaration des npcs/viseurs/killers----------------------------------
         npc = 10;
         nb_photos = 0;
         SpriteArray = {};
@@ -22,22 +34,6 @@ var multiState = {
         cursors = game.input.keyboard.createCursorKeys();
         killspace = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         var skindark = ['player1dark', 'player2dark', 'player3dark'];
-        $('#loginform').submit(function(event){
-            event.preventDefault();
-            socket.emit('login', {
-                pseudo : $('#pseudo').val()
-            });
-            $('#loginform').hide();
-            $('#roleform').show();
-        });
-
-        $('#roleform').submit(function(event){
-            event.preventDefault();
-            socket.emit('role', $('input[name=role]:checked').val());
-            $('#roleform').hide();
-            $('#changerole').show();
-            $('#ready').show();
-        });
 
         socket.on('data', function(){
             socket.emit('data', {
@@ -45,26 +41,6 @@ var multiState = {
                 width : game.width,
                 height : game.height
             });
-        });
-
-        $('#changerole').click(function(event){
-            $('#changerole').hide();
-            $('#roleform').show();
-            $('#ready').hide();
-        });
-
-        $('#ready').click(function(event){
-            socket.emit('pret');
-            $('#ready').hide();
-            $('#changerole').hide();
-            $('#unready').show();
-        });
-
-        $('#unready').click(function(event){
-            socket.emit('Paspret');
-            $('#changerole').show();
-            $('#ready').show();
-            $('#unready').hide();
         });
 
         socket.on('logged', function(user){
@@ -75,60 +51,68 @@ var multiState = {
             me.role = role;
             me.found = false;
         });
-
-        backgroundS = game.add.sprite(0, 0, 'background');
-	    backgroundS = game.add.sprite(0, 0, 'filtreSombre');
-
+        var txt = []; 
         socket.on('connected',function(user){
             if(user.role == ''){
-                if(user.ready){
-                    console.log(user.pseudo + ' connected' + ' (no role chosen) et pret ' + user.id);
-                }else{
-                    console.log(user.pseudo + ' connected' + ' (no role chosen) mais pas pret ' + user.id);
-                }
+                if(!user.ready){
+                    console.log(user.pseudo + ' connected' + ' (no role chosen)' + user.id);
+                    txt.push(game.add.text(game.width/3, 150+50*user.id, user.pseudo,{font: '30px Arial', fill: '#ffffff'}));
+                }   
             }else{
                 if(user.ready){
                     console.log(user.pseudo + ' connected as ' + user.role + ' et pret ' + user.id );
+                    txt.push(game.add.text(game.width/3, 150+50*user.id, user.pseudo+' est '+user.role+' et est pret',{font: '30px Arial', fill: '#ffffff'}));
+
                 }else{
                     console.log(user.pseudo + ' connected as ' + user.role + ' mais pas pret '+user.id);
+                    txt.push(game.add.text(game.width/3, 150+50*user.id, user.pseudo+' est '+user.role,{font: '30px Arial', fill: '#ffffff'}));
+
                 }
             }
         });
 
         socket.on('newrole', function(user){
             console.log(user.pseudo + ' is a ' + user.role);
+            txt[user.id].setText(user.pseudo+' est '+user.role);
+
         });
 
         socket.on('pret', function(user){
             console.log(user.pseudo + ' est prêt.');
+            txt[user.id].setText(user.pseudo+' est '+user.role+' et est pret');
         });
 
         socket.on('Paspret', function(user){
             console.log(user.pseudo + " n'est pas prêt.");
+          //  txt[user.id].setText(user.pseudo);
+
         });
 
-
-        socket.on('MissingBDE', function(){
-            console.log('il faut au moins un BDE pour lancer la partie');
-            /*socket.emit('Paspret');
-            $('#changerole').show();
-            $('#ready').show();
-            $('#unready').hide();*/
+        socket.on('MissingKiller', function(){
+            console.log('il faut au moins un killer pour lancer la partie');
+            //socket.emit('Paspret');
         });
 
-        socket.on('MissingJournalist', function(){
-            console.log('il faut au moins un Journalist pour lancer la partie');
-            /*socket.emit('Paspret');
-            $('#changerole').show();
-            $('#ready').show();
-            $('#unready').hide();*/
+        socket.on('MissingGardian', function(){
+            console.log('il faut au moins un gardian pour lancer la partie');
+            //socket.emit('Paspret');
         });
 
-        socket.on('tsPret', function(){
+        socket.on('tsPret', function(){//-------------------------------------------------------------------------------------------
             console.log('tout les joueurs sont prêt');
+            
+            $('#Login').hide();
+            displayLabel.visible = false;
+            enter.visible = false;
+            Ready.visible = false;
+            change.visible = false;
+            journalist.visible = false;
+            bdeMember.visible = false;
 
-            $('#gameDiv').show();
-            $('#unready').hide();
+            game.add.tileSprite(0, 0, game.width, game.height, 'background');
+            backgroundS = game.add.sprite(0, 0, 'background');
+            backgroundS = game.add.sprite(0, 0, 'filtreSombre');
+
         });
 
         socket.on('createNPC', function(data){
@@ -179,7 +163,7 @@ var multiState = {
                 });
             }
         });
-
+        
         socket.on('PlayerFound', function(pseudo){
             if(me.pseudo == pseudo){
                 me.found = true;
@@ -256,15 +240,53 @@ var multiState = {
             console.log("Journalist win");
         });
 
-
-    //---------------------------------------------------------------------------------------------------------------------------------------
-        var startLabel = game.add.text(game.width/2, game.height -40, 'Press SPACE', {font: '25px Arial', fill: '#ffffff'});
+        nombredetir = 0;
+        //Retour menu
         var wkey = game.input.keyboard.addKey(Phaser.Keyboard.M);
         wkey.onDown.addOnce(this.restart, this);
-        startLabel.stroke = '#000000';
-        startLabel.strokeThickness = 3;
-        nombredetir = 0;
+    },
+    waiting: function () {
+        displayLabel.setText('Please Wait the others players');
+        Ready.visible = false;
+        socket.emit('pret');
+    },
 
+    chooseRole: function () {
+        displayLabel.setText('Choose Your Role');
+        socket.emit('Paspret');
+        $('#Login').hide();
+        enter.visible = false;
+        Ready.visible = false;
+        change.visible = false;
+        journalist.visible = true;
+        bdeMember.visible = true;
+        meDisplay.setText('');
+    },
+
+    start: function () {
+        socket.emit('login',{
+            pseudo: getLogin()});
+        enter.visible = false;
+        this.chooseRole();
+    },
+
+    journalistChoice: function () {
+        displayLabel.setText('Confirm Your Role');
+        journalist.visible = false;
+        bdeMember.visible = false;
+        change.visible = true;
+        Ready.visible = true;
+        socket.emit('role', 'Journalist');
+        meDisplay.setText(getLogin()+' est Journalist');
+    },
+
+    bdeChoice: function () {
+        journalist.visible = false;
+        bdeMember.visible = false;
+        change.visible = true;
+        Ready.visible = true;
+        socket.emit('role', 'BDE');
+        meDisplay.setText(getLogin()+' est BDE');
     },
 
     update: function(){
@@ -278,7 +300,7 @@ var multiState = {
                     }
                 }
             }
-
+/*
             if( (game.input.activePointer.leftButton.isDown)&&(me.role == "Journalist") ){
                 ViseurArray[me.pseudo].tempShoot = true;
                 if(ViseurArray[me.pseudo].tempShoot == true){
@@ -319,9 +341,8 @@ var multiState = {
                     }
                 }
             }
-
+*/
     },
-
 
     collisionHandler: function(player, Ennemi) {
         if(Ennemi.alive == true){
@@ -331,6 +352,7 @@ var multiState = {
     },
 
     restart: function() {
+        $('#Login').hide();        
         game.state.start('menu');
     }
 
