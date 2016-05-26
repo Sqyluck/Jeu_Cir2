@@ -73,8 +73,7 @@ var loadState = {
 		game.load.spritesheet('photo','assets/camera.png',89,87,5);
 		
 		//Background
-		game.load.image('background', 'assets/fond1B.png');
-		//game.load.image('mapLift', 'assets/background/ascenceur.png');
+		game.load.image('ascenseur', 'assets/background/ascenseur.png');
 
 		//Filtres
 		game.load.image('filtreSombre', 'assets/filtreSombre.png');
