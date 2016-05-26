@@ -21,7 +21,7 @@ var filmLeft;
 var filmDisp;
 var sons = {};
 var pad = [];
-		var tempShoot; //action unique onclick
+var tempShoot; //action unique onclick
 
 var player = [];
 var soloState = {
@@ -47,12 +47,17 @@ var soloState = {
 
 
 	    //Background
-	    backgroundS = game.add.sprite(0, 0, 'background');
+	    backgroundS = game.add.sprite(0,0, 'ascenseur');
+	    backgroundS.scale.x = game.width/backgroundS.width;
+    	backgroundS.scale.y = game.height/backgroundS.height;
 	    backgroundS = game.add.sprite(0, 0, 'filtreSombre');
-	  	background = game.add.sprite(0, 0, 'background');
-	    
+	    backgroundS = game.add.sprite(0, 0, 'filtreSombre');
+
+	  	background = game.add.sprite(0, 0, 'ascenseur');
+	    background.scale.x = game.width/background.width;
+    	background.scale.y = game.height/background.height;
 	    //Lampe
-	    viseur = new Viseur(75 ,30, game.input.x, game.input.y);
+	    viseur = new Viseur(150 ,ammoinit);
 	    viseur.eclairage();
 
 	    myArray = [];
@@ -61,13 +66,17 @@ var soloState = {
 	    //id du killer
 	    var k = game.rnd.between(0, npcs - 1)
 	    //Insertion des npcs + killer
-	    for (var i = 0; i < npcs; i++) {
+		for (var i = 0; i < npcs; i++) {
 	        if(i == k){
-	            player[1] = new NPC(skindark[game.rnd.between(0, skin.length-1)]);
-	            if(killerinit>1) player[2] = new NPC(skindark[game.rnd.between(0, skin.length-1)]);
-	            if(killerinit>2) player[3] = new NPC(skindark[game.rnd.between(0, skin.length-1)]);
+	        	for(var nb = 1 ; nb <= killerinit ; nb++){
+	            	player[nb] = new NPC(skindark[game.rnd.between(0, skin.length-1)]);
+	            	player[nb].Sprite.scale.x += 1;
+ 	    			player[nb].Sprite.scale.y += 1;
+ 	    		}
 	        }
  			myArray.push(new NPC(skindark[game.rnd.between(0, skindark.length-1)]));
+ 			myArray[i].Sprite.scale.x += 1;
+ 	    	myArray[i].Sprite.scale.y += 1;
  	    }
 	    cursors = game.input.keyboard.createCursorKeys();
 
@@ -83,16 +92,16 @@ var soloState = {
 	    sons['ascenseur'] =  game.add.audio('ascenseur');
 	    sons['prout'] =  game.add.audio('prout');
 	    sons['honte'] =  game.add.audio('honte');
+	    sons['song1'] =  game.add.audio('song1');
 
-	    sons.allowMultiple = false;
+	    sons.allowMultiple = true;
 	    this.ecranDebut();
 	    timer.add(3000, this.ecranDebutCancel, this);
-	    sons['ascenseur'].play();
 	},
 
 	update: function() {
 		if(gameLength>timeinit) return;
-		if(game.rnd.between(0, 10000)==10)sons['prout'].play();
+		if(!game.rnd.between(0, 10000))sons['prout'].play();
 		viseur.move();
 		
 		if (debugKey.isDown) {
@@ -150,6 +159,10 @@ var soloState = {
 		    		if(!myArray[0].out)myArray[0].iaEasy(myArray);
 		    	}else if(lvlrun == 3) {
 		    		player[1].iaMedium(myArray); 
+				}else if(lvlrun == 4) {
+		    		player[1].iaMedium(myArray); 
+		    	}else if(lvlrun > 4) {
+		    		player[1].iaHard(myArray); 
 		    	}
 		    }
 
@@ -223,6 +236,7 @@ var soloState = {
 	   	timer.start();
 	},
 	ecranDebut: function() {
+		sons['ascenseur'].play();
 		var myText = "Find them !";
 	    message = game.add.text(game.world.centerX,  game.world.centerY, myText, { font: "1000% Arial", fill: "#ffffff", align: "center" });
 	    message.anchor.setTo(0.5, 0.5);
@@ -232,7 +246,7 @@ var soloState = {
 
 	},
 	ecranDebutCancel: function() {
-		console.log("jeees");
+		sons['song1'].play();
 	    message.setText("");
 	},
 
