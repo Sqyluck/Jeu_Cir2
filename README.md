@@ -8,8 +8,8 @@ Voici les travaux restants au bien de notre projet:
 - Ajouter l'HUD de manière agréable
 - Définir des bordures de déplacement pour les IA en fonction de la map.
 - IA performante
-- Menu pour gérer le multi local
-- Menu pour gérer le multi réseau
+- Menu pour gérer le multi local  --manque bouton retour--
+- Menu pour gérer le multi réseau --manque bouton retour--
 - Succès
 - musique
 - options
