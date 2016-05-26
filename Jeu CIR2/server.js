@@ -2,20 +2,18 @@ var express = require('express'),
     app = express(),
     http = require('http').createServer(app);
     //io = require('socket.io').listen(server);
-//var io = require('socket.io')(http);
-//var host = '0.0.0.0';
-//var port = 3000;
+var io = require('socket.io')(http);
+var host = '0.0.0.0';
+var port = 3000;
 //server.listen(3000);
 
 app.use(express.static(__dirname));
 
-var os = require( 'os' );
-var networkInterfaces = os.networkInterfaces( );
-var ip = networkInterfaces['Wi-Fi'][1].address;
-
 var client ={};
+var pre_strat;
 var taille = 0;
 var data;
+var time = 0;
 var NpcArrayServer = [];
 var BDEArray = {};
 var ViseurArray = {};
@@ -154,7 +152,18 @@ console.log('connection');
         });
         io.sockets.emit('ActionViseur');
         console.log('________________________________Start update____________________________________');
-        updateGame = setInterval(update, 100/6);
+        var compteur = 4;
+        pre_start = setInterval(function(){
+            io.sockets.emit('start', compteur);
+            compteur --;
+        }, 1000);
+        setTimeout(startupdate, 6000);
+    }
+
+    function startupdate(){
+        clearInterval(pre_start);
+        io.sockets.emit('stopStartAnimation');
+        updateGame = setInterval(update, 20);
     }
 
     function update(){
@@ -198,6 +207,18 @@ console.log('connection');
                 });
             }
         }
+        if(time == 50){
+            time = 0;
+            data.gameLength --;
+            io.sockets.emit('updateCounter');
+            if(data.gameLength == 0){
+                io.sockets.emit('BdeWin');
+                client = {};
+                taille = 0;
+                clearInterval(updateGame);
+            }
+        }
+        time ++;
     }
     socket.on('NPCdied', function(id){
         //console.log(npc);//ereur ici a revoir avec will die
@@ -231,17 +252,21 @@ console.log('connection');
         io.sockets.emit('MistakeOnNpc', i);
     });
 
-    socket.on('photo', function(){
+    socket.on('photo', function(pseudo){
         film --;
-        io.sockets.emit('PhotoShot');
+        io.sockets.emit('PhotoShot', pseudo);
         if(film == 0){
             io.sockets.emit('BdeWin');
+            client = {};
+            taille = 0;
             clearInterval(updateGame);
         }
     });
 
     socket.on('JournalistWin', function(){
         io.sockets.emit('JournalistWin');
+        client = {};
+        taille = 0;
         clearInterval(updateGame);
     });
 
