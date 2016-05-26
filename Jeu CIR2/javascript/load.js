@@ -79,6 +79,7 @@ var loadState = {
 		//Filtres
 		game.load.image('filtreSombre', 'assets/filtreSombre.png');
 		game.load.image('filtreLampe', 'assets/filtreLampe.png');
+		game.load.spritesheet('cover', 'assets/cover.png', 1920, 1440);
 
 		//Music
 		game.load.audio('coller', 'assets/Music/coller.mp3');
@@ -96,6 +97,6 @@ var loadState = {
         game.scale.startFullScreen(false);
         game.debug.inputInfo(32, 32);
 		$("#modif").hide();
-		game.state.start('menu');
+		game.state.start('home');
 	} 
 };
