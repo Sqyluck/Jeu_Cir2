@@ -2,9 +2,9 @@ var express = require('express'),
     app = express(),
     http = require('http').createServer(app);
     //io = require('socket.io').listen(server);
-var io = require('socket.io')(http);
-var host = '0.0.0.0';
-var port = 3000;
+//var io = require('socket.io')(http);
+//var host = '0.0.0.0';
+//var port = 3000;
 //server.listen(3000);
 
 app.use(express.static(__dirname));
