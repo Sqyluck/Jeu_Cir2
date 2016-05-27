@@ -16,7 +16,7 @@ var finState = {
 			if(npcsLeft*100/npcs>75 && killersLeft==0 && lvlunblock <= lvlrun) {
 				if(lvlrun < 6){
 					lvlunblock = lvlrun + 1;
-					var text = game.add.text(50, winner.height+210, 'LEVEL '+lvlunblock+' UNLOCK !', {font: '25px Arial', fill: '#ffffff'});
+					var text = game.add.text(50, winner.height+210, 'LEVEL '+lvlunblock+' UNLOCKED !', {font: '25px Arial', fill: '#ffffff'});
 				}else{
 					var text = game.add.text(50, winner.height+210, "You finally discovered the evil plan of the Asterix’en. ",{font: '25px Arial', fill: '#ffffff'});
 					var text = game.add.text(50, winner.height+250, "Unfortunately, no one really care about your thought so they eventually became the new official BDE of ISEN.",{font: '25px Arial', fill: '#ffffff'});
@@ -33,7 +33,7 @@ var finState = {
 	
 			}
 		}else{
-			game.add.text(50, winner.height+210, 100-(npcsLeft*100/npcs)+'% ASTERIXED !', {font: '25px Arial', fill: '#ffffff'});
+			game.add.text(50, winner.height+210, Phaser.Math.roundTo((100-(npcsLeft*100/npcs)),0)+'% ASTERIXED !', {font: '25px Arial', fill: '#ffffff'});
 			if(gameLength>0 && killersLeft>0) game.add.text(50, winner.height+250, 'WITH '+gameLength+' SECONDS LEFT', {font: '25px Arial', fill: '#ffffff'});
 
 		}
