@@ -37,7 +37,6 @@ console.log('connection');
         socket.emit('logged', user);
         io.sockets.emit('connected', client[user.pseudo]);
         taille ++;
-        console.log(taille);
         if(taille == 1){
             socket.emit('data');
         }
@@ -91,7 +90,7 @@ console.log('connection');
                 io.sockets.emit('MissingBDE');
             }
             if(nb_guardian == 0){
-                io.sockets.emit('MissingJournalist');
+                io.sockets.emit('MissingGuardian');
             }
             pret = 1;
         }
