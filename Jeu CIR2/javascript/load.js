@@ -30,6 +30,8 @@ var loadState = {
 	    game.load.image('awon','assets/Asterix/won.png');
 	    game.load.image('alost','assets/Funcky/lost.png');
 	    game.load.image('alogo','assets/Asterix/logo.png');
+	    game.load.spritesheet('statut','assets/statut.png', 500, 500);
+	    game.load.spritesheet('roleChoosed','assets/roleChoosed.png', 38, 53);
 
 		//Boutons Levels
 	    game.load.spritesheet('level1','assets/Buttons/level1.png', 107, 40);
