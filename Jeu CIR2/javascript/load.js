@@ -94,9 +94,6 @@ var loadState = {
 
 	create: function(){
 		game.stage.backgroundColor = '#7a0e0c';
-		game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE
-        game.scale.startFullScreen(false);
-        game.debug.inputInfo(32, 32);
 		$("#modif").hide();
 		game.state.start('home');
 	} 
