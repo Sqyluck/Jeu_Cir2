@@ -410,8 +410,8 @@ NPC.prototype.IsDetected = function(viseur){
 NPC.prototype.willDie = function(){
     if(this.Sprite.x < 270)  this.Sprite.kill();
     else{
-        this.arriveex = 250;
-        this.arriveey = game.height/2;
+        this.arriveex = game.width/2;
+        this.arriveey = game.height-30;
         this.moveToXY(this.arriveex, this.arriveey);
     }
 }
