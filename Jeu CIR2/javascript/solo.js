@@ -236,8 +236,15 @@ var soloState = {
 	   	timer.start();
 	},
 	ecranDebut: function() {
-		sons['ascenseur'].play();
+		//sons['ascenseur'].play();
 		var myText = "Find them !";
+		if(lvlrun == 1) myText = "FIND THE SUSPECT !";
+		if(lvlrun == 2) myText = "DON’T JUDGE THIS ONE !";
+		if(lvlrun == 3) myText = "FOLLOW THE GOOD ONE !";
+		if(lvlrun == 4) myText = "DON’T GIVE UP !";
+		if(lvlrun == 5) myText = "USE YOUR BRAIN !";
+		if(lvlrun == 6) myText = "THE LAST ONE !";
+
 	    message = game.add.text(game.world.centerX,  game.world.centerY, myText, { font: "1000% Arial", fill: "#ffffff", align: "center" });
 	    message.anchor.setTo(0.5, 0.5);
 	    message.stroke = '#000000';
