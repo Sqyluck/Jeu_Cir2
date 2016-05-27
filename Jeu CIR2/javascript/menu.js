@@ -26,20 +26,21 @@ var menuState = {
         }
         else//------------------Changement BDE----------------------------------------------------------------- 
         {
-           logo = game.add.sprite(game.width/2 -144,0, 'alogo');
-            logo.scale.setTo(0.7, 0.7);
+           logo = game.add.sprite(game.world.centerX, 150, 'logo');
+           logo.anchor.setTo(0.5,0.5);
+           logo.scale.setTo(0.7, 0.7);
 
             //Position des boutons
-            solo = game.add.button(game.width/3 -103, 240, 'asolo', this.solo, this, 0, 1);
-            multi = game.add.button(2*game.width/3 -103, 240, 'amulti', this.multi, this, 0, 1);
-            succes = game.add.button(game.width/3 -103, 440, 'asucces', this.succes, this, 0, 1);
-            optio = game.add.button(2*game.width/3 -103, 440, 'aoptio', this.optio, this, 0, 1);
+            solo = game.add.button(game.width/3 -103, 340, 'asolo', this.solo, this, 0, 1);
+            multi = game.add.button(2*game.width/3 -103, 340, 'amulti', this.multi, this, 0, 1);
+            //succes = game.add.button(game.width/3 -103, 440, 'asucces', this.succes, this, 0, 1);
+            //optio = game.add.button(2*game.width/3 -103, 440, 'aoptio', this.optio, this, 0, 1);
             
             //Echelle
             solo.scale.setTo(0.5, 0.5);
             multi.scale.setTo(0.5, 0.5);
-            succes.scale.setTo(0.5, 0.5);
-            optio.scale.setTo(0.5, 0.5);
+            //succes.scale.setTo(0.5, 0.5);
+            //optio.scale.setTo(0.5, 0.5);
         }
     },
 
