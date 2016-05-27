@@ -146,9 +146,9 @@ var soloState = {
 		    	player[i].IsDetected(viseur);
 		    }
 		    if(lvlrun ==0){
-	    		for(var i=1; i<=killers; i++){
-					player[i].movePlayer(pad[i],myArray,npcs);
-		    	}
+			if(game.input.gamepad.pad1.connected) player[1].movePlayer(pad[1],myArray,npcs); else player[1].iaMedium(myArray);
+			if(game.input.gamepad.pad2.connected) player[2].movePlayer(pad[2],myArray,npcs); else player[2].iaMedium(myArray);
+			if(game.input.gamepad.pad3.connected) player[3].movePlayer(pad[3],myArray,npcs); else player[3].iaHard(myArray);
 		    }else{
 		    	if(lvlrun == 1){ 
 		    		player[1].iaEasy(myArray);
