@@ -278,16 +278,13 @@ NPC.prototype.AI2 = function(){
             var rand = game.rnd.between(1,10);
             if(rand < 2){
                 this.wait = game.rnd.between(0, 100);
-    console.log("wait");
             }else{
                 if(rand < 7){
                     this.arriveex = game.rnd.between(Phaser.Math.max(30, game.input.x - viseur.radius/2), Phaser.Math.min(game.width-30, game.input.x + viseur.radius/2));
                     this.arriveey = game.rnd.between(Phaser.Math.max(30, game.input.y - viseur.radius/2), Phaser.Math.min(game.height-30, game.input.y + viseur.radius/2));
                     this.moveToXY(this.arriveex,this.arriveey);
-    console.log("move");
                 }else{
                     this.randomMove();
-    console.log("rand");
                 }
             }
             this.inPriorityMove = true;
