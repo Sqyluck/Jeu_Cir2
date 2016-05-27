@@ -34,7 +34,7 @@ var finState = {
 			}
 		}else{
 			game.add.text(50, winner.height+210, 100-(npcsLeft*100/npcs)+'% ASTERIXED !', {font: '25px Arial', fill: '#ffffff'});
-			if(time>0) game.add.text(50, winner.height+250, 'WITH '+timeLeft+' SECONDS LEFT', {font: '25px Arial', fill: '#ffffff'});
+			if(gameLength>0) game.add.text(50, winner.height+250, 'WITH '+gameLength+' SECONDS LEFT', {font: '25px Arial', fill: '#ffffff'});
 
 		}
 		var startLabel = game.add.text(game.width/2, game.height -40, 'Press SPACE', {font: '25px Arial', fill: '#ffffff'});
