@@ -7,6 +7,7 @@ var menuState = {
         var multi;
         var succes;
         var optio;
+        killerinit = 3;
 
         if(choice == 'funcky'){
             logo = game.add.sprite(game.width/2 -150,-10, 'flogo');
