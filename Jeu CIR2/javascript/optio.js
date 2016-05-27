@@ -27,7 +27,7 @@ var optioState = {
 			TIME = game.add.text(50, settings.height+100, 'Time : '+timeinit, {font: '25px Arial', fill: '#ffffff'});
 
 
-	        home = game.add.button(50, 450, 'fhome', this.restart, this, 0, 1);
+		var home = game.add.button(20, 3*game.height/4, 'back', this.restart, this, 0, 1);
 	        home.scale.setTo(0.25, 0.25);
 			modif = game.add.button(100+game.width/2, 450, 'fmodif', this.Showchange, this, 0, 1);
 	        modif.scale.setTo(0.25, 0.25);
