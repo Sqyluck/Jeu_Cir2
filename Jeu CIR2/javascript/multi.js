@@ -36,14 +36,15 @@ var multiState = {
     create: function(){
         //socket = io.connect('localhost:3000');
      //----------------------------------
-         $('#Login').show();
-        displayLabel = game.add.text(0, 10, 'Connection Page',{font: '30px Arial', fill: '#ffffff'});
+        $('#Login').show();
+        displayLabel = game.add.text(0, 100, 'Connection Page',{font: '30px Arial', fill: '#ffffff'});
+        //meDisplay = game.add.text(game.width/3, 100, '',{font: '30px Arial', fill: '#ffffff'});
         //Déclaration des boutons du menu
         enter = game.add.button(game.width/2 +50, game.height/2, 'ready', this.start, this, 1, 0);
-        change = game.add.button(game.width/3 -69, 2*game.height/3, 'changeRole', this.chooseRole, this, 1, 0);
-        Ready = game.add.button(2*game.width/3 -40, 2*game.height/3, 'play', this.waiting, this, 1, 0);
-        journalist = game.add.button(game.width/3 -69, 2*game.height/3, 'journalist', this.journalistChoice, this, 1, 0);
-        bdeMember = game.add.button(2*game.width/3 -85, 2*game.height/3, 'bdeMember', this.bdeChoice, this, 1, 0);
+        change = game.add.button(game.width/3 -69, game.height/2, 'changeRole', this.chooseRole, this, 1, 0);
+        Ready = game.add.button(2*game.width/3 -40, game.height/2, 'play', this.waiting, this, 1, 0);
+        journalist = game.add.button(game.width/3 -69, game.height/2, 'journalist', this.journalistChoice, this, 1, 0);
+        bdeMember = game.add.button(2*game.width/3 -85, game.height/2, 'bdeMember', this.bdeChoice, this, 1, 0);
 
         change.visible = false;
         Ready.visible = false;
@@ -104,95 +105,58 @@ var multiState = {
             me.found = false;
             //console.log(me);
         });
-        
-        var errorDisplay = game.add.text(game.width/2,0,'');
-        var statutDisplay = [];
-        var choiceDisplay = [];
+
+        var txt = [];
         socket.on('connected',function(user){
             if(user.role == ''){
                 if(!user.ready){
                     console.log(user.pseudo + ' connected' + ' (no role chosen)' + user.id);
-                    game.add.text(game.width/3, 100+50*user.id, user.pseudo,{font: '30px Arial', fill: '#ffffff'});
-                    
-                    statutDisplay.push(game.add.sprite(game.width/2 + 50,  100+50*user.id, 'statut'));
-                    choiceDisplay.push(game.add.sprite(game.width/2,  90+50*user.id, 'roleChoosed'));
-                    statutDisplay[user.id].scale.setTo(0.1,0.1);
-                    statutDisplay[user.id].frame = 0;
-                    choiceDisplay[user.id].frame = 0;
-                }   
+                    txt.push(game.add.text(game.width/3, 150+50*user.id, user.pseudo,{font: '30px Arial', fill: '#ffffff'}));
+                }
             }else{
                 if(user.ready){
                     console.log(user.pseudo + ' connected as ' + user.role + ' et pret ' + user.id );
-                    game.add.text(game.width/3, 100+50*user.id, user.pseudo,{font: '30px Arial', fill: '#ffffff'});
-                    
-                    statutDisplay.push(game.add.sprite(game.width/2 + 50,  100+50*user.id, 'statut'));
-                    choiceDisplay.push(game.add.sprite(game.width/2,  90+50*user.id, 'roleChoosed'));
-                    statutDisplay[user.id].scale.setTo(0.1,0.1);
-                    statutDisplay[user.id].frame = 1;
-                    if(user.role == 'BDE'){
-                        choiceDisplay[user.id].frame = 2;
-                    }else if(user.role == 'Journalist'){
-                        choiceDisplay[user.id].frame = 1;
-                    }
-                        
+                    txt.push(game.add.text(game.width/3, 150+50*user.id, user.pseudo+' est '+user.role+' et est pret',{font: '30px Arial', fill: '#ffffff'}));
 
                 }else{
                     console.log(user.pseudo + ' connected as ' + user.role + ' mais pas pret '+user.id);
-                    game.add.text(game.width/3, 100+50*user.id, user.pseudo,{font: '30px Arial', fill: '#ffffff'});
-                    
-                    statutDisplay.push(game.add.sprite(game.width/2 + 50,  100+50*user.id, 'statut'));
-                    choiceDisplay.push(game.add.sprite(game.width/2,  90+50*user.id, 'roleChoosed'));
-                    statutDisplay[user.id].scale.setTo(0.1,0.1);
-                    statutDisplay[user.id].frame = 0;
-                    if(user.role == 'BDE'){
-                        choiceDisplay[user.id].frame = 2;
-                    }else if(user.role == 'Journalist'){
-                        choiceDisplay[user.id].frame = 1;
-                    }
+                    txt.push(game.add.text(game.width/3, 150+50*user.id, user.pseudo+' est '+user.role,{font: '30px Arial', fill: '#ffffff'}));
+
                 }
             }
         });
 
         socket.on('newrole', function(user){
             console.log(user.pseudo + ' is a ' + user.role);
-            statutDisplay[user.id].frame = 0;
-                    if(user.role == 'BDE'){
-                        choiceDisplay[user.id].frame = 2;
-                    }else if(user.role == 'Journalist'){
-                        choiceDisplay[user.id].frame = 1;
-                    }
+            txt[user.id].setText(user.pseudo+' est '+user.role);
+
         });
 
         socket.on('pret', function(user){
             console.log(user.pseudo + ' est prêt.');
-            statutDisplay[user.id].frame = 1;
-                    if(user.role == 'BDE'){
-                        choiceDisplay[user.id].frame = 2;
-                    }else if(user.role == 'Journalist'){
-                        choiceDisplay[user.id].frame = 1;
-                    }
+            txt[user.id].setText(user.pseudo+' est '+user.role+' et est pret');
         });
 
         socket.on('Paspret', function(user){
             console.log(user.pseudo + " n'est pas prêt.");
-            statutDisplay[user.id].frame = 0;
-                    if(user.role == 'BDE'){
-                        choiceDisplay[user.id].frame = 2;
-                    }else if(user.role == 'Journalist'){
-                        choiceDisplay[user.id].frame = 1;
-                    }
+          //  txt[user.id].setText(user.pseudo);
 
         });
 
         socket.on('MissingBDE', function(){
             console.log('il faut au moins un BDE pour lancer la partie');
-            errorDisplay.setText('il faut au moins un BDE pour lancer la partie');
+            /*socket.emit('Paspret');
+            $('#changerole').show();
+            $('#ready').show();
+            $('#unready').hide();*/
         });
 
         socket.on('MissingJournalist', function(){
             console.log('il faut au moins un Journalist pour lancer la partie');
-            errorDisplay.setText('il faut au moins un Journalist pour lancer la partie');
-
+            /*socket.emit('Paspret');
+            $('#changerole').show();
+            $('#ready').show();
+            $('#unready').hide();*/
         });
 
         socket.on('tsPret', function(){//-------------------------------------------------------------------------------------------
@@ -312,12 +276,12 @@ var multiState = {
                 me.found = true;
             }
             PlayerArray[pseudo].alive = false;
-            killersLeft --;
-            killersDisp.setText('Bde:'+killersLeft+'/'+killers);
             if(PlayerArray[pseudo].alreadyFound == false){
+                killersLeft --;
                 PlayerArray[pseudo].changeSkin();
                 sons['coller'].play();
                 PlayerArray[pseudo].alreadyFound = true;
+                killersDisp.setText('Bde:'+killersLeft+'/'+killers);
             }
         });
 
@@ -431,7 +395,7 @@ var multiState = {
 
     start: function () {
         socket.emit('login',{
-            pseudo: getLogin()});
+        pseudo: getLogin()});
         enter.visible = false;
         this.chooseRole();
     },
