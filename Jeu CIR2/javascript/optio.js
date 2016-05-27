@@ -76,11 +76,14 @@ var optioState = {
 		$("#modif").show();
     },
 
-    Hidechange:function(){
+    ReelHide: function () {
 		ok.visible = false;
 		Default.visible = false;
 		$("#modif").hide();
     	modif.visible = true;
+    },
+
+    Hidechange:function(){
 		var tempkillers = killerinit;
 		var tempnpc = npcsinit;
 		var tempammo = ammoinit;
@@ -101,6 +104,7 @@ var optioState = {
 			alert('Film error :'+ammoinit);
 			ammoinit = tempammo;
 		}
+		ReelHide();
     },
 
     reinit: function(){
@@ -108,11 +112,7 @@ var optioState = {
 		npcsinit = 20;
 		ammoinit = 3;
 		killerinit = 4;
-		ok.visible = false;
-		Default.visible = false;
-    	modif.visible = true;
-    	home.visible = true;
-		$("#modif").hide();
+		this.ReelHide();
     },
 
 	restart: function() {
