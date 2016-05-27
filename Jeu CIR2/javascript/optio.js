@@ -109,9 +109,9 @@ var optioState = {
 
     reinit: function(){
     	timeinit = 120;
-		npcsinit = 20;
-		ammoinit = 3;
-		killerinit = 4;
+		npcsinit = 30;
+		ammoinit = 5;
+		killerinit = 3;
 		this.ReelHide();
     },
 
