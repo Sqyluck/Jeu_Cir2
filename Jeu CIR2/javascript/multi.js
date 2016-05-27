@@ -205,6 +205,9 @@ var multiState = {
 
             game.add.tileSprite(0, 0, game.width, game.height, 'ascenseur');
             backgroundS = game.add.sprite(0, 0, 'ascenseur');
+            backgroundS.scale.x = game.width/backgroundS.width;
+            backgroundS.scale.y = game.height/backgroundS.height;
+            backgroundS = game.add.sprite(0, 0, 'filtreSombre');
             backgroundS = game.add.sprite(0, 0, 'filtreSombre');
 
         });
@@ -230,6 +233,8 @@ var multiState = {
 
         socket.on('createViseur', function(viseur){
             SpriteArray[viseur.pseudo] = game.add.sprite(0, 0, 'ascenseur');
+            SpriteArray[viseur.pseudo].scale.x = game.width/SpriteArray[viseur.pseudo].width;
+            SpriteArray[viseur.pseudo].scale.y = game.height/SpriteArray[viseur.pseudo].height;
             ViseurArray[viseur.pseudo] = new ViseurServer(viseur.radius, viseur.pseudo);
             ViseurArray[viseur.pseudo].eclairage();
             //film = viseur.film;
