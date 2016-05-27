@@ -408,13 +408,12 @@ NPC.prototype.IsDetected = function(viseur){
 
 
 NPC.prototype.willDie = function(){
-    if(this.Sprite.x < 270)  this.Sprite.kill();
-    else{
-        this.arriveex = game.width/2;
-        this.arriveey = game.height-30;
-        this.moveToXY(this.arriveex, this.arriveey);
-    }
+    if(this.Sprite.y > game.height - 40)  this.Sprite.kill();
+    this.arriveex = game.width/2;
+    this.arriveey = game.height-30;
+    this.moveToXY(this.arriveex, this.arriveey);
 }
+
 
 NPC.prototype.movePlayer = function(mypad, myArray, npcs){
     var left =  (cursors.left.isDown || mypad.isDown(Phaser.Gamepad.XBOX360_DPAD_LEFT) || mypad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.2);
