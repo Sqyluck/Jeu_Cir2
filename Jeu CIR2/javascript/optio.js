@@ -28,8 +28,7 @@ var optioState = {
 
 
 		var home = game.add.button(20, 3*game.height/4, 'back', this.restart, this, 0, 1);
-	        home.scale.setTo(0.25, 0.25);
-			modif = game.add.button(100+game.width/2, 450, 'fmodif', this.Showchange, this, 0, 1);
+		modif = game.add.button(100+game.width/2, 450, 'fmodif', this.Showchange, this, 0, 1);
 	        modif.scale.setTo(0.25, 0.25);
 	        ok = game.add.button(100+game.width/2, 450, 'fok', this.Hidechange, this, 0, 1);
 	        ok.scale.setTo(0.25, 0.25);
