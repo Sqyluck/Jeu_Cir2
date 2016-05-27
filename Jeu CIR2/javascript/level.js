@@ -50,7 +50,7 @@ var levelState = {
 
 
 		}
-		var home = game.add.button(20, game.height/2, 'back', this.restart, this, 0, 1);
+		var home = game.add.button(20, 3*game.height/4, 'back', this.restart, this, 0, 1);
 
 		mess = game.add.text(game.width/3, 10,'Finish the previous level',{font: '30px Arial', fill: '#ffffff'});
 		mess.visible = false;
