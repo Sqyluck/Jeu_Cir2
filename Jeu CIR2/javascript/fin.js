@@ -39,6 +39,8 @@ var finState = {
 	},
 
 	restart: function() {
-		game.state.start('level');
+		if(lvlrun>0) game.state.start('level');
+		if(lvlrun==0) game.state.start('optio');
+		if(lvlrun==-1) game.state.start('menu');
 	}
 };
