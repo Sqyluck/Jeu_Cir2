@@ -71,7 +71,9 @@ var loadState = {
 
 		//Caméra
 		game.load.spritesheet('photo','assets/camera.png',89,87,5);
-		
+		game.load.image('logo', 'assets/logo.png');
+		game.load.image('back', 'assets/back.png');
+
 		//Background
 		game.load.image('ascenseur', 'assets/background/floor.png');
 
