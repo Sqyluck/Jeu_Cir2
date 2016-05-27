@@ -14,9 +14,9 @@ var restart = true;
 var timer;
 
 //Options par default pour solo
-var timeinit = 60;
-var npcsinit = 10;
-var ammoinit = 3;
+var timeinit = 120;
+var npcsinit = 30;
+var ammoinit = 5;
 var killerinit = 1;
 
 //Choix lvl
