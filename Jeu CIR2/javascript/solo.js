@@ -70,13 +70,9 @@ var soloState = {
 	        if(i == k){
 	        	for(var nb = 1 ; nb <= killerinit ; nb++){
 	            	player[nb] = new NPC(skindark[game.rnd.between(0, skin.length-1)]);
-	            	player[nb].Sprite.scale.x += 1;
- 	    			player[nb].Sprite.scale.y += 1;
  	    		}
 	        }
  			myArray.push(new NPC(skindark[game.rnd.between(0, skindark.length-1)]));
- 			myArray[i].Sprite.scale.x += 1;
- 	    	myArray[i].Sprite.scale.y += 1;
  	    }
 	    cursors = game.input.keyboard.createCursorKeys();
 
