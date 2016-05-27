@@ -33,7 +33,9 @@ var finState = {
 	
 			}
 		}else{
-			var text = game.add.text(50, winner.height+210, 100-(npcsLeft*100/npcs)+'% ASTERIXED !', {font: '25px Arial', fill: '#ffffff'});
+			game.add.text(50, winner.height+210, 100-(npcsLeft*100/npcs)+'% ASTERIXED !', {font: '25px Arial', fill: '#ffffff'});
+			if(time>0) game.add.text(50, winner.height+250, 'WITH '+timeLeft+' SECONDS LEFT', {font: '25px Arial', fill: '#ffffff'});
+
 		}
 		var startLabel = game.add.text(game.width/2, game.height -40, 'Press SPACE', {font: '25px Arial', fill: '#ffffff'});
 		var wkey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
