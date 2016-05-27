@@ -41,13 +41,11 @@ var optioState = {
 			settings = game.add.sprite(game.width/2 -144, 0, 'aoptio',0);
 			settings.scale.setTo(0.7, 0.7);
 
-			soundLabel = game.add.text(50, settings.height+50, 'Sound : ', {font: '25px Arial', fill: '#ffffff'});
-			NPCS = game.add.text(game.width/2, settings.height+50, 'NPCS : '+npcsinit, {font: '25px Arial', fill: '#ffffff'});
-			AMMOS = game.add.text(game.width/2, settings.height+100, 'Films : '+ammoinit, {font: '25px Arial', fill: '#ffffff'});
-			TIME = game.add.text(50, settings.height+100, 'Time : '+timeinit, {font: '25px Arial', fill: '#ffffff'});
+			NPCS = game.add.text(game.width/2-50, settings.height+50, 'NPCS : '+npcsinit, {font: '25px Arial', fill: '#ffffff'});
+			AMMOS = game.add.text(game.width/2-50, settings.height+100, 'Films : '+ammoinit, {font: '25px Arial', fill: '#ffffff'});
+			//TIME = game.add.text(50, settings.height+100, 'Time : '+killerinit, {font: '25px Arial', fill: '#ffffff'});
 
-	        home = game.add.button(game.width/3 -103, 440, 'ahome', this.restart, this, 0, 1);
-	        home.scale.setTo(0.5, 0.5);
+			var home = game.add.button(20, game.height/2, 'back', this.restart, this, 0, 1);
 			modif = game.add.button(2*game.width/3 -103, 440, 'amodif', this.Showchange, this, 0, 1);
 	        modif.scale.setTo(0.5, 0.5);
 	        ok = game.add.button(2*game.width/3 -103, 440, 'aok', this.Hidechange, this, 0, 1);
@@ -62,17 +60,16 @@ var optioState = {
 	},
 	
 	startGame: function () {
-		home.visible = false;
 		modif.visible = false;
         ok.visible = true;
 		Default.visible = true;
 		$("#modif").hide();
+		killerinit = 3;
 		lvlrun = 0;
 		game.state.start('solo');
     },
 
 	Showchange: function () {
-		home.visible = false;
 		modif.visible = false;
         ok.visible = true;
 		Default.visible = true;
@@ -84,19 +81,18 @@ var optioState = {
 		Default.visible = false;
 		$("#modif").hide();
     	modif.visible = true;
-		home.visible = true;
-		var temptime = timeinit;
+		var tempkillers = killerinit;
 		var tempnpc = npcsinit;
 		var tempammo = ammoinit;
 
 		getFilm();
-		getTime();
+		//getKillers();
 		getnpcs();
 
-		if(timeinit <= 0) {
-			alert('Time error :'+timeinit);
-			timeinit = temptime;
-		}
+		/*if(killerinit <= 0 || killerinit > 3) {
+			alert('killer error :'+killerinit);
+			killerinit = tempkillers;
+		}*/
 		if(npcsinit <= 0) {
 			alert('Npc error :'+npcsinit);
 			npcsinit = tempnpc;
@@ -108,10 +104,10 @@ var optioState = {
     },
 
     reinit: function(){
-    	timeinit = 60;
-		npcsinit = 10;
+    	timeinit = 120;
+		npcsinit = 20;
 		ammoinit = 3;
-		killerinit = 1;
+		killerinit = 4;
 		ok.visible = false;
 		Default.visible = false;
     	modif.visible = true;
@@ -120,12 +116,13 @@ var optioState = {
     },
 
 	restart: function() {
+		$("#modif").hide();
         game.state.start('menu');
     },
     
     update: function(){
         NPCS.setText('Npcs : '+npcsinit);
-        TIME.setText('Time : '+timeinit);
+        //TIME.setText('Killers : '+killerinit);
         AMMOS.setText('Films : '+ammoinit);
     }
 };
