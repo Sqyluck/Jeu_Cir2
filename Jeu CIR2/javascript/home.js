@@ -11,7 +11,7 @@ var homeState = {
 		var text = game.add.text(game.world.centerX, game.world.centerY * 1.7, 'click to play', {font: '30px Arial', fill: '#ffffff'});
 		text.anchor.setTo(0.5);
 
-		game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+		//game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
 		game.input.onDown.add(this.goFull, this);
 
 
@@ -19,14 +19,14 @@ var homeState = {
 
 	goFull: function () {
 
-	    if (game.scale.isFullScreen)
+	    /*if (game.scale.isFullScreen)
 	    {
 	        game.scale.stopFullScreen();
 	    }
 	    else
 	    {
 	        game.scale.startFullScreen(false);
-	    }
+	    }*/
 	    this.restart();
 	},
 	
