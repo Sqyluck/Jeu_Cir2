@@ -91,7 +91,7 @@ console.log('connection');
                 io.sockets.emit('MissingBDE');
             }
             if(nb_guardian == 0){
-                io.sockets.emit('MissingGuardian');
+                io.sockets.emit('MissingJournalist');
             }
             pret = 1;
         }
