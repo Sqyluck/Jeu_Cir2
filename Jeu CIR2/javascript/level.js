@@ -33,6 +33,7 @@ var levelState = {
 		}else{
 			var lvl6disp = game.add.button(2*game.width/3 -53, 3*game.height/4 -20, 'level6', this.message, this, 2, 2);
 		}
+		var home = game.add.button(20, game.height/2, 'back', this.restart, this, 0, 1);
 
 		mess = game.add.text(game.width/3, 10,'Finish the previous level',{font: '30px Arial', fill: '#ffffff'});
 		mess.visible = false;
@@ -96,5 +97,8 @@ var levelState = {
 	},
 	update: function(){
 		game.input.onDown.addOnce(this.removeMessage, this);
+	},	
+	restart: function() {
+		game.state.start('menu');
 	}
 };
