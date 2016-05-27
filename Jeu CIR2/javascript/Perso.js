@@ -109,7 +109,9 @@ NPC.prototype.iaEasy2 = function(myArray){
         game.physics.arcade.overlap(this.Sprite, myArray[this.target].Sprite, this.PkillNPC);
         this.moveToXY(this.arriveex,this.arriveey);
     }else{
-        this.target = this.closiestIAalive(myArray);
+        for(var i=0 ; i<myArray.length-1 ; i++){
+        	game.physics.arcade.overlap(this.Sprite, myArray[i].Sprite, this.PkillNPC);
+        }
         game.physics.arcade.overlap(this.Sprite, myArray[this.target].Sprite, this.PkillNPC);
         if((Math.abs(this.Sprite.x - this.arriveex) < 10) && (Math.abs(this.Sprite.y - this.arriveey) < 10))
             this.findClosePoint();
