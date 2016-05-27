@@ -1,4 +1,4 @@
-var game = new Phaser.Game(window.outerWidth-40, window.outerHeight-110, Phaser.CANVAS,'gameDiv');
+var game = new Phaser.Game(window.outerWidth-40, window.outerHeight-130, Phaser.CANVAS,'gameDiv');
 var socket = io.connect('localhost:3000');
 //Variables Globales
 
