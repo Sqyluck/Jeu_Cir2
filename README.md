@@ -1,6 +1,7 @@
 # FIND ISEN
 
 FIND ISEN is a multiplayer-game for the CIR2's Project from ISEN LILLE by
+
   CARLIER Anthony   FERMAUT Luc   GRUET Philippe    VANDAELE Eymeric
   
 
